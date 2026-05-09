@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import logo from "../assets/UDAYAM INTERNATION LOGO - Higher Pixel .jpg.jpeg"
+import logo from "../assets/HomeLogo.jpeg"
 export type Page =
   | "home"
   | "about"
@@ -25,7 +25,7 @@ const navItems: { label: string; page: Page }[] = [
   { label: "Trade", page: "trade" },
   { label: "Foreign Education", page: "education" },
   { label: "Recruitment", page: "recruitment" },
-  { label: "Contact Us", page: "contact" },
+  // { label: "Contact Us", page: "contact" },
 ]
 
 const promoItems = [
@@ -42,17 +42,16 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
 
   return (
     <>
-      <link
+      {/* <link
         href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,700&display=swap"
         rel="stylesheet"
-      />
+      /> */}
 
       {/* ── PROMO TICKER ── */}
-      <div
+      {/* <div
         className="overflow-hidden py-2"
         style={{
           background: "linear-gradient(90deg, #0F1B47, #1B2B6B, #0F1B47)",
-          fontFamily: "'Poppins', sans-serif",
         }}
       >
         <div
@@ -72,15 +71,55 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
             </span>
           ))}
         </div>
-      </div>
+      </div> */}
+      <div
+        className="hidden flex-col items-center justify-between gap-3 px-4 py-2 md:flex md:flex-row md:px-8 xl:px-10"
+        style={{
+          background: "linear-gradient(90deg, #0F1B47, #1B2B6B, #0F1B47)",
+        }}
+      >
+        <div className="flex items-center gap-2">
+          {["instagram", "facebook", "x", "tiktok"].map((item) => (
+            <button
+              key={item}
+              className="flex h-8 w-8 items-center justify-center rounded-full text-sm text-white transition-all duration-200 hover:scale-105"
+              style={{
+                background: "rgba(255,255,255,0.15)",
+                border: "1px solid rgba(255,255,255,0.25)",
+              }}
+            >
+              {item === "instagram" && "◎"}
+              {item === "facebook" && "f"}
+              {item === "x" && "𝕏"}
+              {item === "tiktok" && "♪"}
+            </button>
+          ))}
+        </div>
 
+        {/* Contact info */}
+        <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[13px] text-white md:justify-end">
+          <div className="flex items-center gap-2 opacity-90">
+            <span>📞</span>
+            <span>+1 (555) 123-4567</span>
+          </div>
+
+          <div className="flex items-center gap-2 opacity-90">
+            <span>✉</span>
+            <span>info@example.com</span>
+          </div>
+
+          <div className="hidden items-center gap-2 opacity-90 lg:flex">
+            <span>📍</span>
+            <span>123 Main Street, Suite 62704</span>
+          </div>
+        </div>
+      </div>
       {/* ── NAVBAR ── */}
       <nav
         className="sticky top-0 z-[999] flex h-[72px] items-center justify-between bg-white px-10"
         style={{
           borderBottom: "1px solid #DDE3F0",
           boxShadow: "0 2px 8px rgba(27,43,107,0.09)",
-          fontFamily: "'Poppins', sans-serif",
         }}
       >
         {/* Logo */}
@@ -98,10 +137,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
               if (sib) sib.style.display = "block"
             }}
           />
-          <span
-            className="text-[20px] font-bold text-[#0D1B3E]"
-            style={{ fontFamily: "'Poppins', sans-serif" }}
-          >
+          <span className="text-[20px] font-bold text-[#0D1B3E]">
             Udayam <span style={{ color: "#1B2B6B" }}>International</span>
           </span>
         </div>
@@ -112,9 +148,8 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
             <li key={page}>
               <button
                 onClick={() => onNavigate(page)}
-                className="rounded-lg px-3 py-[7px] text-[13px] font-medium transition-all duration-200"
+                className="cursor-pointer rounded-lg px-3 py-[7px] font-inter text-[13px] font-medium transition-all duration-200"
                 style={{
-                  fontFamily: "'Poppins', sans-serif",
                   background: currentPage === page ? "#E8ECFA" : "transparent",
                   color: currentPage === page ? "#1B2B6B" : "#2D3A5A",
                 }}
@@ -154,18 +189,17 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
             }}
           >
             Sign In
-          </button>
+          </button> */}
           <button
             onClick={() => onNavigate("contact")}
-            className="cursor-pointer rounded-full border-none px-[22px] py-[9px] text-[13px] font-bold text-white transition-all duration-200 hover:-translate-y-px"
+            className="cursor-pointer rounded-full border-none px-[22px] py-[9px] !font-inter text-[13px] font-bold text-white transition-all duration-200 hover:-translate-y-px"
             style={{
-              background: "linear-gradient(135deg, #1B2B6B, #1565C0)",
-              boxShadow: "0 4px 14px rgba(27,43,107,0.3)",
-              fontFamily: "'Poppins', sans-serif",
+              background: "linear-gradient(135deg, #388E3C, #43A047)",
+              boxShadow: "0 6px 24px rgba(46,125,50,0.45)",
             }}
           >
-            Get a Quote ↗
-          </button> */}
+            Contact Us ↗
+          </button>
         </div>
 
         {/* Hamburger */}
@@ -195,12 +229,10 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
       <div
         className="fixed right-0 left-0 z-[998] overflow-hidden bg-white transition-all duration-300 xl:hidden"
         style={{
-          top: 108,
           maxHeight: menuOpen ? 600 : 0,
           opacity: menuOpen ? 1 : 0,
           borderBottom: "1px solid #DDE3F0",
           boxShadow: "0 6px 24px rgba(27,43,107,0.11)",
-          fontFamily: "'Poppins', sans-serif",
         }}
       >
         <ul className="flex list-none flex-col gap-1 px-7 py-3">
@@ -211,9 +243,8 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
                   onNavigate(page)
                   setMenuOpen(false)
                 }}
-                className="w-full rounded-lg px-3 py-3 text-left text-[13px] font-medium transition-all duration-200"
+                className="w-full rounded-lg px-3 py-3 text-left font-inter text-[13px] font-medium transition-all duration-200"
                 style={{
-                  fontFamily: "'Poppins', sans-serif",
                   borderBottom: "1px solid #DDE3F0",
                   background: currentPage === page ? "#E8ECFA" : "transparent",
                   color: currentPage === page ? "#1B2B6B" : "#2D3A5A",
@@ -224,7 +255,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
             </li>
           ))}
           <li className="flex flex-col gap-2 pt-3 pb-2">
-            <button
+            {/* <button
               className="w-full rounded-full py-3 text-[13px] font-semibold"
               style={{
                 border: "1.5px solid #C5CEDF",
@@ -233,19 +264,19 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate }) => {
               }}
             >
               Sign In
-            </button>
+            </button> */}
             <button
               onClick={() => {
                 onNavigate("contact")
                 setMenuOpen(false)
               }}
-              className="w-full rounded-full py-3 text-[13px] font-bold text-white"
+              className="w-full rounded-full py-3 font-inter text-[13px] font-bold text-white"
               style={{
-                background: "linear-gradient(135deg, #1B2B6B, #1565C0)",
-                fontFamily: "'Poppins', sans-serif",
+                background: "linear-gradient(135deg, #388E3C, #43A047)",
+                boxShadow: "0 6px 24px rgba(46,125,50,0.45)",
               }}
             >
-              Get a Quote ↗
+              Contact Us ↗
             </button>
           </li>
         </ul>
