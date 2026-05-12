@@ -13,7 +13,7 @@ interface Props {
 
 export default function StatsCard({ title, value, subtitle, icon, iconBg, trend, color = 'text-white' }: Props) {
   return (
-    <div className="stat-card animate-fade-in">
+    <div className="stat-card animate-fade-in group">
       <div>
         <p className="text-sm text-dark-400 mb-1">{title}</p>
         <p className={clsx('text-3xl font-bold', color)}>{value}</p>

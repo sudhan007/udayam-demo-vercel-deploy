@@ -85,7 +85,7 @@
 
   .stat-card {
     @apply card p-6 flex items-start justify-between hover:border-brand-500/30 
-           transition-all duration-300 group;
+           transition-all duration-300;
   }
 
   .table-header {
