@@ -120,13 +120,13 @@ const Navbar: React.FC = () => {
       >
         {/* Logo */}
         <div
-          className="flex h-[54px] cursor-pointer items-center"
+          className="flex h-[54px] cursor-pointer items-center gap-2"
           onClick={() => go("home")}
         >
           <img
             src={logo}
             alt="Udayam International"
-            className="h-[45px] w-auto object-contain"
+            className="h-[35px] w-auto object-contain"
             onError={(e) => {
               ;(e.currentTarget as HTMLImageElement).style.display = "none"
               const sib = e.currentTarget.nextSibling as HTMLElement
