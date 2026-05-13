@@ -244,10 +244,7 @@ const AboutUs = () => {
           </span>
         </div>
         <div className="hero-content relative z-[2] max-w-[1100px]">
-          <div className="h-eye mb-5 inline-flex animate-[fsu_0.9s_0.2s_forwards] items-center gap-2.5 font-inter text-[0.72rem] font-semibold tracking-[0.16em] text-white/55 uppercase opacity-0">
-            <span className="inline-block h-px w-[30px] bg-white/40" />
-            About Horizons Travel Co. · Est. 2004
-          </div>
+          <div className="h-eye mb-5 inline-flex animate-[fsu_0.9s_0.2s_forwards] items-center gap-2.5 font-inter text-[0.72rem] font-semibold tracking-[0.16em] text-white/55 uppercase opacity-0"></div>
           <h1 className="h1 font-libre mb-[30px] animate-[fsu_1s_0.35s_forwards] text-[clamp(3rem,6vw,6.2rem)] leading-[1.01] font-bold text-white opacity-0">
             We Craft Journeys
             <br />
@@ -258,9 +255,8 @@ const AboutUs = () => {
           </h1>
           <div className="h-row flex animate-[fsu_1s_0.5s_forwards] flex-col items-start justify-between gap-10 opacity-0 md:flex-row md:items-end">
             <p className="h-desc max-w-[460px] text-base leading-[1.8] text-white/60">
-              Twenty years curating the world's finest travel experiences for
-              explorers who believe the journey is just as important as the
-              destination.
+              Trusted International Services for Every Journey From tourism to
+              education and recruitment, we guide you every step of the way.
             </p>
             <div className="h-stats flex gap-11">
               <div className="hs text-right">
@@ -344,16 +340,17 @@ const AboutUs = () => {
           </p>
 
           <h2 className="sh font-libre mb-5 text-[clamp(2rem,5vw,3.2rem)] leading-[1.1] font-bold text-[#1B2B6B]">
-            Born from a Passion
+            Connecting People
             <br />
-            for <em className="text-[#2E7D32] italic">Exploration</em>
+            to Global <em className="text-[#2E7D32] italic">Opportunities</em>
           </h2>
 
           <p className="bt mb-5 text-[15px] leading-[1.85] text-[#5a5a7a] sm:text-base">
-            In 2004, a small team of travel enthusiasts in Chennai dared to
-            imagine a world where everyone could experience the beauty of
-            distant lands without stress or compromise. That spark became
-            Horizons Travel Co.
+            Udayam International was founded with a vision to provide trusted
+            international services and create opportunities beyond borders. From
+            travel and medical tourism to education and recruitment, we help
+            individuals and businesses achieve their global goals with
+            confidence and ease.
           </p>
 
           <p className="bt mb-9 text-[15px] leading-[1.85] text-[#5a5a7a] sm:text-base">
@@ -563,9 +560,11 @@ const AboutUs = () => {
               Our Promise
             </h3>
             <p className="text-[0.9rem] leading-[1.8] text-[#5a5a7a]">
-              Every booking comes with our personal guarantee — 24/7 on-ground
-              support, verified partners, and real humans who genuinely care
-              about your experience.
+              We are committed to delivering trusted, transparent, and
+              customer-focused international services. From travel and medical
+              tourism to education and recruitment, we ensure personalized
+              guidance, reliable support, and seamless experiences at every step
+              of your journey.
             </p>
           </div>
         </div>

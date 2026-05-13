@@ -1039,10 +1039,7 @@ const MedicalTourism: React.FC = () => {
             </span>
           </div>
           <div className="hero-content relative z-[2] max-w-[1100px]">
-            <div className="h-eye mb-5 inline-flex animate-[fsu_0.9s_0.2s_forwards] items-center gap-2.5 font-inter text-[0.72rem] font-semibold tracking-[0.16em] text-white/55 uppercase opacity-0">
-              <span className="inline-block h-px w-[30px] bg-white/40" />
-              About Horizons Travel Co. · Est. 2004
-            </div>
+            <div className="h-eye mb-5 inline-flex animate-[fsu_0.9s_0.2s_forwards] items-center gap-2.5 font-inter text-[0.72rem] font-semibold tracking-[0.16em] text-white/55 uppercase opacity-0"></div>
             <h1 className="h1 font-libre mb-[30px] animate-[fsu_1s_0.35s_forwards] text-[clamp(3rem,6vw,6.2rem)] leading-[1.01] font-bold text-white opacity-0">
               We Craft Journeys
               <br />
