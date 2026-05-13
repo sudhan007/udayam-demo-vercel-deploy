@@ -5,14 +5,11 @@ import { useNavigate } from "react-router-dom"
 import {
   heroSlides,
   catPills,
-  footerServices,
   stats,
   testimonials,
   whyUs,
 } from "@/lib/homeData"
-import type { Page } from "@/lib/navData"
 import Services from "./Services"
-import NewsLetter from "../NewsLetter"
 
 export const SectionTitle: React.FC<{
   children: React.ReactNode
@@ -215,198 +212,12 @@ const Home = () => {
         </div>
       </div>
 
-      {/* ══ SEARCH STRIP ══ */}
-      {/* <div
-        className="bg-white"
-        style={{
-          borderBottom: "2px solid #DDE3F0",
-          boxShadow: "0 6px 24px rgba(27,43,107,0.11)",
-        }}
-      >
-        <div className="mx-auto max-w-[1200px] px-10">
-          <div className="flex" style={{ borderBottom: "1px solid #DDE3F0" }}>
-            {searchTabs.map((t, i) => (
-              <button
-                key={i}
-                onClick={() => setActiveTab(i)}
-                className="flex cursor-pointer items-center gap-1.5 border-none bg-none px-[22px] py-[14px] text-[13.5px] font-semibold transition-all duration-200"
-                style={{
-                  fontFamily: poppins,
-                  color: activeTab === i ? "#1B2B6B" : "#5A6880",
-                  borderBottom:
-                    activeTab === i
-                      ? "2.5px solid #1B2B6B"
-                      : "2.5px solid transparent",
-                  marginBottom: -1,
-                }}
-              >
-                {t}
-              </button>
-            ))}
-          </div>
-          <div
-            className="my-[18px] mb-[22px] flex items-stretch overflow-hidden rounded-xl"
-            style={{ background: "#F7F9FC", border: "1.5px solid #DDE3F0" }}
-          >
-            {[
-              { ico: "📍", lbl: "Destination", ph: "Where do you want to go?" },
-              { ico: "📅", lbl: "Travel Date", ph: "Select dates" },
-              { ico: "👥", lbl: "Travellers", ph: "2 Adults, 1 Child" },
-              { ico: "💰", lbl: "Budget (₹)", ph: "Any budget" },
-            ].map((f, i) => (
-              <div
-                key={i}
-                className="flex flex-1 items-center gap-2.5 px-[18px] py-[13px] transition-colors duration-200 hover:bg-white"
-                style={{ borderRight: "1.5px solid #DDE3F0" }}
-              >
-                <span className="flex-shrink-0 text-[18px]">{f.ico}</span>
-                <div className="flex-1">
-                  <div
-                    className="mb-0.5 text-[10.5px] font-bold tracking-[0.8px] uppercase"
-                    style={{ color: "#9BA8C0", fontFamily: poppins }}
-                  >
-                    {f.lbl}
-                  </div>
-                  <input
-                    className="w-full border-none bg-transparent text-[14px] font-medium outline-none"
-                    style={{ color: "#0D1B3E", fontFamily: poppins }}
-                    placeholder={f.ph}
-                  />
-                </div>
-              </div>
-            ))}
-            <button
-              className="flex min-w-[130px] cursor-pointer items-center justify-center gap-2 border-none px-8 text-[14px] font-bold text-white transition-opacity duration-200 hover:opacity-90"
-              style={{
-                background: "linear-gradient(135deg, #1B2B6B, #1565C0)",
-                fontFamily: poppins,
-              }}
-            >
-              🔍 Search
-            </button>
-          </div>
-        </div>
-      </div> */}
-
       {/* ══ DESTINATIONS CAROUSEL ══ */}
       <DestinationsSection />
 
       {/* ══ SERVICES ══ */}
-      {/* <section className="py-[80px]" style={{ background: "#F7F9FC" }}>
-        <div className="mx-auto max-w-[1280px] px-10">
-          <div className="mb-11">
-            <SectionTitle hl="Services">All Our</SectionTitle>
-            <p
-              className="mt-2 max-w-[520px] text-[15px] leading-[1.7]"
-              style={{ color: "#5A6880" }}
-            >
-              One trusted company for all your travel, healthcare, education,
-              and career needs.
-            </p>
-          </div>
-          <div
-            className="grid overflow-hidden rounded-[18px]"
-            style={{
-              gridTemplateColumns: "repeat(3, 1fr)",
-              gap: 1,
-              background: "#DDE3F0",
-              border: "1px solid #DDE3F0",
-            }}
-          >
-            {services.map((s, i) => (
-              <button
-                key={i}
-                onClick={() => onNavigate(s.page)}
-                className="block w-full p-[36px_30px] text-left transition-colors duration-200"
-                style={{
-                  background: "#FFFFFF",
-                  border: "none",
-                  cursor: "pointer",
-                }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.background = "#EFF3FB")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.background = "#FFFFFF")
-                }
-              >
-                <div className="mb-[14px] text-[36px]">{s.icon}</div>
-                <div
-                  className="mb-2 text-[11px] font-bold tracking-[1.5px] uppercase"
-                  style={{ color: "#2E7D32" }}
-                >
-                  {s.num}
-                </div>
-                <h3
-                  className="mb-2 text-[20px] font-extrabold"
-                  style={{ color: "#0D1B3E" }}
-                >
-                  {s.title}
-                </h3>
-                <div
-                  className="text-[13px] leading-[1.7]"
-                  style={{ color: "#5A6880" }}
-                >
-                  {s.desc}
-                </div>
-                <div
-                  className="mt-4 text-[13px] font-semibold"
-                  style={{ color: "#1B2B6B" }}
-                >
-                  {s.cta}
-                </div>
-              </button>
-            ))}
-          </div>
-        </div>
-      </section> */}
-
-      {/* ══ Services ══ */}
 
       <Services />
-      {/* <section className="bg-[#F7F9FC] py-14">
-        <div className="mx-auto max-w-7xl px-5 md:px-8 lg:px-10">
-          <div className="mb-10 md:mb-12">
-            <h2 className="text-4xl font-bold text-[#0D1B3E] md:text-5xl">
-              Our <span className="text-[#2E7D32]">Services</span>
-            </h2>
-            <p className="mt-3 max-w-[520px] text-[15px] leading-relaxed text-[#5A6880]">
-              One trusted company for all your travel, healthcare, education,
-              and career needs.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-[#DDE3F0] bg-[#DDE3F0] md:grid-cols-2 lg:grid-cols-3">
-            {services.map((service, index) => (
-              <button
-                key={index}
-                onClick={() => navigate(service.page)}
-                className="group flex h-full flex-col bg-white p-8 text-left transition-all duration-300 hover:bg-[#EFF3FB] active:bg-[#E6ECF7] md:p-9 lg:p-10"
-              >
-                <div className="mb-6 text-4xl transition-transform duration-300 group-hover:scale-110 md:text-5xl">
-                  {service.icon}
-                </div>
-
-                <div className="mb-3 text-xs font-bold tracking-[1.5px] text-[#2E7D32] uppercase md:text-sm">
-                  {service.num}
-                </div>
-
-                <h3 className="mb-3 text-[20px] leading-tight font-extrabold text-[#0D1B3E] md:text-[22px]">
-                  {service.title}
-                </h3>
-
-                <p className="flex-1 text-[13px] leading-relaxed text-[#5A6880] md:text-[14px]">
-                  {service.desc}
-                </p>
-
-                <div className="mt-6 flex items-center gap-2 font-inter text-sm font-semibold text-[#1B2B6B] transition-all group-hover:gap-3">
-                  {service.cta}
-                </div>
-              </button>
-            ))}
-          </div>
-        </div>
-      </section> */}
 
       {/* ══ TOUR CARDS ══ */}
 
@@ -449,41 +260,9 @@ const Home = () => {
           <TravelCards />
         </div>
       </section>
+
       {/* ══ STATS ══ */}
-      {/* <div
-        className="grid"
-        style={{
-          gridTemplateColumns: "repeat(4, 1fr)",
-          background: "#0F1B47",
-          borderTop: "3px solid #388E3C",
-        }}
-      >
-        {stats.map((s, i) => (
-          <div
-            key={i}
-            className="px-7 py-[38px] text-center"
-            style={{
-              borderRight: i < 3 ? "1px solid rgba(255,255,255,0.1)" : "none",
-            }}
-          >
-            <div
-              className="leading-none font-extrabold text-white"
-              style={{ fontFamily: poppins, fontSize: 42 }}
-            >
-              {s.num}
-              <sup className="text-[22px]" style={{ color: "#43A047" }}>
-                {s.sup}
-              </sup>
-            </div>
-            <div
-              className="mt-1.5 text-[12px] font-medium tracking-[0.5px] uppercase"
-              style={{ color: "rgba(255,255,255,0.55)", fontFamily: poppins }}
-            >
-              {s.label}
-            </div>
-          </div>
-        ))}
-      </div> */}
+
       <div className="grid grid-cols-2 bg-[#0F1B47] md:grid-cols-4">
         {stats.map((s, i) => (
           <div
@@ -509,161 +288,9 @@ const Home = () => {
           </div>
         ))}
       </div>
-      {/* ══ DEALS ══ */}
-      {/* <section className="py-[80px]" style={{ background: "#F7F9FC" }}>
-        <div className="mx-auto max-w-[1280px] px-10">
-          <div className="mb-11 flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <Eyebrow>Limited Time</Eyebrow>
-              <SectionTitle hl="Deals & Offers">Hot</SectionTitle>
-            </div>
-            <button
-              onClick={() => onNavigate("tourism")}
-              className="inline-flex items-center gap-1.5 rounded-full px-5 py-2 text-[14px] font-semibold transition-all duration-200 hover:bg-[#1B2B6B] hover:text-white"
-              style={{
-                color: "#1B2B6B",
-                background: "#E8ECFA",
-                border: "1.5px solid #E8ECFA",
-                fontFamily: poppins,
-              }}
-            >
-              All Deals →
-            </button>
-          </div>
-          <div
-            className="grid gap-[18px]"
-            style={{ gridTemplateColumns: "1.7fr 1fr 1fr" }}
-          >
-            {deals.map((d, i) => (
-              <div
-                key={i}
-                className="group relative cursor-pointer overflow-hidden rounded-[18px]"
-                style={{ minHeight: 260 }}
-                onClick={() => onNavigate("tourism")}
-              >
-                <img
-                  src={d.img}
-                  alt={d.title}
-                  className="absolute inset-0 h-full w-full object-cover transition-all duration-500 group-hover:scale-[1.06]"
-                  style={{ filter: "brightness(0.9)" }}
-                />
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    background:
-                      "linear-gradient(to top, rgba(11,20,60,.82) 0%, transparent 65%)",
-                  }}
-                />
-                <div className="relative z-[2] flex h-full flex-col justify-end p-6">
-                  <span
-                    className="mb-3 inline-block self-start rounded-full px-[13px] py-1 text-[11px] font-extrabold tracking-[0.5px] text-white"
-                    style={{ background: "#E53935", fontFamily: poppins }}
-                  >
-                    {d.tag}
-                  </span>
-                  <div
-                    className="mb-1.5 leading-[1.2] font-extrabold text-white"
-                    style={{ fontFamily: poppins, fontSize: d.big ? 28 : 22 }}
-                  >
-                    {d.title}
-                  </div>
-                  <div
-                    className="mb-3 text-[13px]"
-                    style={{
-                      color: "rgba(255,255,255,0.75)",
-                      fontFamily: poppins,
-                    }}
-                  >
-                    {d.sub}
-                  </div>
-                  <div
-                    className="text-[13px]"
-                    style={{
-                      color: "rgba(255,255,255,0.7)",
-                      fontFamily: poppins,
-                    }}
-                  >
-                    {d.price.split(/(?=₹)/)[0]}
-                    <strong className="text-[18px] font-extrabold text-white">
-                      {" "}
-                      {d.price.match(/₹[\d,]+/)?.[0]}
-                    </strong>
-                    {d.price.split(/₹[\d,]+/)[1]}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section> */}
 
       {/* ══ WHY US ══ */}
-      {/* <section className="py-[80px]">
-        <div className="mx-auto max-w-[1280px] px-10">
-          <div className="mx-auto mb-11 max-w-[580px] text-center">
-            <SectionTitle center hl="Confidence">
-              Travel with
-            </SectionTitle>
-            <p
-              className="mx-auto mt-2 text-[15px] leading-[1.7]"
-              style={{ color: "#5A6880", fontFamily: poppins }}
-            >
-              15+ years of crafting unforgettable journeys — we're with you
-              every step of the way.
-            </p>
-          </div>
-          <div
-            className="grid gap-[22px]"
-            style={{ gridTemplateColumns: "repeat(4, 1fr)" }}
-          >
-            {whyUs.map((w, i) => (
-              <div
-                key={i}
-                className="cursor-default rounded-[18px] px-[26px] py-[30px] text-center transition-all duration-300"
-                style={{
-                  background: "#fff",
-                  border: "1px solid #DDE3F0",
-                  boxShadow: "0 1px 3px rgba(27,43,107,0.07)",
-                }}
-                onMouseEnter={(e) => {
-                  ;(e.currentTarget as HTMLElement).style.borderColor =
-                    "#1B2B6B"
-                  ;(e.currentTarget as HTMLElement).style.boxShadow =
-                    "0 8px 32px rgba(27,43,107,0.12)"
-                  ;(e.currentTarget as HTMLElement).style.transform =
-                    "translateY(-5px)"
-                }}
-                onMouseLeave={(e) => {
-                  ;(e.currentTarget as HTMLElement).style.borderColor =
-                    "#DDE3F0"
-                  ;(e.currentTarget as HTMLElement).style.boxShadow =
-                    "0 1px 3px rgba(27,43,107,0.07)"
-                  ;(e.currentTarget as HTMLElement).style.transform = "none"
-                }}
-              >
-                <div
-                  className="mx-auto mb-4 flex h-[62px] w-[62px] items-center justify-center rounded-xl text-[26px]"
-                  style={{ background: "#E8ECFA" }}
-                >
-                  {w.icon}
-                </div>
-                <div
-                  className="mb-2 text-[15.5px] font-bold"
-                  style={{ color: "#0D1B3E", fontFamily: poppins }}
-                >
-                  {w.title}
-                </div>
-                <div
-                  className="text-[13px] leading-[1.65]"
-                  style={{ color: "#5A6880", fontFamily: poppins }}
-                >
-                  {w.desc}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section> */}
+
       <section className="py-14">
         <div className="mx-auto max-w-[1280px] px-5 md:px-8 lg:px-10">
           <div className="mb-10 md:mb-12">
@@ -729,92 +356,9 @@ const Home = () => {
           </div>
         </div>
       </section>
+
       {/* ══ TESTIMONIALS ══ */}
-      {/* <section className="py-[80px]" style={{ background: "#EFF3FB" }}>
-        <div className="mx-auto max-w-[1280px] px-10">
-          <div className="mx-auto mb-11 max-w-[580px] text-center">
-            <Eyebrow center>Real Stories</Eyebrow>
-            <SectionTitle center hl="Clients Say">
-              What Our
-            </SectionTitle>
-          </div>
-          <div
-            className="grid gap-[22px]"
-            style={{ gridTemplateColumns: "repeat(3, 1fr)" }}
-          >
-            {testimonials.map((t, i) => (
-              <div
-                key={i}
-                className="relative cursor-default overflow-hidden rounded-[18px] px-7 py-[28px] transition-all duration-300"
-                style={{
-                  background: "#fff",
-                  border: "1px solid #DDE3F0",
-                  boxShadow: "0 1px 3px rgba(27,43,107,0.07)",
-                }}
-                onMouseEnter={(e) => {
-                  ;(e.currentTarget as HTMLElement).style.borderColor =
-                    "#1B2B6B"
-                  ;(e.currentTarget as HTMLElement).style.boxShadow =
-                    "0 6px 24px rgba(27,43,107,0.11)"
-                  ;(e.currentTarget as HTMLElement).style.transform =
-                    "translateY(-4px)"
-                }}
-                onMouseLeave={(e) => {
-                  ;(e.currentTarget as HTMLElement).style.borderColor =
-                    "#DDE3F0"
-                  ;(e.currentTarget as HTMLElement).style.boxShadow =
-                    "0 1px 3px rgba(27,43,107,0.07)"
-                  ;(e.currentTarget as HTMLElement).style.transform = "none"
-                }}
-              >
-                <div
-                  className="pointer-events-none absolute top-[-8px] right-[18px] text-[110px] leading-none font-extrabold select-none"
-                  style={{ color: "#E8ECFA", fontFamily: poppins }}
-                >
-                  "
-                </div>
-                <div
-                  className="mb-3 text-[13px] tracking-[2px]"
-                  style={{ color: "#F59E0B" }}
-                >
-                  ★★★★★
-                </div>
-                <p
-                  className="relative z-[1] mb-5 text-[14px] leading-[1.78]"
-                  style={{ color: "#2D3A5A", fontFamily: poppins }}
-                >
-                  {t.text}
-                </p>
-                <div className="flex items-center gap-3">
-                  <div
-                    className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full text-[17px] font-bold text-white"
-                    style={{
-                      background: "linear-gradient(135deg, #1B2B6B, #1565C0)",
-                      fontFamily: poppins,
-                    }}
-                  >
-                    {t.av}
-                  </div>
-                  <div>
-                    <div
-                      className="text-[14px] font-bold"
-                      style={{ color: "#0D1B3E", fontFamily: poppins }}
-                    >
-                      {t.name}
-                    </div>
-                    <div
-                      className="mt-0.5 text-[12px]"
-                      style={{ color: "#5A6880", fontFamily: poppins }}
-                    >
-                      {t.trip}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section> */}
+
       <section className="py-14" style={{ background: "#EFF3FB" }}>
         <div className="mx-auto max-w-[1280px] px-5 md:px-8 lg:px-10">
           {/* Header */}
@@ -902,81 +446,6 @@ const Home = () => {
           </div>
         </div>
       </section>
-      {/* ══ NEWSLETTER ══ */}
-      {/* <section
-        className="relative overflow-hidden py-[72px]"
-        style={{
-          background:
-            "linear-gradient(135deg, #0F1B47 0%, #1B2B6B 55%, #1B5E20 100%)",
-        }}
-      >
-        <div
-          className="pointer-events-none absolute -top-20 -right-20 h-[360px] w-[360px] rounded-full"
-          style={{ background: "rgba(255,255,255,0.04)" }}
-        />
-        <div
-          className="pointer-events-none absolute -bottom-15 -left-15 h-[280px] w-[280px] rounded-full"
-          style={{ background: "rgba(255,255,255,0.03)" }}
-        />
-        <div className="relative z-[1] mx-auto max-w-[1280px] px-10">
-          <div className="text-center">
-            <h2
-              className="mb-2.5 font-extrabold tracking-[-0.5px] text-white"
-              style={{ fontFamily: poppins, fontSize: 36 }}
-            >
-              ✉️ Stay Inspired
-            </h2>
-            <p
-              className="mb-[30px] text-[15.5px]"
-              style={{ color: "rgba(255,255,255,0.75)", fontFamily: poppins }}
-            >
-              Join 50,000+ travellers. Get exclusive deals, destination guides,
-              and early-bird offers.
-            </p>
-            <div
-              className="mx-auto flex max-w-[500px] overflow-hidden rounded-full"
-              style={{
-                background: "#fff",
-                boxShadow: "0 8px 32px rgba(0,0,0,0.2)",
-              }}
-            >
-              <input
-                type="email"
-                placeholder="Enter your email address..."
-                className="flex-1 border-none bg-transparent px-[22px] py-[14px] text-[14px] outline-none"
-                style={{ fontFamily: poppins, color: "#0D1B3E" }}
-              />
-              <button
-                className="cursor-pointer border-none px-[26px] text-[14px] font-bold text-white transition-opacity duration-200 hover:opacity-90"
-                style={{
-                  background: "linear-gradient(135deg, #388E3C, #43A047)",
-                  fontFamily: poppins,
-                }}
-              >
-                Subscribe →
-              </button>
-            </div>
-            <div className="mt-[22px] flex flex-wrap justify-center gap-7">
-              {[
-                "✓ No spam, ever",
-                "✓ Exclusive deals first",
-                "✓ Unsubscribe anytime",
-              ].map((c) => (
-                <span
-                  key={c}
-                  className="flex items-center gap-1.5 text-[13px]"
-                  style={{
-                    color: "rgba(255,255,255,0.75)",
-                    fontFamily: poppins,
-                  }}
-                >
-                  {c}
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section> */}
 
       {/* ══ WHATSAPP ══ */}
       <a

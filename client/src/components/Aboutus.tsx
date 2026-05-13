@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 
 const AboutUs = () => {
   // Refs
@@ -288,45 +288,6 @@ const AboutUs = () => {
         </div>
       </section>
 
-      {/* MARQUEE */}
-      {/* <div className="mq overflow-hidden border-y border-white/5 bg-[#1B2B6B] py-[18px]">
-        <div className="mq-track flex w-max animate-[mqscroll_28s_linear_infinite]">
-          {[
-            "Personalised Itineraries",
-            "120+ Destinations",
-            "24/7 Travel Support",
-            "IATA Accredited",
-            "Eco-Certified",
-            "Award Winning Agency",
-            "20 Years of Excellence",
-          ].map((item, idx) => (
-            <React.Fragment key={idx}>
-              <div className="mq-item flex items-center gap-[18px] px-9 font-inter text-[0.72rem] font-medium tracking-[0.14em] whitespace-nowrap text-white/40 uppercase">
-                <div className="mq-dot h-1 w-1 rounded-full bg-[#43A047]" />
-                {item}
-              </div>
-            </React.Fragment>
-          ))}
-          {[
-            "Personalised Itineraries",
-            "120+ Destinations",
-            "24/7 Travel Support",
-            "IATA Accredited",
-            "Eco-Certified",
-            "Award Winning Agency",
-            "20 Years of Excellence",
-          ].map((item, idx) => (
-            <div
-              key={`dup-${idx}`}
-              className="mq-item flex items-center gap-[18px] px-9 font-inter text-[0.72rem] font-medium tracking-[0.14em] whitespace-nowrap text-white/40 uppercase"
-            >
-              <div className="mq-dot h-1 w-1 rounded-full bg-[#43A047]" />
-              {item}
-            </div>
-          ))}
-        </div>
-      </div> */}
-
       {/* INTRO SPLIT */}
       <div
         className="intro grid min-h-[85vh] grid-cols-1 overflow-hidden lg:min-h-[88vh] lg:grid-cols-2"
@@ -463,55 +424,6 @@ const AboutUs = () => {
           </div>
         </div>
       </section>
-
-      {/* STATS BAND */}
-      {/* <div className="sb relative grid grid-cols-2 overflow-hidden bg-[#1B2B6B] px-6 py-[72px] md:grid-cols-4 md:px-16">
-        <div className="bg-radial-gradient absolute top-1/2 left-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full from-[rgba(46,125,50,0.12)] to-transparent" />
-        <div className="si rv relative z-[1] translate-y-9 border-r border-white/7 px-5 py-10 text-center opacity-0 transition-all duration-800">
-          <div className="sn font-libre mb-2 text-[3.4rem] leading-none font-bold text-white">
-            <span className="counter" data-t="48">
-              0
-            </span>
-            K<sup className="text-[1.5rem] text-[#43A047]">+</sup>
-          </div>
-          <div className="sl font-inter text-[0.7rem] font-medium tracking-[0.1em] text-white/38 uppercase">
-            Happy Travellers
-          </div>
-        </div>
-        <div className="si rv d1 relative z-[1] translate-y-9 border-r border-white/7 px-5 py-10 text-center opacity-0 transition-all delay-100 duration-800">
-          <div className="sn font-libre mb-2 text-[3.4rem] leading-none font-bold text-white">
-            <span className="counter" data-t="120">
-              0
-            </span>
-            <sup className="text-[1.5rem] text-[#43A047]">+</sup>
-          </div>
-          <div className="sl font-inter text-[0.7rem] font-medium tracking-[0.1em] text-white/38 uppercase">
-            Countries Covered
-          </div>
-        </div>
-        <div className="si rv d2 relative z-[1] translate-y-9 border-r border-white/7 px-5 py-10 text-center opacity-0 transition-all delay-200 duration-800">
-          <div className="sn font-libre mb-2 text-[3.4rem] leading-none font-bold text-white">
-            <span className="counter" data-t="20">
-              0
-            </span>
-            <sup className="text-[1.5rem] text-[#43A047]">+</sup>
-          </div>
-          <div className="sl font-inter text-[0.7rem] font-medium tracking-[0.1em] text-white/38 uppercase">
-            Years of Experience
-          </div>
-        </div>
-        <div className="si rv d3 relative z-[1] translate-y-9 px-5 py-10 text-center opacity-0 transition-all delay-300 duration-800">
-          <div className="sn font-libre mb-2 text-[3.4rem] leading-none font-bold text-white">
-            <span className="counter" data-t="35">
-              0
-            </span>
-            <sup className="text-[1.5rem] text-[#43A047]">+</sup>
-          </div>
-          <div className="sl font-inter text-[0.7rem] font-medium tracking-[0.1em] text-white/38 uppercase">
-            Industry Awards
-          </div>
-        </div>
-      </div> */}
 
       {/* VISION MISSION */}
       <section className="vm bg-[#F7F5F0] px-6 py-20 md:px-16" id="vision">
@@ -674,102 +586,6 @@ const AboutUs = () => {
           </div>
         </div>
       </section>
-
-      {/* TESTIMONIALS */}
-      {/* <section className="testi relative overflow-hidden bg-[#1B2B6B] px-6 py-20 md:px-16">
-        <div className="bg-radial-gradient absolute -top-[200px] -right-[200px] h-[600px] w-[600px] rounded-full from-[rgba(46,125,50,0.12)] to-transparent" />
-        <div className="testi-hd mb-14 flex flex-col items-start justify-between md:flex-row md:items-end">
-          <div>
-            <p className="ey mb-[14px] flex items-center gap-2.5 font-inter text-[0.7rem] font-bold tracking-[0.18em] text-white/30 uppercase">
-              <span className="h-[1.5px] w-6 bg-white/30" />
-              Customer Stories
-            </p>
-            <h2 className="sh font-libre rv translate-y-9 text-[clamp(2rem,3.5vw,3.2rem)] leading-[1.15] font-bold text-white opacity-0 transition-all duration-800">
-              Over 21,000{" "}
-              <em className="text-[#7ed88a] italic not-italic">
-                5-Star Reviews
-              </em>
-            </h2>
-          </div>
-          <p className="testi-sub rv d2 max-w-[220px] translate-y-9 text-left text-[0.88rem] text-white/38 opacity-0 transition-all delay-100 duration-800 md:text-right">
-            Real stories from travellers who trusted us with their most precious
-            moments.
-          </p>
-        </div>
-        <div className="tg grid grid-cols-1 gap-5 md:grid-cols-[1.6fr_1fr]">
-          <div className="tc rv translate-y-9 rounded-2xl border border-white/8 bg-white/5 p-9 opacity-0 transition-all duration-350 duration-800 hover:bg-white/10">
-            <div className="tstars mb-[14px] text-[0.85rem] tracking-[2px] text-[#f4c150]">
-              ★★★★★
-            </div>
-            <p className="tq font-libre mb-6 text-[1.05rem] leading-[1.75] text-white/82 italic">
-              "Horizons didn't just plan our honeymoon — they crafted a story
-              we'll tell for the rest of our lives. Every detail, from the
-              sunrise villa in Bali to the private beach dinner, was absolutely
-              perfect."
-            </p>
-            <div className="ta flex items-center gap-3">
-              <div className="tav2 flex h-[38px] w-[38px] items-center justify-center rounded-full bg-white/10 font-inter text-[0.76rem] font-semibold text-white/60">
-                DM
-              </div>
-              <div>
-                <div className="tan font-inter text-[0.82rem] font-semibold text-white/65">
-                  Deepa & Mahesh
-                </div>
-                <div className="tal text-[0.7rem] text-white/30">
-                  Bangalore, India
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="tr flex flex-col gap-5">
-            <div className="tcm rv d2 translate-y-9 rounded-2xl border border-white/8 bg-white/5 p-6 opacity-0 transition-all delay-100 duration-350 duration-800 hover:bg-white/10">
-              <div className="tstars mb-[14px] text-[0.75rem] text-[#f4c150]">
-                ★★★★★
-              </div>
-              <p className="tq font-libre mb-4 text-[0.88rem] leading-[1.75] text-white/82 italic">
-                "As a solo female traveller, safety was my priority. Horizons
-                made me feel supported every single moment — from landing to
-                departing."
-              </p>
-              <div className="ta flex items-center gap-3">
-                <div className="tav2 flex h-[38px] w-[38px] items-center justify-center rounded-full bg-white/10 font-inter text-[0.76rem] font-semibold text-white/60">
-                  AK
-                </div>
-                <div>
-                  <div className="tan font-inter text-[0.82rem] font-semibold text-white/65">
-                    Anika Kapoor
-                  </div>
-                  <div className="tal text-[0.7rem] text-white/30">
-                    Mumbai, India
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="tcm rv d3 translate-y-9 rounded-2xl border border-white/8 bg-white/5 p-6 opacity-0 transition-all delay-200 duration-350 duration-800 hover:bg-white/10">
-              <div className="tstars mb-[14px] text-[0.75rem] text-[#f4c150]">
-                ★★★★★
-              </div>
-              <p className="tq font-libre mb-4 text-[0.88rem] leading-[1.75] text-white/82 italic">
-                "The Switzerland itinerary was pure magic. Nothing felt generic
-                — it felt like it was made just for us."
-              </p>
-              <div className="ta flex items-center gap-3">
-                <div className="tav2 flex h-[38px] w-[38px] items-center justify-center rounded-full bg-white/10 font-inter text-[0.76rem] font-semibold text-white/60">
-                  RS
-                </div>
-                <div>
-                  <div className="tan font-inter text-[0.82rem] font-semibold text-white/65">
-                    Rajan & Sunita
-                  </div>
-                  <div className="tal text-[0.7rem] text-white/30">
-                    Chennai, India
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section> */}
 
       <style>{`
         @keyframes fsu {
