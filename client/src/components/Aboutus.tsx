@@ -534,9 +534,10 @@ const AboutUs = () => {
               Our Vision
             </h3>
             <p className="text-[0.9rem] leading-[1.8] text-[#5a5a7a]">
-              To be the most trusted travel companion for India's next
-              generation of explorers — making world-class travel accessible,
-              sustainable, and profoundly personal.
+              Udayam International will emerge as India’s most trusted global
+              enterprise by 2040, achieving this through strategic international
+              connectivity and excellence in trade, travel, education,
+              healthcare, tourism, and recruitment.
             </p>
           </div>
           <div className="vc rv d2 relative translate-y-9 overflow-hidden rounded-2xl border border-[#E8E4DC] bg-white p-11 opacity-0 transition-all delay-200 duration-400 duration-800 hover:-translate-y-2 hover:border-[rgba(27,43,107,0.15)] hover:shadow-[0_32px_80px_rgba(27,43,107,0.1)]">
@@ -547,9 +548,11 @@ const AboutUs = () => {
               Our Mission
             </h3>
             <p className="text-[0.9rem] leading-[1.8] text-[#5a5a7a]">
-              To design journeys curated to individual dreams — from budget solo
-              backpacks to luxury escapes — with zero compromise on quality,
-              safety, or soul.
+              Udayam International delivers trusted and compliant end-to-end
+              solutions to individuals and businesses across trade, travel,
+              education, healthcare, tourism, and recruitment, enabling seamless
+              international connectivity through professionalism, integrity, and
+              operational excellence.
             </p>
           </div>
           <div className="vc rv d3 relative translate-y-9 overflow-hidden rounded-2xl border border-[#E8E4DC] bg-white p-11 opacity-0 transition-all delay-300 duration-400 duration-800 hover:-translate-y-2 hover:border-[rgba(27,43,107,0.15)] hover:shadow-[0_32px_80px_rgba(27,43,107,0.1)]">
@@ -673,7 +676,7 @@ const AboutUs = () => {
       </section>
 
       {/* TESTIMONIALS */}
-      <section className="testi relative overflow-hidden bg-[#1B2B6B] px-6 py-20 md:px-16">
+      {/* <section className="testi relative overflow-hidden bg-[#1B2B6B] px-6 py-20 md:px-16">
         <div className="bg-radial-gradient absolute -top-[200px] -right-[200px] h-[600px] w-[600px] rounded-full from-[rgba(46,125,50,0.12)] to-transparent" />
         <div className="testi-hd mb-14 flex flex-col items-start justify-between md:flex-row md:items-end">
           <div>
@@ -766,7 +769,7 @@ const AboutUs = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       <style>{`
         @keyframes fsu {
