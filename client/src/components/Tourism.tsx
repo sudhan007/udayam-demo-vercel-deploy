@@ -2444,12 +2444,9 @@
 // export default Tourism
 
 import React, { useState, useEffect, useRef } from "react"
-import type { Page } from "./Navbar"
 
 // ─── Types ────────────────────────────────────────────────
-interface TourismProps {
-  onNavigate: (page: Page) => void
-}
+
 interface PackageCard {
   id: number
   img: string
@@ -3642,7 +3639,7 @@ export const SecHeader: React.FC<{
 )
 
 // ─── Main Component ───────────────────────────────────────
-const Tourism: React.FC<TourismProps> = ({ onNavigate }) => {
+const Tourism = () => {
   const [search, setSearch] = useState("")
   const [activeType, setActiveType] = useState<
     "all" | "domestic" | "international"

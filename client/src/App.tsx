@@ -87,6 +87,11 @@ import Tourism from "./components/Tourism"
 import MedicalTourism from "./components/Medical"
 import Footer from "./components/Footer"
 import NewsLetter from "./components/NewsLetter"
+import TravelService from "./components/TravelSevice"
+import Trade from "./components/Trade"
+import Education from "./components/Education"
+import Recruitment from "./components/Recruiment"
+import Contact from "./components/Contact"
 
 const ComingSoon = ({ label }: { label: string }) => {
   const navigate = useNavigate()
@@ -139,25 +144,13 @@ function AppShell() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<AboutUs />} />
-          <Route
-            path="/tourism"
-            element={<Tourism onNavigate={(page) => {}} />}
-          />
+          <Route path="/tourism" element={<Tourism />} />
           <Route path="/medical" element={<MedicalTourism />} />
-          <Route
-            path="/travel"
-            element={<ComingSoon label="Travel Services" />}
-          />
-          <Route path="/trade" element={<ComingSoon label="Trade" />} />
-          <Route
-            path="/education"
-            element={<ComingSoon label="Foreign Education" />}
-          />
-          <Route
-            path="/recruitment"
-            element={<ComingSoon label="Recruitment" />}
-          />
-          <Route path="/contact" element={<ComingSoon label="Contact Us" />} />
+          <Route path="/travel" element={<TravelService />} />
+          <Route path="/trade" element={<Trade />} />
+          <Route path="/education" element={<Education />} />
+          <Route path="/recruitment" element={<Recruitment />} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
