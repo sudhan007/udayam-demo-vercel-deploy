@@ -1,6 +1,13 @@
 import React, { useState } from "react"
 import { useNavigate, useLocation } from "react-router-dom"
-import logo from "../assets/home/HomeLogo.jpeg"
+import Homelogo from "../assets/home/HomeLogo.jpeg"
+import TourismLogo from "../assets/TourismLogo.jpeg"
+import MedicalLogo from "../assets/MedicalLogo.jpeg"
+import TradeLogo from "../assets/TradeLogo.jpeg"
+import RecruitmentLogo from "../assets/RecruitmentLogo.jpeg"
+import TravelLogo from "../assets/TravelLogo.jpeg"
+import EducationLogo from "../assets/EducationLogo.jpeg"
+
 import { navItems, pageToPath, type Page } from "@/lib/navData"
 import callIcon from "../assets/Call.svg"
 import mailIcon from "../assets/Email.svg"
@@ -19,6 +26,24 @@ const Navbar: React.FC = () => {
     window.scrollTo({ top: 0, behavior: "smooth" })
     setMenuOpen(false)
   }
+
+  const pageLogos: Partial<Record<Page, string>> = {
+    home: Homelogo,
+    about: Homelogo,
+    tourism: TourismLogo,
+    medical: MedicalLogo,
+    trade: TradeLogo,
+    travel: TravelLogo,
+    recruitment: RecruitmentLogo,
+    education: EducationLogo,
+  }
+
+  const currentPage =
+    (Object.entries(pageToPath).find(
+      ([_, path]) => path === location.pathname
+    )?.[0] as Page) || "home"
+
+  const currentLogo = pageLogos[currentPage] || Homelogo
 
   return (
     <>
@@ -118,13 +143,12 @@ const Navbar: React.FC = () => {
           boxShadow: "0 2px 8px rgba(27,43,107,0.09)",
         }}
       >
-        {/* Logo */}
         <div
           className="flex h-[54px] cursor-pointer items-center gap-2"
           onClick={() => go("home")}
         >
           <img
-            src={logo}
+            src={currentLogo}
             alt="Udayam International"
             className="h-[35px] w-auto object-contain"
             onError={(e) => {
