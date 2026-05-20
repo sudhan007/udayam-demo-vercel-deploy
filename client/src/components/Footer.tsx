@@ -6,7 +6,11 @@ const Footer = () => {
   const navigate = useNavigate()
   return (
     <footer
-      style={{ background: "#0f1a42", paddingTop: 68, paddingBottom: 28 }}
+      style={{
+        background: "#0f1a42",
+        paddingTop: 68,
+        paddingBottom: 28,
+      }}
     >
       <div className="mx-auto max-w-[1280px] px-5 md:px-8 lg:px-10">
         <div
@@ -30,7 +34,7 @@ const Footer = () => {
             </div>
             <p
               className="mb-5 max-w-[280px] text-[13px] leading-[1.75]"
-              style={{ color: "rgba(255,255,255,0.42)" }}
+              style={{ color: "white" }}
             >
               Your trusted partner for travel, medical tourism, foreign
               education, trade, and global recruitment. Connecting lives across
@@ -58,7 +62,7 @@ const Footer = () => {
           <div>
             <h4
               className="mb-4 text-[11px] font-bold tracking-[1.8px] uppercase"
-              style={{ color: "rgba(255,255,255,0.45)" }}
+              style={{ color: "white" }}
             >
               Services
             </h4>
@@ -68,9 +72,7 @@ const Footer = () => {
                   <button
                     onClick={() => navigate(s.page)}
                     className="cursor-pointer border-none bg-transparent text-left text-[13px] transition-colors duration-200"
-                    style={{
-                      color: "rgba(255,255,255,0.42)",
-                    }}
+                    style={{ color: "white" }}
                   >
                     {s.label}
                   </button>
@@ -83,7 +85,7 @@ const Footer = () => {
           <div>
             <h4
               className="mb-4 text-[11px] font-bold tracking-[1.8px] uppercase"
-              style={{ color: "rgba(255,255,255,0.45)" }}
+              style={{ color: "white" }}
             >
               Company
             </h4>
@@ -97,9 +99,7 @@ const Footer = () => {
                   <button
                     onClick={() => navigate(l.page)}
                     className="cursor-pointer border-none bg-transparent text-left text-[13px] transition-colors duration-200"
-                    style={{
-                      color: "rgba(255,255,255,0.42)",
-                    }}
+                    style={{ color: "white" }}
                   >
                     {l.label}
                   </button>
@@ -110,9 +110,7 @@ const Footer = () => {
                   <a
                     href="#"
                     className="text-[13px] transition-colors duration-200"
-                    style={{
-                      color: "rgba(255,255,255,0.42)",
-                    }}
+                    style={{ color: "white" }}
                   >
                     {l}
                   </a>
@@ -125,18 +123,21 @@ const Footer = () => {
           <div>
             <h4
               className="mb-4 text-[11px] font-bold tracking-[1.8px] uppercase"
-              style={{ color: "rgba(255,255,255,0.45)" }}
+              style={{ color: "white" }}
             >
               Contact Us
             </h4>
             <div
               className="font-inter text-[13px] leading-[2.1]"
-              style={{ color: "rgba(255,255,255,0.42)" }}
+              style={{ color: "white" }}
             >
-              <div> Chennai, Tamil Nadu, India</div>
-              <div> +91 98765 43210</div>
-              <div> info@udayaminternational.com</div>
-              <div> Mon–Sat: 9AM–7PM</div>
+              <div>
+                {" "}
+                No: 6 - 178 / 1 , Kaniyaanvilai , Palliyadi Post , Kanyakumari
+                Disrtict , Tamilnadu , India – 629169.
+              </div>
+              <div> +91 72997 71111</div>
+              <div> 04651 - 225 236</div>
             </div>
           </div>
         </div>
@@ -145,16 +146,13 @@ const Footer = () => {
         <div className="flex flex-col items-center justify-between gap-4 pt-[22px] md:flex-row">
           <div
             className="text-center text-[12px] md:text-left"
-            style={{ color: "rgba(255,255,255,0.28)" }}
+            style={{ color: "white" }}
           >
             © 2026 Udayam International. All rights reserved. | Trade · Travel ·
             Trust
           </div>
           <div className="flex items-center gap-[7px]">
-            <span
-              className="mr-1.5 text-[12px]"
-              style={{ color: "rgba(255,255,255,0.3)" }}
-            >
+            <span className="mr-1.5 text-[12px]" style={{ color: "white" }}>
               We Accept:
             </span>
             {["VISA", "MC", "UPI", "EMI"].map((p) => (
@@ -163,7 +161,7 @@ const Footer = () => {
                 className="rounded-[5px] px-[11px] py-[3px] text-[11px] font-bold tracking-[0.3px]"
                 style={{
                   background: "rgba(255,255,255,0.08)",
-                  color: "rgba(255,255,255,0.5)",
+                  color: "white",
                 }}
               >
                 {p}

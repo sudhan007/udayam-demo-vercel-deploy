@@ -856,7 +856,7 @@ export const PCard: React.FC<{ card: PackageCard; listView: boolean }> = ({
           })}
         </div>
         {/* Wishlist */}
-        <button
+        {/* <button
           onClick={() => setWished((w) => !w)}
           style={{
             position: "absolute",
@@ -892,7 +892,7 @@ export const PCard: React.FC<{ card: PackageCard; listView: boolean }> = ({
           >
             {wished ? "♥" : "♡"}
           </span>
-        </button>
+        </button> */}
         {/* Price on image */}
         <div
           style={{
@@ -988,7 +988,7 @@ export const PCard: React.FC<{ card: PackageCard; listView: boolean }> = ({
             👥 {card.pax}
           </span>
         </div>
-        <div
+        {/* <div
           style={{
             display: "flex",
             alignItems: "center",
@@ -1014,7 +1014,7 @@ export const PCard: React.FC<{ card: PackageCard; listView: boolean }> = ({
           <span style={{ fontFamily: f, fontSize: ".72rem", color: "#9494b0" }}>
             {card.reviews}
           </span>
-        </div>
+        </div> */}
         <div
           style={{
             display: "flex",

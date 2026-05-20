@@ -396,7 +396,7 @@ const Services: React.FC = () => {
   })
 
   return (
-    <div className="mx-auto max-w-[1280px] overflow-x-hidden rounded-xl px-5 py-14 text-[#1a1a2e] md:px-8 lg:px-10">
+    <div className="mx-auto max-w-[1280px] overflow-x-hidden rounded-xl px-5 py-7 text-[#1a1a2e] md:px-0 md:py-14">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Raleway:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
         .font-serif { font-family: 'Libre Baskerville', serif; }

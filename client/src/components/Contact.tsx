@@ -5,23 +5,24 @@ const contactInfo = [
   {
     icon: "📍",
     label: "Office Address",
-    value: "No. 12, Anna Salai, Chennai - 600 002\nTamil Nadu, India",
+    value:
+      "No: 6 - 178 / 1 , Kaniyaanvilai , Palliyadi Post , Kanyakumari Disrtict , Tamilnadu , India – 629 169.",
   },
   {
     icon: "📞",
     label: "Phone",
-    value: "+91 98765 43210\n+91 44 2234 5678",
+    value: "+ 91 72997 71111\n+ 04651 - 225 236",
   },
   {
     icon: "✉️",
     label: "Email",
     value: "info@udayaminternational.com\nsupport@udayaminternational.com",
   },
-  {
-    icon: "🕐",
-    label: "Working Hours",
-    value: "Mon–Sat: 9:00 AM – 7:00 PM\nSunday: 10:00 AM – 2:00 PM",
-  },
+  // {
+  //   icon: "🕐",
+  //   label: "Working Hours",
+  //   value: "Mon–Sat: 9:00 AM – 7:00 PM\nSunday: 10:00 AM – 2:00 PM",
+  // },
 ]
 
 export default function Contact() {

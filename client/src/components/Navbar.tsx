@@ -48,7 +48,7 @@ const Navbar: React.FC = () => {
   return (
     <>
       <div
-        className="hidden flex-col items-center justify-between gap-3 px-4 py-2 md:flex md:flex-row md:px-8 xl:px-10"
+        className="hidden flex-col items-center justify-between gap-3 px-4 py-2 md:flex md:flex-row md:px-10"
         style={{
           background: "linear-gradient(90deg, #0F1B47, #1B2B6B, #0F1B47)",
         }}
@@ -122,22 +122,22 @@ const Navbar: React.FC = () => {
         <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 font-inter text-[13px] text-white md:justify-end">
           <div className="flex items-center gap-2 opacity-90">
             <img src={callIcon} />
-            <span>+1 (555) 123-4567</span>
+            <span>+91 72997 71111</span>
           </div>
           <div className="flex items-center gap-2 opacity-90">
             <img src={mailIcon} />
-            <span>info@example.com</span>
+            <span>info@udayaminternational.com</span>
           </div>
           <div className="hidden items-center gap-2 opacity-90 lg:flex">
             <img src={locationIcon} />
-            <span>123 Main Street, Suite 62704</span>
+            <span>Kaniyaanvilai , Kanyakumari</span>
           </div>
         </div>
       </div>
 
       {/* ── NAVBAR ── */}
       <nav
-        className="sticky top-0 z-[999] flex h-[72px] items-center justify-between bg-white px-10"
+        className="sticky top-0 z-[999] flex h-[72px] items-center justify-between bg-white px-1 md:px-8"
         style={{
           borderBottom: "1px solid #DDE3F0",
           boxShadow: "0 2px 8px rgba(27,43,107,0.09)",
@@ -150,16 +150,18 @@ const Navbar: React.FC = () => {
           <img
             src={currentLogo}
             alt="Udayam International"
-            className="h-[35px] w-auto object-contain"
+            className={` ${currentLogo === Homelogo ? "h-[35px]" : "h-[60px] md:h-[70px]"} w-auto object-contain`}
             onError={(e) => {
               ;(e.currentTarget as HTMLImageElement).style.display = "none"
               const sib = e.currentTarget.nextSibling as HTMLElement
               if (sib) sib.style.display = "block"
             }}
           />
-          <span className="text-[20px] font-bold text-[#0D1B3E]">
-            Udayam <span style={{ color: "#1B2B6B" }}>International</span>
-          </span>
+          {currentLogo === Homelogo && (
+            <span className="text-[20px] font-bold text-[#0D1B3E]">
+              Udayam <span style={{ color: "#1B2B6B" }}>International</span>
+            </span>
+          )}
         </div>
 
         {/* Desktop links */}

@@ -367,7 +367,7 @@ export default function TravelService() {
                     className={inputCls}
                   />
                 </FormField>
-                <FormField label="Service Type" className="mb-4">
+                {/* <FormField label="Service Type" className="mb-4">
                   <select
                     name="service"
                     value={form.service}
@@ -384,7 +384,7 @@ export default function TravelService() {
                       <option key={s}>{s}</option>
                     ))}
                   </select>
-                </FormField>
+                </FormField> */}
                 <FormField label="Destination" className="mb-4">
                   <input
                     name="destination"
@@ -402,7 +402,7 @@ export default function TravelService() {
                     onChange={handleChange}
                     rows={3}
                     placeholder="Travel requirements…"
-                    className={inputCls + " resize-y"}
+                    className={inputCls + " resize-none"}
                   />
                 </FormField>
                 <button
