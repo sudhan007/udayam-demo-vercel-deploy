@@ -10,6 +10,7 @@ import {
   whyUs,
 } from "@/lib/homeData"
 import Services from "./Services"
+import UdayamEcosystem from "./EcoSystem"
 
 export const SectionTitle: React.FC<{
   children: React.ReactNode
@@ -211,19 +212,18 @@ const Home = () => {
           ))}
         </div>
       </div>
-
+      <UdayamEcosystem />
       {/* ══ DESTINATIONS CAROUSEL ══ */}
-      <DestinationsSection />
+      {/* <DestinationsSection /> */}
 
       {/* ══ SERVICES ══ */}
 
-      <Services />
+      {/* <Services /> */}
 
       {/* ══ TOUR CARDS ══ */}
 
-      <section className="bg-white py-14">
+      {/* <section className="bg-white py-14">
         <div className="mx-auto max-w-7xl px-5 md:px-8 lg:px-10">
-          {/* Header */}
           <div className="mb-10 flex flex-wrap items-end justify-center gap-4">
             <div>
               <h2 className="text-4xl font-bold text-[#0D1B3E] md:text-5xl">
@@ -231,15 +231,9 @@ const Home = () => {
               </h2>
             </div>
 
-            {/* <button
-              onClick={() => onNavigate("tourism")}
-              className="inline-flex items-center gap-2 rounded-full border border-[#E8ECFA] bg-[#E8ECFA] px-6 py-2.5 font-inter text-sm font-semibold text-[#1B2B6B] transition-all hover:border-[#1B2B6B] hover:bg-[#1B2B6B] hover:text-white"
-            >
-              All Packages →
-            </button> */}
+         
           </div>
 
-          {/* Category Pills */}
           <div className="mb-10 flex flex-wrap justify-center gap-3">
             {catPills.map((pill, i) => (
               <button
@@ -256,10 +250,9 @@ const Home = () => {
             ))}
           </div>
 
-          {/* Packages Grid */}
           <TravelCards />
         </div>
-      </section>
+      </section> */}
 
       {/* ══ STATS ══ */}
 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react"
+import { ToursCursor } from "./cursor/Tourscursor"
 
 // ─── Types ────────────────────────────────────────────────
 
@@ -1323,7 +1324,12 @@ const Tourism = () => {
         href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Raleway:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap"
         rel="stylesheet"
       />
+      <ToursCursor />
+
       <style>{`
+      * {
+  cursor: none !important;
+}
         @keyframes fsu{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
         @keyframes mqscroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
         .t-h1-anim{opacity:0;animation:fsu 1s .35s forwards}

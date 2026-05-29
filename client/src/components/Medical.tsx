@@ -7,6 +7,7 @@ import {
   SecHeader,
   tripTypes,
 } from "./Tourism"
+import { MedicalCursor } from "./cursor/Medicalcursor"
 
 // ─── Types ────────────────────────────────────────────────
 interface TreatmentCard {
@@ -972,6 +973,19 @@ const MedicalTourism: React.FC = () => {
   return (
     <>
       <style>{`
+      * {
+  cursor: none !important;
+}
+  @keyframes medPulse {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2.8);
+    opacity: 0;
+  }
+}
         :root {
           --teal:#007A6E; --teal-mid:#009688; --teal-dim:#005A52;
           --teal-glow:rgba(0,122,110,.12); --teal-pale:rgba(0,122,110,.07);
@@ -1026,7 +1040,7 @@ const MedicalTourism: React.FC = () => {
         @media(min-width:900px){.mob-filter-bar{display:none!important}}
         @media(max-width:899px){.tourism-sidebar{display:none!important}}
       `}</style>
-
+      <MedicalCursor /> {/* ← just this line */}
       <div className="med-wrap">
         {/* ─── HERO ─── */}
         <section className="hero relative flex h-screen min-h-[700px] flex-col justify-end overflow-hidden px-4 pb-[88px] md:px-16">

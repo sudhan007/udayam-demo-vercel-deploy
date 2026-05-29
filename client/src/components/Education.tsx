@@ -1,6 +1,7 @@
 import React from "react"
 import { useState } from "react"
 import education from "../assets/Education.jpeg"
+import { EducationCursor } from "./cursor/Educationcursor"
 
 const destinations = [
   {
@@ -90,6 +91,9 @@ export default function Education() {
   return (
     <>
       <style>{`
+      * {
+  cursor: none !important;
+}
         @keyframes fsu{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
         @keyframes mqscroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
         .t-h1-anim{opacity:0;animation:fsu 1s .35s forwards}
@@ -100,6 +104,7 @@ export default function Education() {
     
     
       `}</style>
+      <EducationCursor /> {/* ← just this line */}
       <div className="bg-white font-[Outfit,sans-serif] text-[#0D1B3E]">
         {/* PAGE HERO */}
         <section
