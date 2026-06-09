@@ -32,9 +32,7 @@ export const SectionTitle: React.FC<{
 
 const Home = () => {
   const [slide, setSlide] = useState(0)
-  const [activeCat, setActiveCat] = useState(0)
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
-  const navigate = useNavigate()
 
   const gSlide = useCallback((n: number) => {
     setSlide((n + heroSlides.length) % heroSlides.length)
@@ -50,7 +48,7 @@ const Home = () => {
   return (
     <div>
       {/* ══ HERO CAROUSEL ══ */}
-      <div
+      {/* <div
         className="relative overflow-hidden"
         style={{
           height: "calc(100vh - 108px)",
@@ -69,7 +67,6 @@ const Home = () => {
             }}
           >
             <img src={s.img} alt="" className="h-full w-full object-cover" />
-            {/* overlay */}
             <div
               className="absolute inset-0"
               style={{
@@ -77,7 +74,6 @@ const Home = () => {
                   "linear-gradient(105deg, rgba(11,20,60,.82) 0%, rgba(11,20,60,.5) 55%, rgba(11,20,60,.15) 100%)",
               }}
             />
-            {/* content */}
             <div className="absolute top-1/2 left-[9%] z-[3] max-w-[600px] -translate-y-1/2">
               <div
                 className="mb-[18px] inline-flex items-center gap-2 text-[12px] font-bold tracking-[2px] uppercase"
@@ -144,27 +140,7 @@ const Home = () => {
           </div>
         ))}
 
-        {/* Prev / Next */}
-        {/* {[
-          { dir: "prev", ch: "←" },
-          { dir: "next", ch: "→" },
-        ].map(({ dir, ch }) => (
-          <button
-            key={dir}
-            onClick={() => gSlide(dir === "prev" ? slide - 1 : slide + 1)}
-            className="absolute top-1/2 z-10 flex h-[50px] w-[50px] -translate-y-1/2 cursor-pointer items-center justify-center rounded-full text-[22px] text-white transition-all duration-200"
-            style={{
-              [dir === "prev" ? "left" : "right"]: 24,
-              background: "rgba(255,255,255,0.15)",
-              backdropFilter: "blur(8px)",
-              border: "1.5px solid rgba(255,255,255,0.3)",
-            }}
-          >
-            {ch}
-          </button>
-        ))} */}
-
-        {/* Dots */}
+     
         <div className="absolute bottom-7 left-1/2 z-10 flex -translate-x-1/2 gap-2">
           {heroSlides.map((_, i) => (
             <button
@@ -180,7 +156,6 @@ const Home = () => {
           ))}
         </div>
 
-        {/* Slide number */}
         <div
           className="absolute right-10 bottom-7 z-10 text-[13px] font-semibold"
           style={{ color: "rgba(255,255,255,0.6)" }}
@@ -189,7 +164,6 @@ const Home = () => {
           {heroSlides.length}
         </div>
 
-        {/* Thumbnail sidebar */}
         <div className="absolute top-1/2 right-7 z-10 hidden -translate-y-1/2 flex-col gap-2.5 lg:flex">
           {heroSlides.map((s, i) => (
             <button
@@ -211,7 +185,7 @@ const Home = () => {
             </button>
           ))}
         </div>
-      </div>
+      </div> */}
       <UdayamEcosystem />
       {/* ══ DESTINATIONS CAROUSEL ══ */}
       {/* <DestinationsSection /> */}

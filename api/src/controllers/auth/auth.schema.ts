@@ -1,13 +1,11 @@
 import { RoleType } from "@types";
 import { t } from "elysia";
 
-
-
 const adminModel = t.Object({
     email: t.String({ format: "email" }),
     password: t.String(),
     role: t.Optional(t.String({ default: RoleType.ADMIN })),
-    isActive: t.Optional(t.Boolean({ default: true })),
+    active: t.Optional(t.Boolean({ default: true })),
 })
 
 export const createAdminDto = {

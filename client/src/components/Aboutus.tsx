@@ -557,27 +557,27 @@ const AboutUs = () => {
               {[
                 {
                   title: "Integrity Without Compromise",
-                  desc: "We uphold honesty, transparency, and ethical practices in every decision and action.",
+                  desc: "We always act honestly and ethically in everything we do.",
                   delay: "d1",
                 },
                 {
                   title: "Compliance & Accountability",
-                  desc: "We adhere to regulations, policies, and take full responsibility for our commitments.",
+                  desc: "We follow all rules and take full responsibility for our work.",
                   delay: "d2",
                 },
                 {
                   title: "Customer-Centric Excellence",
-                  desc: "We prioritize customer needs and consistently deliver exceptional service and value.",
+                  desc: "We put our customers first and deliver quality service every time.",
                   delay: "d3",
                 },
                 {
                   title: "Mutual Respect & Team Unity",
-                  desc: "We foster a collaborative environment built on respect, trust, and shared success.",
+                  desc: "We treat everyone with respect and work together as one team.",
                   delay: "d4",
                 },
                 {
                   title: "Reliability & Measurable Results",
-                  desc: "Celebrated two decades with a community of 48,000+ travellers across 120+ countries worldwide.",
+                  desc: "We keep our promises and prove our success through clear results.",
                   delay: "d5",
                 },
               ].map((item, idx) => (

@@ -32,7 +32,7 @@ function RootComponent() {
     queryKey: ['session'],
     queryFn: async () => {
       try {
-        const adminResponse = await _axios.get('/admin/auth/session')
+        const adminResponse = await _axios.get('/admin-auth/session')
         return { data: adminResponse.data.data, userType: 'admin' as const }
       } catch (adminError) {
         console.log(adminError)

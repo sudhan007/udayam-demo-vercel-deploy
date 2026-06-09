@@ -426,7 +426,7 @@ function LoginPage() {
       email: string
       password: string
     }) =>
-      _axios.post('/admin/auth/login', { email, password }).then((r) => r.data),
+      _axios.post('/admin-auth/login', { email, password }).then((r) => r.data),
 
     onSuccess: (data) => {
       if (data.ok) {
@@ -472,13 +472,13 @@ function LoginPage() {
 
       <div className="relative w-full max-w-md z-10">
         {/* Brand / Logo Section */}
-        <div className="flex flex-col items-center mb-10">
+        {/* <div className="flex flex-col items-center mb-10">
           <img
             src="/KPLogo.png"
             className="w-24 h-24 mb-5 object-contain"
             alt="Udyam Tourist"
           />
-        </div>
+        </div> */}
 
         {/* Login Card */}
         <div
@@ -521,13 +521,10 @@ function LoginPage() {
 
             {!success && (
               <form onSubmit={handleSubmit} className="space-y-7">
-                <div className="text-center mb-2">
+                <div className="text-center mb-5">
                   <h2 className="text-white text-2xl font-semibold">
                     Admin Portal
                   </h2>
-                  <p className="text-slate-400 text-sm mt-1">
-                    Sign in to manage tours &amp; bookings
-                  </p>
                 </div>
 
                 <div className="space-y-5">

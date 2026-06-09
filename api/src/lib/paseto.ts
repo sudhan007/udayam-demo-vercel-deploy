@@ -1,3 +1,4 @@
+import { APP_CONSTANTS } from "constant";
 import { V3 as PS } from "paseto";
 
 export const generatePasetoSecret = async () => {
@@ -7,9 +8,9 @@ export const generatePasetoSecret = async () => {
     return key
 }
 
-const PASETO_KEY: string | undefined = process.env.PASETO_SECRET_KEY
-
+const PASETO_KEY: string | undefined = APP_CONSTANTS.PASETO_ADMIN_SECRET_KEY
 export const EncodePaseto = async (payload: Record<string, string>) => {
+
     try {
         if (PASETO_KEY) {
             return await PS.encrypt(payload, PASETO_KEY);

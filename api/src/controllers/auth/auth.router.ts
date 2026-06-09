@@ -1,6 +1,7 @@
 import { Elysia } from "elysia";
 import { createAdmin, adminSession, loginAdmin, logoutAdmin } from "./auth.service";
 import { createAdminDto, loginAdminDto, logoutDto, sessionDto } from "./auth.schema";
+import { adminOnly } from "@lib/authGuard";
 
 export const adminAuthController = new Elysia({
     prefix: '/admin-auth',
@@ -8,7 +9,7 @@ export const adminAuthController = new Elysia({
         tags: ["Admin Authentication"]
     }
 })
-    .post("/create", createAdmin, createAdminDto)
-    .post("/login", loginAdmin, loginAdminDto)
-    .post("/logout", logoutAdmin, logoutDto)
-    .get("/session", adminSession, sessionDto)
+    .post("/create", createAdmin, { ...createAdminDto, beforeHandle: adminOnly })
+    .post("/login", loginAdmin, { ...loginAdminDto, beforeHandle: adminOnly })
+    .post("/logout", logoutAdmin, { ...logoutDto, beforeHandle: adminOnly })
+    .get("/session", adminSession, { ...sessionDto, beforeHandle: adminOnly })

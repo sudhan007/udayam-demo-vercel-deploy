@@ -205,41 +205,6 @@ import Recruitment from "./components/Recruiment"
 import Contact from "./components/Contact"
 import IntroScreen from "./components/Introscreen"
 
-const ComingSoon = ({ label }: { label: string }) => {
-  const navigate = useNavigate()
-  return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ background: "#F7F9FC" }}
-    >
-      <div className="px-8 text-center">
-        <p
-          className="mb-4 text-[11px] font-bold tracking-[2.5px] uppercase"
-          style={{ color: "#2E7D32" }}
-        >
-          Coming Soon
-        </p>
-        <h1
-          className="mb-8 font-extrabold tracking-[-0.5px]"
-          style={{ fontSize: "clamp(32px,4vw,52px)", color: "#0D1B3E" }}
-        >
-          {label}
-        </h1>
-        <button
-          onClick={() => navigate("/")}
-          className="cursor-pointer rounded-full border-none px-9 py-[13px] text-[14px] font-bold text-white transition-all duration-200 hover:opacity-90"
-          style={{
-            background: "linear-gradient(135deg, #388E3C, #43A047)",
-            boxShadow: "0 6px 24px rgba(46,125,50,0.45)",
-          }}
-        >
-          ← Back to Home
-        </button>
-      </div>
-    </div>
-  )
-}
-
 export function App() {
   const [showIntro, setShowIntro] = useState(true)
 

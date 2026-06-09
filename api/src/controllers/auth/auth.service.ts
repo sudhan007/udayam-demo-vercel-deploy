@@ -24,7 +24,7 @@ export const createAdmin = async (ctx: Context<{ body: CreateAdminSchema }>) => 
             email,
             password: hashedPassword,
             role: RoleType.ADMIN,
-            isActive: true,
+            active: true,
             createdAt: new Date(),
             updatedAt: new Date()
         });
@@ -128,7 +128,7 @@ export const adminSession = async (ctx: Context) => {
 
         const admin = await AdminModel.findById(payload.id).select("-password");
 
-        if (!admin || !admin.isActive) {
+        if (!admin || !admin.active) {
             set.status = 401;
             return { message: "Unauthorized" };
         }

@@ -2,30 +2,32 @@ import { Schema, model } from "mongoose"
 
 interface Iadmin {
     name: string;
-    mobileNumber: string;
+    email: string;
+    password: string;
+    role: string;
     active: boolean;
-    fcmToken?: string;
-    profileImage?: string
 }
 
 const adminSchema = new Schema<Iadmin>({
     name: {
         type: String,
     },
-    mobileNumber: {
+    email: {
         type: String,
         required: true
+    },
+    password: {
+        type: String,
+        required: true
+    },
+    role: {
+        type: String,
+        default: "ADMIN"
     },
     active: {
         type: Boolean,
         default: true
     },
-    fcmToken: {
-        type: String
-    },
-    profileImage: {
-        type: String
-    }
 }, { timestamps: true })
 
 adminSchema.index({ email: 1 }, { unique: true })

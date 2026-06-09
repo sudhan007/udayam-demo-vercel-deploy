@@ -9,16 +9,16 @@ export function NotFound() {
       className="min-h-[95dvh] flex items-center justify-center p-5"
       style={{
         background:
-          'linear-gradient(135deg, #0a1f22 0%, #0d2b2e 50%, #112f2f 100%)',
+          'linear-gradient(135deg, #0f172a 0%, #1e2937 50%, #0f172a 100%)',
       }}
     >
-      {/* Subtle gold ring glow behind the 404 */}
+      {/* Subtle accent glow */}
       <div
-        className="absolute w-72 h-72 rounded-full pointer-events-none"
+        className="absolute w-80 h-80 rounded-full pointer-events-none"
         style={{
           background:
-            'radial-gradient(circle, rgba(201,162,39,0.12) 0%, transparent 70%)',
-          filter: 'blur(40px)',
+            'radial-gradient(circle, rgba(245, 158, 11, 0.15) 0%, transparent 70%)',
+          filter: 'blur(50px)',
         }}
       />
 
@@ -28,45 +28,46 @@ export function NotFound() {
           className="text-[10rem] leading-none font-black select-none tracking-tighter"
           style={{
             color: 'transparent',
-            WebkitTextStroke: '2px rgba(201,162,39,0.25)',
+            WebkitTextStroke: '2px rgba(245, 158, 11, 0.25)',
           }}
         >
           404
         </h1>
 
-        {/* Gold divider line */}
+        {/* Gold/Amber divider */}
         <div
-          className="mx-auto h-px w-24"
+          className="mx-auto h-px w-28"
           style={{
             background:
-              'linear-gradient(90deg, transparent, #c9a227, transparent)',
+              'linear-gradient(90deg, transparent, #f59e0b, transparent)',
           }}
         />
 
-        {/* Copy */}
+        {/* Content */}
         <div className="space-y-3">
           <p className="text-3xl font-bold text-white tracking-wide">
             Page Not Found
           </p>
           <p
             className="text-base max-w-sm mx-auto leading-relaxed"
-            style={{ color: 'rgba(201,162,39,0.7)' }}
+            style={{ color: 'rgba(245, 158, 11, 0.75)' }}
           >
             The page you're looking for doesn't exist or has been moved. Let's
-            get you back on track.
+            get you back to exploring amazing destinations.
           </p>
         </div>
 
-        {/* Actions */}
+        {/* Action Buttons */}
         <div className="flex gap-3 justify-center flex-wrap">
           <Button
             asChild
             size="lg"
-            className="gap-2 font-semibold text-sm px-6"
+            className="gap-2 font-semibold text-sm px-8 py-6 rounded-xl"
             style={{
-              background: '#c9a227',
-              color: '#1a1a1a',
+              background: '#f59e0b',
+              color: '#0f172a',
               border: 'none',
+              fontWeight: 600,
             }}
           >
             <Link to="/">
@@ -79,16 +80,16 @@ export function NotFound() {
             asChild
             variant="outline"
             size="lg"
-            className="gap-2 font-semibold text-sm px-6"
+            className="gap-2 font-semibold text-sm px-8 py-6 rounded-xl"
             style={{
               background: 'transparent',
-              border: '1px solid rgba(201,162,39,0.4)',
-              color: 'rgba(255,255,255,0.8)',
+              border: '1px solid rgba(245, 158, 11, 0.5)',
+              color: '#e2e8f0',
             }}
           >
             <Link to="/">
               <Home className="h-4 w-4" />
-              Home
+              Back to Home
             </Link>
           </Button>
         </div>

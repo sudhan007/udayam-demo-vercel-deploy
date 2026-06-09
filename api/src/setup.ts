@@ -1,11 +1,12 @@
 import cors from "@elysiajs/cors";
 import { swagger } from "@elysiajs/swagger";
 import { logger } from "@rasla/logify";
+import { APP_CONSTANTS } from "constant";
 import { BaseRouter } from "controllers/routes";
 import { Elysia } from "elysia";
 import mongoose from "mongoose";
 
-const URL = process.env.DB_URL;
+const URL = APP_CONSTANTS.DB_URL
 
 try {
     await mongoose.connect(URL as string, {
@@ -24,7 +25,8 @@ app.use(cors());
 
 app.use(
     swagger({
-        path: isProd ? "/docs" : "/api/docs",
+        // path: isProd ? "/docs" : "/api/docs",
+        path: "/docs",
         exclude: ["/docs", "/docs/json"],
         theme: "dark",
         documentation: {
