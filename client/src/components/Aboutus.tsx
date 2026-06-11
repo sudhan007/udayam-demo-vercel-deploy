@@ -357,9 +357,9 @@ const AboutUs = () => {
           <div className="ir-overlay absolute inset-0 bg-gradient-to-r from-[rgba(247,245,240,0.15)] to-transparent" />
 
           {/* Top Tag - Responsive */}
-          <div className="ir-tag absolute top-6 right-6 rounded-full bg-orange-500 px-5 py-2.5 font-inter text-[0.7rem] font-semibold tracking-[0.06em] text-white backdrop-blur-[8px] hover:bg-orange-600 sm:top-8 sm:right-8 sm:text-[0.72rem]">
+          {/* <div className="ir-tag absolute top-6 right-6 rounded-full bg-orange-500 px-5 py-2.5 font-inter text-[0.7rem] font-semibold tracking-[0.06em] text-white backdrop-blur-[8px] hover:bg-orange-600 sm:top-8 sm:right-8 sm:text-[0.72rem]">
             ✦ Est. 2025
-          </div>
+          </div> */}
 
           {/* Bottom Badge - Responsive */}
           {/* <div className="ir-badge absolute bottom-8 left-4 min-w-[130px] rounded-2xl bg-white px-6 py-5 text-center shadow-[0_20px_60px_rgba(27,43,107,0.15)] sm:left-6 sm:min-w-[140px] sm:py-[22px] md:left-8 lg:-left-7">
@@ -606,16 +606,14 @@ const AboutUs = () => {
               ))}
             </div>
           </div>
-          <div className="st-imgs rvr relative hidden h-[600px] opacity-0 transition-all duration-800 md:mt-16 md:block md:translate-x-9">
-            <div className="si1 absolute top-0 left-0 z-[1] h-[80%] w-[72%] overflow-hidden rounded-2xl">
-              <img
+          <div className="st-imgs rvr relative hidden h-[600px] opacity-0 transition-all duration-800 md:mt-16 md:block lg:-translate-x-16">
+            <div className="si1 lg-left-16 absolute top-0 left-0 z-[1] h-[80%] w-[72%] overflow-hidden rounded-2xl">
+              {/* <img
                 src={roadImg}
                 // src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=800&auto=format&fit=crop&q=80"
                 alt="Journey"
-                className="h-full w-full object-cover"
-              />
-            </div>
-            <div className="si2 absolute right-0 bottom-0 z-[2] h-[55%] w-[55%] overflow-hidden rounded-2xl shadow-[0_20px_60px_rgba(27,43,107,0.15)]">
+                className="h-full w-full rounded-2xl"
+              /> */}
               <img
                 // src="https://images.unsplash.com/photo-1488085061387-422e29b40080?w=600&auto=format&fit=crop&q=80"
                 src="https://plus.unsplash.com/premium_photo-1726754607013-3cb6a7f1c1a8?q=80&w=1427&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
@@ -623,16 +621,14 @@ const AboutUs = () => {
                 className="h-full w-full object-cover"
               />
             </div>
-            {/* <div className="si3 absolute top-[58%] left-1/2 z-[3] min-w-[140px] -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-[#1B2B6B] px-7 py-[22px] text-center shadow-[0_16px_48px_rgba(27,43,107,0.25)]">
-              <div className="si3-n font-libre text-3xl font-bold text-white">
-                20+
-              </div>
-              <div className="si3-t mt-1 font-inter text-[0.62rem] tracking-[0.1em] text-white/45 uppercase">
-                Years of
-                <br />
-                Wanderlust
-              </div>
-            </div> */}
+            <div className="si2 absolute right-0 bottom-0 z-[2] h-[55%] w-[55%] overflow-hidden rounded-2xl shadow-[0_20px_60px_rgba(27,43,107,0.15)]">
+              <img
+                src={roadImg}
+                // src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=800&auto=format&fit=crop&q=80"
+                alt="Journey"
+                className="h-full w-full rounded-2xl"
+              />
+            </div>
           </div>
         </div>
       </section>
