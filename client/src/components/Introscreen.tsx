@@ -251,12 +251,12 @@ export default function IntroScreen({ onComplete }: IntroScreenProps) {
         >
           {/* Brand Name - Slow fade in */}
           <h1
+            className="text-base tracking-[6px] md:text-5xl md:tracking-[12px]"
             style={{
               fontFamily: "'Georgia', 'Times New Roman', serif",
-              fontSize: "clamp(30px, 6vw, 58px)",
+              // fontSize: "clamp(30px, 6vw, 58px)",
               fontWeight: 400,
               color: "#c9a96e",
-              letterSpacing: "12px",
               textTransform: "uppercase",
               margin: 0,
               textAlign: "center",

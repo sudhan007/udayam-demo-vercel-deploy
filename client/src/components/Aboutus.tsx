@@ -606,7 +606,7 @@ const AboutUs = () => {
               ))}
             </div>
           </div>
-          <div className="st-imgs rvr relative h-[600px] opacity-0 transition-all duration-800 md:mt-16 md:translate-x-9">
+          <div className="st-imgs rvr relative hidden h-[600px] opacity-0 transition-all duration-800 md:mt-16 md:block md:translate-x-9">
             <div className="si1 absolute top-0 left-0 z-[1] h-[80%] w-[72%] overflow-hidden rounded-2xl">
               <img
                 src={roadImg}
