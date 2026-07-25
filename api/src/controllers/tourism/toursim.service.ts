@@ -2,6 +2,9 @@ import { Context } from "elysia"
 import { CreateTourismSchema, UpdateTourismSchema, GetTourismQuery } from "./tourism.schema"
 import { deleteFile, saveFile } from "@lib/file"
 import { DurationCategory, TourismModel } from "@models/tourism.model"
+import { PaymentModel } from "@models/payment.model"
+import { UserModel } from "@models/user.model"
+import { BookingModel } from "@models/booking.model"
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -209,28 +212,81 @@ export const getTourismDashboardStats = async (ctx: Context) => {
     const { set } = ctx
 
     try {
+        // 1. Fetch KPI metrics
         const [
-            totalPackages,
-            domesticPackages,
-            internationalPackages,
-            activePackages,
-            inactivePackages
+            totalBookings,
+            revenueResult,
+            totalUsers,
+            activePackages
         ] = await Promise.all([
-            TourismModel.countDocuments(),
-            TourismModel.countDocuments({ packageType: "DOMESTIC" }),
-            TourismModel.countDocuments({ packageType: "INTERNATIONAL" }),
-            TourismModel.countDocuments({ isActive: true }),
-            TourismModel.countDocuments({ isActive: false })
+            PaymentModel.countDocuments({ status: "SUCCESS" }),
+            PaymentModel.aggregate([
+                { $match: { status: "SUCCESS" } },
+                { $group: { _id: null, total: { $sum: "$amount" } } }
+            ]),
+            UserModel.countDocuments(),
+            TourismModel.countDocuments({ isActive: true })
         ])
+
+        const totalRevenue = revenueResult[0]?.total || 0
+
+        // 2. Fetch packages categories for pie chart matching
+        const domesticPackages = await TourismModel.find({ packageType: "DOMESTIC" }).select("_id").lean()
+        const domesticIds = domesticPackages.map(p => p._id)
+
+        const internationalPackages = await TourismModel.find({ packageType: "INTERNATIONAL" }).select("_id").lean()
+        const internationalIds = internationalPackages.map(p => p._id)
+
+        // 3. Count successful bookings by type/category
+        const [domesticCount, internationalCount, standardCount, customizedCount] = await Promise.all([
+            BookingModel.countDocuments({
+                packageId: { $in: domesticIds },
+                $or: [
+                    { bookingType: "STANDARD", status: { $in: ["PAYMENT_SUCCESS", "BOOKED", "CONFIRMED", "TRAVEL_STARTED", "COMPLETED"] } },
+                    { bookingType: "CUSTOMIZED", status: { $in: ["BOOKED", "COMPLETED"] } }
+                ]
+            }),
+            BookingModel.countDocuments({
+                packageId: { $in: internationalIds },
+                $or: [
+                    { bookingType: "STANDARD", status: { $in: ["PAYMENT_SUCCESS", "BOOKED", "CONFIRMED", "TRAVEL_STARTED", "COMPLETED"] } },
+                    { bookingType: "CUSTOMIZED", status: { $in: ["BOOKED", "COMPLETED"] } }
+                ]
+            }),
+            BookingModel.countDocuments({
+                bookingType: "STANDARD",
+                status: { $in: ["PAYMENT_SUCCESS", "BOOKED", "CONFIRMED", "TRAVEL_STARTED", "COMPLETED"] }
+            }),
+            BookingModel.countDocuments({
+                bookingType: "CUSTOMIZED",
+                status: { $in: ["BOOKED", "COMPLETED"] }
+            })
+        ])
+
+        // 4. Fetch the 10 most recent bookings
+        const recentBookings = await BookingModel.find()
+            .sort({ createdAt: -1 })
+            .limit(10)
+            .populate("packageId", "title destination packageType price bookingType")
+            .populate("userId", "fullName email mobile")
+            .lean()
 
         return {
             status: true,
             data: {
-                totalPackages,
-                domesticPackages,
-                internationalPackages,
-                activePackages,
-                inactivePackages
+                kpis: {
+                    totalBookings,
+                    totalRevenue,
+                    totalUsers,
+                    activePackages
+                },
+                pieChart: {
+                    domestic: domesticCount,
+                    international: internationalCount,
+                    standard: standardCount,
+                    customized: customizedCount
+                },
+                recentBookings
             }
         }
     } catch (error: any) {

@@ -9,6 +9,8 @@ import { TourismModel } from "@models/tourism.model"
 import { BookingStatusHistoryModel } from "@models/bookingStatusHistory.model"
 import { RefundModel } from "@models/refund.model"
 import { APP_CONSTANTS } from "constant"
+import { sendStandardBookingEmail, sendCustomizedEnquiryEmail } from "@lib/emailTemplates"
+
 
 // ─── HELPER: Coupon Validator Logic ──────────────────────────────────────────
 
@@ -457,6 +459,18 @@ export const confirmBookingFromPaymentPayload = async (
         notes: `Payment verified & booking created successfully (Payment ID: ${razorpayPaymentId})`,
     })
 
+    // Trigger confirmation email in the background
+    BookingModel.findById(booking._id)
+        .populate("packageId")
+        .then((populatedBooking) => {
+            if (populatedBooking) {
+                sendStandardBookingEmail(populatedBooking).catch((err) =>
+                    console.error("Error sending standard booking email:", err)
+                )
+            }
+        })
+        .catch((err) => console.error("Error fetching booking for email:", err))
+
     return booking
 }
 
@@ -699,6 +713,18 @@ export const createCustomizedEnquiry = async (ctx: Context) => {
             changedBy: new Types.ObjectId(userId),
             notes: "Customized package enquiry submitted by user",
         })
+
+        // Trigger customized enquiry email in the background
+        BookingModel.findById(booking._id)
+            .populate("packageId")
+            .then((populatedBooking) => {
+                if (populatedBooking) {
+                    sendCustomizedEnquiryEmail(populatedBooking).catch((err) =>
+                        console.error("Error sending customized enquiry email:", err)
+                    )
+                }
+            })
+            .catch((err) => console.error("Error fetching booking for email:", err))
 
         return {
             status: true,

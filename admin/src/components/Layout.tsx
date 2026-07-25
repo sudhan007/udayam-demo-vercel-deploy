@@ -43,7 +43,11 @@ interface NavLink {
 
 const allLinks: NavLink[] = [
   { name: 'Dashboard', href: '/', icon: LayoutDashboard },
-  { name: 'Standard Bookings', href: '/bookings/standard', icon: CalendarCheck },
+  {
+    name: 'Standard Bookings',
+    href: '/bookings/standard',
+    icon: CalendarCheck,
+  },
   { name: 'Customized Bookings', href: '/bookings/customized', icon: Sparkles },
   { name: 'Users', href: '/users', icon: Users },
   { name: 'Tourism', href: '/tourism', icon: MapIcon },
@@ -57,7 +61,7 @@ interface LayoutProps {
 }
 
 const HEADER_H = 56
-const SIDEBAR_FULL = 220
+const SIDEBAR_FULL = 250
 const SIDEBAR_ICON = 64
 
 export default function Layout({ session, userType }: LayoutProps) {
@@ -87,9 +91,10 @@ export default function Layout({ session, userType }: LayoutProps) {
     const parts = location.pathname.split('/')
     if (parts[1] === 'bookings') {
       const search = location.search as any
-      const typeParam = typeof search === 'object' && search !== null
-        ? search.type
-        : new URLSearchParams(search || '').get('type')
+      const typeParam =
+        typeof search === 'object' && search !== null
+          ? search.type
+          : new URLSearchParams(search || '').get('type')
 
       if (parts[2] === 'customized' || typeParam === 'customized') {
         setActiveMenu('/bookings/customized')
@@ -172,14 +177,13 @@ export default function Layout({ session, userType }: LayoutProps) {
               loading="lazy"
             /> */}
 
-            {(!collapsed || !isLarge) && (
-              <div className="overflow-hidden">
-                <p className="font-bold tracking-wide text-base text-white">
-                  UDAYAM
-                  {/* INTERNATIONAL */}
-                </p>
-              </div>
-            )}
+            <div className={`transition-all duration-300 overflow-hidden whitespace-nowrap ${
+              collapsed && isLarge ? 'max-w-0 opacity-0' : 'max-w-48 opacity-100'
+            }`}>
+              <p className="font-bold tracking-wide text-base text-white">
+                UDAYAM
+              </p>
+            </div>
 
             {!isLarge && (
               <button
@@ -201,7 +205,7 @@ export default function Layout({ session, userType }: LayoutProps) {
                   <TooltipTrigger asChild>
                     <button
                       onClick={() => handleNav(link.href)}
-                      className="w-full flex items-center gap-3 rounded-xl mb-1.5 text-sm font-medium transition-all duration-200"
+                      className="w-full flex items-center gap-3 rounded-xl mb-1.5 text-sm font-medium transition-all duration-200 cursor-pointer"
                       style={{
                         padding: collapsed && isLarge ? '12px 0' : '12px 16px',
                         justifyContent:
@@ -223,13 +227,25 @@ export default function Layout({ session, userType }: LayoutProps) {
                           e.currentTarget.style.background = 'transparent'
                       }}
                     >
-                      <link.icon size={18} />
-                      {(!collapsed || !isLarge) && <span>{link.name}</span>}
+                      <link.icon size={18} className="shrink-0" />
+                      <span className={`transition-all duration-300 overflow-hidden whitespace-nowrap ${
+                        collapsed && isLarge ? 'max-w-0 opacity-0 pointer-events-none' : 'max-w-48 opacity-100'
+                      }`}>
+                        {link.name}
+                      </span>
                     </button>
                   </TooltipTrigger>
                   {collapsed && isLarge && (
-                    <TooltipContent side="right">
-                      <p>{link.name}</p>
+                    <TooltipContent
+                      className="!bg-slate-900 !text-slate-100 !border-slate-800 border shadow-md py-1.5 px-3 rounded-lg text-xs font-semibold"
+                      style={{
+                        backgroundColor: '#0f172a',
+                        color: '#f8fafc',
+                        border: '1px solid #1e293b'
+                      }}
+                      side="right"
+                    >
+                      <p style={{ color: '#f8fafc' }}>{link.name}</p>
                     </TooltipContent>
                   )}
                 </Tooltip>
@@ -242,7 +258,7 @@ export default function Layout({ session, userType }: LayoutProps) {
             <div className="p-3 border-t border-[var(--ui-sidebar-border)]">
               <button
                 onClick={() => setCollapsed(!collapsed)}
-                className="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors"
+                className="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors cursor-pointer"
                 style={{
                   justifyContent: collapsed ? 'center' : 'flex-start',
                   color: 'var(--ui-sidebar-muted)',
@@ -261,8 +277,13 @@ export default function Layout({ session, userType }: LayoutProps) {
                     transform: collapsed ? 'rotate(180deg)' : 'none',
                     transition: 'transform 280ms',
                   }}
+                  className="shrink-0"
                 />
-                {!collapsed && <span>Collapse Sidebar</span>}
+                <span className={`transition-all duration-300 overflow-hidden whitespace-nowrap ${
+                  collapsed ? 'max-w-0 opacity-0 pointer-events-none' : 'max-w-48 opacity-100'
+                }`}>
+                  Collapse Sidebar
+                </span>
               </button>
             </div>
           )}
