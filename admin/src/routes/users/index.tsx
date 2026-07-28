@@ -272,9 +272,6 @@ function AdminUsersComponent() {
                         <div className="font-semibold text-sm text-foreground">
                           {u.fullName || 'Unnamed User'}
                         </div>
-                        <div className="text-[11px] text-muted-foreground font-mono">
-                          ID: {u._id}
-                        </div>
                       </div>
                     </div>
                   </TableCell>

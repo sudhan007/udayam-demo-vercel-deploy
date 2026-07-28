@@ -50,7 +50,7 @@ export const createTouristPlace = async (
         }
 
         const bookingType = (body.bookingType ?? "STANDARD").toUpperCase()
-        
+
         const placeData: any = {
             title: body.title,
             destination: body.destination,
@@ -208,8 +208,98 @@ export const deleteTouristPlace = async (
 
 // ─── DASHBOARD STATS ───────────────────────────────────────────────────────────
 
+// export const getTourismDashboardStats = async (ctx: Context) => {
+//     const { set } = ctx
+
+//     try {
+//         // 1. Fetch KPI metrics
+//         const [
+//             totalBookings,
+//             revenueResult,
+//             totalUsers,
+//             activePackages
+//         ] = await Promise.all([
+//             PaymentModel.countDocuments({ status: "SUCCESS" }),
+//             PaymentModel.aggregate([
+//                 { $match: { status: "SUCCESS" } },
+//                 { $group: { _id: null, total: { $sum: "$amount" } } }
+//             ]),
+//             UserModel.countDocuments(),
+//             TourismModel.countDocuments({ isActive: true })
+//         ])
+
+//         const totalRevenue = revenueResult[0]?.total || 0
+
+//         // 2. Fetch packages categories for pie chart matching
+//         const domesticPackages = await TourismModel.find({ packageType: "DOMESTIC" }).select("_id").lean()
+//         const domesticIds = domesticPackages.map(p => p._id)
+
+//         const internationalPackages = await TourismModel.find({ packageType: "INTERNATIONAL" }).select("_id").lean()
+//         const internationalIds = internationalPackages.map(p => p._id)
+
+//         // 3. Count successful bookings by type/category
+//         const [domesticCount, internationalCount, standardCount, customizedCount] = await Promise.all([
+//             BookingModel.countDocuments({
+//                 packageId: { $in: domesticIds },
+//                 $or: [
+//                     { bookingType: "STANDARD", status: { $in: ["PAYMENT_SUCCESS", "BOOKED", "CONFIRMED", "TRAVEL_STARTED", "COMPLETED"] } },
+//                     { bookingType: "CUSTOMIZED", status: { $in: ["BOOKED", "COMPLETED"] } }
+//                 ]
+//             }),
+//             BookingModel.countDocuments({
+//                 packageId: { $in: internationalIds },
+//                 $or: [
+//                     { bookingType: "STANDARD", status: { $in: ["PAYMENT_SUCCESS", "BOOKED", "CONFIRMED", "TRAVEL_STARTED", "COMPLETED"] } },
+//                     { bookingType: "CUSTOMIZED", status: { $in: ["BOOKED", "COMPLETED"] } }
+//                 ]
+//             }),
+//             BookingModel.countDocuments({
+//                 bookingType: "STANDARD",
+//                 status: { $in: ["PAYMENT_SUCCESS", "BOOKED", "CONFIRMED", "TRAVEL_STARTED", "COMPLETED"] }
+//             }),
+//             BookingModel.countDocuments({
+//                 bookingType: "CUSTOMIZED",
+//                 status: { $in: ["BOOKED", "COMPLETED"] }
+//             })
+//         ])
+
+//         // 4. Fetch the 10 most recent bookings
+//         const recentBookings = await BookingModel.find()
+//             .sort({ createdAt: -1 })
+//             .limit(10)
+//             .populate("packageId", "title destination packageType price bookingType")
+//             .populate("userId", "fullName email mobile")
+//             .lean()
+
+//         return {
+//             status: true,
+//             data: {
+//                 kpis: {
+//                     totalBookings,
+//                     totalRevenue,
+//                     totalUsers,
+//                     activePackages
+//                 },
+//                 pieChart: {
+//                     domestic: domesticCount,
+//                     international: internationalCount,
+//                     standard: standardCount,
+//                     customized: customizedCount
+//                 },
+//                 recentBookings
+//             }
+//         }
+//     } catch (error: any) {
+//         console.error("Get Tourism Dashboard Stats Error", error)
+//         set.status = 500
+//         return { error: "Failed to fetch tourism dashboard stats", status: false }
+//     }
+// }
 export const getTourismDashboardStats = async (ctx: Context) => {
     const { set } = ctx
+
+    // Only these booking statuses count as "real" revenue
+    const REVENUE_STATUSES = ["BOOKED", "CONFIRMED", "TRAVEL_STARTED", "COMPLETED"]
 
     try {
         // 1. Fetch KPI metrics
@@ -220,9 +310,9 @@ export const getTourismDashboardStats = async (ctx: Context) => {
             activePackages
         ] = await Promise.all([
             PaymentModel.countDocuments({ status: "SUCCESS" }),
-            PaymentModel.aggregate([
-                { $match: { status: "SUCCESS" } },
-                { $group: { _id: null, total: { $sum: "$amount" } } }
+            BookingModel.aggregate([
+                { $match: { status: { $in: REVENUE_STATUSES } } },
+                { $group: { _id: null, total: { $sum: "$pricingDetails.finalAmount" } } }
             ]),
             UserModel.countDocuments(),
             TourismModel.countDocuments({ isActive: true })
@@ -295,7 +385,6 @@ export const getTourismDashboardStats = async (ctx: Context) => {
         return { error: "Failed to fetch tourism dashboard stats", status: false }
     }
 }
-
 // ─── GET ALL (with filters) ───────────────────────────────────────────────────
 
 export const getAllTouristPlaces = async (

@@ -190,10 +190,23 @@ export default function IntroScreen({ onComplete }: IntroScreenProps) {
   }
 
   useEffect(() => {
+    // Save original overflow values
+    const originalHtmlOverflow = document.documentElement.style.overflow
+    const originalBodyOverflow = document.body.style.overflow
+
+    // Hide scrollbar on mount
+    document.documentElement.style.overflow = "hidden"
+    document.body.style.overflow = "hidden"
+
     // Start showing brand name
     const t1 = setTimeout(() => setShowBrand(true), 60)
 
-    return () => clearTimeout(t1)
+    return () => {
+      clearTimeout(t1)
+      // Restore scrollbar on unmount
+      document.documentElement.style.overflow = originalHtmlOverflow
+      document.body.style.overflow = originalBodyOverflow
+    }
   }, [])
 
   return (
@@ -227,6 +240,7 @@ export default function IntroScreen({ onComplete }: IntroScreenProps) {
 
       {/* Full-screen overlay */}
       <div
+        className="h-screen [&::-webkit-scrollbar]:hidden"
         style={{
           position: "fixed",
           inset: 0,

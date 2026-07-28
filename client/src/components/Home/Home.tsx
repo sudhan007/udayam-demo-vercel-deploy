@@ -453,8 +453,12 @@ const Home = () => {
 
                           {/* Testimonial Text — left aligned, quotes inline, full text always shown */}
                           <p
-                            className="mb-6 text-left text-[15px] leading-[1.7]"
-                            style={{ color: "#3A4560" }}
+                            className="mb-6 text-left text-[15px] leading-[1.7] break-words"
+                            style={{
+                              color: "#3A4560",
+                              overflowWrap: "break-word",
+                              wordBreak: "break-word",
+                            }}
                           >
                             "{t.text}"
                           </p>
@@ -471,15 +475,17 @@ const Home = () => {
                               {t.avatarInitial ||
                                 t.name.charAt(0).toUpperCase()}
                             </div>
-                            <div className="text-left">
+
+                            <div className="min-w-0 flex-1 text-left">
                               <div
-                                className="text-[15px] font-bold"
+                                className="truncate text-[15px] font-bold"
                                 style={{ color: "#0D1B3E" }}
                               >
                                 {t.name}
                               </div>
+
                               <div
-                                className="mt-0.5 text-[13px]"
+                                className="truncate text-[13px]"
                                 style={{ color: "#5A6880" }}
                               >
                                 📍 {t.trip}

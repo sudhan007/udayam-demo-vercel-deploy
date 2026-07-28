@@ -69,6 +69,8 @@ type PaginationMeta = {
 type FilterState = {
   search: string
   status: string
+  startDate: string
+  endDate: string
 }
 
 function CustomizedBookingsComponent() {
@@ -77,6 +79,8 @@ function CustomizedBookingsComponent() {
   const [filters, setFilters] = useState<FilterState>({
     search: '',
     status: 'ALL',
+    startDate: '',
+    endDate: '',
   })
 
   const setFilter = (key: keyof FilterState, value: string) => {
@@ -90,6 +94,8 @@ function CustomizedBookingsComponent() {
     bookingType: 'CUSTOMIZED',
     ...(filters.search && { search: filters.search }),
     ...(filters.status !== 'ALL' && { status: filters.status }),
+    ...(filters.startDate && { startDate: filters.startDate }),
+    ...(filters.endDate && { endDate: filters.endDate }),
   }
 
   const { data, isLoading, isError } = useQuery({
@@ -176,12 +182,30 @@ function CustomizedBookingsComponent() {
             </SelectContent>
           </Select>
 
-          {(filters.search || filters.status !== 'ALL') && (
+          {/* Date Range Filters */}
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-muted-foreground font-medium">From:</span>
+            <Input
+              type="date"
+              value={filters.startDate}
+              onChange={(e) => setFilter('startDate', e.target.value)}
+              className="h-9 w-36 text-xs bg-background cursor-pointer"
+            />
+            <span className="text-xs text-muted-foreground font-medium">To:</span>
+            <Input
+              type="date"
+              value={filters.endDate}
+              onChange={(e) => setFilter('endDate', e.target.value)}
+              className="h-9 w-36 text-xs bg-background cursor-pointer"
+            />
+          </div>
+
+          {(filters.search || filters.status !== 'ALL' || filters.startDate || filters.endDate) && (
             <Button
               variant="ghost"
               size="sm"
               onClick={() => {
-                setFilters({ search: '', status: 'ALL' })
+                setFilters({ search: '', status: 'ALL', startDate: '', endDate: '' })
                 setPage(1)
               }}
               className="text-xs h-9"
@@ -210,7 +234,7 @@ function CustomizedBookingsComponent() {
             {isLoading ? (
               Array.from({ length: limit }).map((_, i) => (
                 <TableRow key={i}>
-                  {Array.from({ length: 7 }).map((_, j) => (
+                  {Array.from({ length: 7 }).map((__, j) => (
                     <TableCell key={j}>
                       <Skeleton className="h-4 w-full" />
                     </TableCell>
@@ -256,10 +280,10 @@ function CustomizedBookingsComponent() {
                   <TableCell>
                     <div className="text-sm font-medium flex items-center gap-1">
                       <User className="w-3.5 h-3.5 text-muted-foreground" />
-                      {booking.travellerInfo?.fullName}
+                      {booking.travellerInfo.fullName}
                     </div>
                     <div className="text-xs text-muted-foreground font-mono">
-                      {booking.travellerInfo?.mobileNumber}
+                      {booking.travellerInfo.mobileNumber}
                     </div>
                   </TableCell>
 
@@ -267,9 +291,9 @@ function CustomizedBookingsComponent() {
                   <TableCell className="text-xs text-muted-foreground space-y-0.5">
                     <div className="flex items-center gap-1 font-medium text-foreground">
                       <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
-                      {formatDate(booking.travellerInfo?.travelDate)}
+                      {formatDate(booking.travellerInfo.travelDate)}
                     </div>
-                    <div>👥 {booking.travellerInfo?.numberOfPersons} Persons</div>
+                    <div>👥 {booking.travellerInfo.numberOfPersons} Persons</div>
                   </TableCell>
 
                   {/* Pricing */}

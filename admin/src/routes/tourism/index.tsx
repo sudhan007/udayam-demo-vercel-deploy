@@ -591,7 +591,7 @@ function RouteComponent() {
                     />
                   </TableCell>
                   <TableCell>
-                    <div className="font-medium text-sm leading-tight">
+                    <div className="w-full max-w-62.5 truncate text-sm font-medium leading-tight">
                       {pkg.title}
                     </div>
                     <div className="text-xs text-muted-foreground mt-0.5 flex flex-wrap items-center gap-1.5">

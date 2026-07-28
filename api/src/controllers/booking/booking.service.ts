@@ -876,8 +876,23 @@ export const getAdminBookings = async (ctx: Context) => {
 
         if (query.startDate || query.endDate) {
             filter.createdAt = {}
-            if (query.startDate) filter.createdAt.$gte = new Date(query.startDate)
-            if (query.endDate) filter.createdAt.$lte = new Date(query.endDate)
+            if (query.startDate) {
+                const start = new Date(query.startDate)
+                if (!isNaN(start.getTime())) {
+                    start.setUTCHours(0, 0, 0, 0)
+                    filter.createdAt.$gte = start
+                }
+            }
+            if (query.endDate) {
+                const end = new Date(query.endDate)
+                if (!isNaN(end.getTime())) {
+                    end.setUTCHours(23, 59, 59, 999)
+                    filter.createdAt.$lte = end
+                }
+            }
+            if (Object.keys(filter.createdAt).length === 0) {
+                delete filter.createdAt
+            }
         }
 
         const [bookings, total] = await Promise.all([

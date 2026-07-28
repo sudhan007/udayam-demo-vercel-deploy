@@ -1,5 +1,11 @@
 import { useState, useEffect } from "react"
-import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom"
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+} from "react-router-dom"
 import Navbar from "./components/Navbar"
 import Home from "./components/Home/Home"
 import AboutUs from "./components/Aboutus"
@@ -18,6 +24,8 @@ import MyBookings from "./components/MyBookings"
 import { AuthProvider } from "./lib/useAuth"
 import { LoginModalProvider } from "./lib/useLoginModal"
 import LoginModal from "./components/LoginModal"
+import { Toaster } from "./components/ui/sonner"
+import TourTermsAndConditions from "./components/TourTermsAndCondition"
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -32,8 +40,12 @@ function ScrollToTop() {
   return null
 }
 
+const NO_INTRO_ROUTES = ["/tour-terms-and-conditions"]
+
 export function App() {
-  const [showIntro, setShowIntro] = useState(true)
+  const [showIntro, setShowIntro] = useState(
+    () => !NO_INTRO_ROUTES.includes(window.location.pathname)
+  )
 
   const handleIntroDone = () => {
     setShowIntro(false)
@@ -41,12 +53,17 @@ export function App() {
 
   return (
     <AuthProvider>
-      <LoginModalProvider modal={(isOpen, onClose) => <LoginModal isOpen={isOpen} onClose={onClose} />}>
+      <LoginModalProvider
+        modal={(isOpen, onClose) => (
+          <LoginModal isOpen={isOpen} onClose={onClose} />
+        )}
+      >
         {showIntro && <IntroScreen onComplete={handleIntroDone} />}
         <BrowserRouter>
           <ScrollToTop />
           <AppShell />
         </BrowserRouter>
+        <Toaster />
       </LoginModalProvider>
     </AuthProvider>
   )
@@ -69,6 +86,10 @@ function AppShell() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/my-bookings" element={<MyBookings />} />
+          <Route
+            path="/tour-terms-and-conditions"
+            element={<TourTermsAndConditions />}
+          />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>

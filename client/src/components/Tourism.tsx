@@ -920,6 +920,7 @@ export const PCard: React.FC<{
         </div>
         <div
           onClick={() => onViewDetails(card)}
+          className="w-full truncate"
           style={{
             fontFamily: "'Libre Baskerville',serif",
             fontSize: "1.05rem",
@@ -937,7 +938,7 @@ export const PCard: React.FC<{
             ;(e.currentTarget as HTMLElement).style.color = "#1B2B6B"
           }}
         >
-          {card.title}
+          sss {card.title}
         </div>
         <div
           style={{
@@ -1314,13 +1315,16 @@ const TourismDetailsDrawer: React.FC<{
             </div>
             <h2
               style={{
-                fontFamily: "'Libre Baskerville',serif",
+                fontFamily: "'Libre Baskerville', serif",
                 fontSize: "1.45rem",
                 fontWeight: 700,
                 color: "#fff",
                 margin: 0,
                 lineHeight: 1.25,
                 textShadow: "0 2px 4px rgba(0,0,0,0.3)",
+                whiteSpace: "normal",
+                overflowWrap: "break-word",
+                wordBreak: "break-word",
               }}
             >
               {pkg.title}
@@ -1473,7 +1477,7 @@ const TourismDetailsDrawer: React.FC<{
           )}
 
           {/* Highlights */}
-          {pkg.highlights && pkg.highlights.length > 0 && (
+          {pkg?.highlights && pkg?.highlights.length > 0 && (
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               <h3
                 style={{
@@ -1546,6 +1550,7 @@ const TourismDetailsDrawer: React.FC<{
                         display: "flex",
                         alignItems: "flex-start",
                         gap: 8,
+                        width: "100%",
                       }}
                     >
                       <span
@@ -1563,6 +1568,10 @@ const TourismDetailsDrawer: React.FC<{
                           fontSize: ".85rem",
                           color: "#5a5a7a",
                           lineHeight: 1.4,
+                          flex: 1,
+                          overflowWrap: "break-word",
+                          wordBreak: "break-word",
+                          whiteSpace: "normal",
                         }}
                       >
                         {inc}
@@ -1598,6 +1607,7 @@ const TourismDetailsDrawer: React.FC<{
                           display: "flex",
                           alignItems: "flex-start",
                           gap: 8,
+                          width: "100%",
                         }}
                       >
                         <span
@@ -1615,6 +1625,10 @@ const TourismDetailsDrawer: React.FC<{
                             fontSize: ".85rem",
                             color: "#5a5a7a",
                             lineHeight: 1.4,
+                            flex: 1,
+                            overflowWrap: "break-word",
+                            wordBreak: "break-word",
+                            whiteSpace: "normal",
                           }}
                         >
                           {exc}
