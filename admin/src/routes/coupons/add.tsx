@@ -42,10 +42,6 @@ function RouteComponent() {
         }
       }
 
-      if (values.discountType === 'PERCENTAGE' && values.maximumDiscountAmount !== undefined && values.maximumDiscountAmount !== '') {
-        form.append('maximumDiscountAmount', String(values.maximumDiscountAmount))
-      }
-
       // Arrays as JSON strings
       form.append('packageIds', JSON.stringify(values.packageIds ?? []))
       form.append('userIds', JSON.stringify(values.userIds ?? []))
@@ -65,7 +61,8 @@ function RouteComponent() {
       navigate({ to: '/coupons' })
     },
     onError: (err: any) => {
-      toast.error(err?.response?.data?.error ?? 'Failed to create coupon')
+      console.log(err)
+      toast.error(err?.error ?? 'Failed to create coupon')
     },
   })
 

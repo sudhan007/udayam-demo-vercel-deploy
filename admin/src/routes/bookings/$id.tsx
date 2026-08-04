@@ -67,6 +67,7 @@ const CUSTOMIZED_STATUSES = [
 
 function BookingDetailsComponent() {
   const { id } = Route.useParams()
+  const { type } = Route.useSearch()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
 
@@ -180,7 +181,17 @@ function BookingDetailsComponent() {
         <p className="text-muted-foreground">
           Booking record could not be found.
         </p>
-        <Button variant="outline" onClick={() => navigate({ to: '/bookings' })}>
+        <Button
+          variant="outline"
+          onClick={() => {
+            const lowerType = type?.toLowerCase()
+            if (lowerType === 'customized') {
+              navigate({ to: '/bookings/customized' })
+            } else {
+              navigate({ to: '/bookings/standard' })
+            }
+          }}
+        >
           Back to Bookings
         </Button>
       </div>
@@ -221,7 +232,14 @@ function BookingDetailsComponent() {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => navigate({ to: '/bookings' })}
+            onClick={() => {
+              const lowerType = type?.toLowerCase()
+              if (lowerType === 'customized' || booking?.bookingType === 'CUSTOMIZED') {
+                navigate({ to: '/bookings/customized' })
+              } else {
+                navigate({ to: '/bookings/standard' })
+              }
+            }}
             className="cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4" />

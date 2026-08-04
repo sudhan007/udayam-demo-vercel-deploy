@@ -4,31 +4,30 @@ export interface ICoupon {
     title: string
     description?: string
     couponCode: string
-    
+
     bannerImage: string
-    
+
     discountType: "PERCENTAGE" | "FIXED_AMOUNT"
     discountValue: number
-    
+
     minimumBookingAmount: number
-    maximumDiscountAmount?: number
-    
+
     totalUsageLimit: number
     perUserUsageLimit: number
     usedCount: number
-    
+
     applicableFor: "ALL" | "STANDARD" | "CUSTOMIZED" | "SELECTED"
     packageIds: Types.ObjectId[]
-    
+
     userType: "ALL_USERS" | "NEW_USERS" | "EXISTING_USERS" | "SELECTED_USERS"
     userIds: Types.ObjectId[]
-    
+
     validFrom: Date
     validTo: Date
-    
+
     status: "ACTIVE" | "INACTIVE"
     isDeleted: boolean
-    
+
     createdBy: Types.ObjectId
     updatedBy: Types.ObjectId
     createdAt?: Date
@@ -39,11 +38,11 @@ const couponSchema = new Schema<ICoupon>(
     {
         title: { type: String, required: true, trim: true },
         description: { type: String, trim: true },
-        couponCode: { 
-            type: String, 
-            required: true, 
-            trim: true, 
-            uppercase: true 
+        couponCode: {
+            type: String,
+            required: true,
+            trim: true,
+            uppercase: true
         },
         bannerImage: { type: String, required: true },
         discountType: {
@@ -53,7 +52,6 @@ const couponSchema = new Schema<ICoupon>(
         },
         discountValue: { type: Number, required: true, min: 0 },
         minimumBookingAmount: { type: Number, required: true, min: 0, default: 0 },
-        maximumDiscountAmount: { type: Number, min: 0 },
         totalUsageLimit: { type: Number, required: true, min: 1, default: 1 },
         perUserUsageLimit: { type: Number, required: true, min: 1, default: 1 },
         usedCount: { type: Number, required: true, default: 0, min: 0 },

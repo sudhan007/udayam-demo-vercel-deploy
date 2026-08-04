@@ -32,6 +32,9 @@ export async function validateCouponHelper(params: {
     }
 
     const now = new Date()
+    console.log("now", now)
+    console.log("coupon.validFrom", coupon.validFrom)
+    console.log("coupon.validTo", coupon.validTo)
     if (now < new Date(coupon.validFrom) || now > new Date(coupon.validTo)) {
         return { valid: false, error: "Coupon is expired or not yet valid" }
     }
@@ -96,12 +99,6 @@ export async function validateCouponHelper(params: {
     let discountAmount = 0
     if (coupon.discountType === "PERCENTAGE") {
         discountAmount = (params.bookingAmount * coupon.discountValue) / 100
-        if (
-            coupon.maximumDiscountAmount !== undefined &&
-            coupon.maximumDiscountAmount > 0
-        ) {
-            discountAmount = Math.min(discountAmount, coupon.maximumDiscountAmount)
-        }
     } else {
         discountAmount = coupon.discountValue
     }
@@ -228,7 +225,6 @@ export const getEligibleCouponsForPackage = async (ctx: Context<{ params: { pack
                 discountType: coupon.discountType,
                 discountValue: coupon.discountValue,
                 minimumBookingAmount: coupon.minimumBookingAmount,
-                maximumDiscountAmount: coupon.maximumDiscountAmount,
                 validTo: coupon.validTo,
             })
         }

@@ -14,7 +14,6 @@
 //   discountType: "PERCENTAGE" | "FIXED_AMOUNT"
 //   discountValue: number
 //   minimumBookingAmount: number
-//   maximumDiscountAmount?: number
 //   totalUsageLimit: number
 //   perUserUsageLimit: number
 //   usedCount: number
@@ -688,7 +687,6 @@ export interface ICoupon {
   discountType: "PERCENTAGE" | "FIXED_AMOUNT"
   discountValue: number
   minimumBookingAmount: number
-  maximumDiscountAmount?: number
   totalUsageLimit: number
   perUserUsageLimit: number
   usedCount: number
@@ -1012,7 +1010,7 @@ export const CouponShowcase: React.FC = () => {
                       </strong>
                     </span>
                   )}
-                  {!!coupon.maximumDiscountAmount && (
+                  {/* {!!coupon.maximumDiscountAmount && (
                     <span className="flex items-center gap-1.5">
                       <span
                         className="h-1.5 w-1.5 shrink-0 rounded-full"
@@ -1023,7 +1021,7 @@ export const CouponShowcase: React.FC = () => {
                         ₹{coupon.maximumDiscountAmount.toLocaleString("en-IN")}
                       </strong>
                     </span>
-                  )}
+                  )} */}
                   <span className="flex items-center gap-1.5">
                     <span
                       className="h-1.5 w-1.5 shrink-0 rounded-full"

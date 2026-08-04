@@ -32,10 +32,10 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Skeleton } from '@/components/ui/skeleton'
+import { SearchInput } from '@/components/SearchInput'
 import {
   MapPin,
   Plus,
-  Search,
   Pencil,
   Trash2,
   SlidersHorizontal,
@@ -288,15 +288,12 @@ function RouteComponent() {
 
       {/* Search + filter bar */}
       <div className="flex flex-wrap gap-2 items-center">
-        <div className="relative flex-1 min-w-[220px] max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input
-            placeholder="Search packages…"
-            className="pl-9 h-9"
-            value={filters.search}
-            onChange={(e) => setFilter('search', e.target.value)}
-          />
-        </div>
+        <SearchInput
+          placeholder="Search packages…"
+          className="flex-1 min-w-[220px] max-w-sm"
+          value={filters.search}
+          onChange={(v) => setFilter('search', v)}
+        />
 
         {/* Package type tabs */}
         <div className="flex rounded-md border overflow-hidden text-sm">

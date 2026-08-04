@@ -719,7 +719,7 @@ export function TourismForm({
       </Section>
 
       {/* Footer actions */}
-      <div className="flex justify-end gap-3 pb-6">
+      <div className="sticky bottom-0 bg-background/95 backdrop-blur-md border-t py-4 px-4 -mx-4 flex justify-end gap-3 z-50 shadow-[0_-4px_12px_rgba(0,0,0,0.03)]">
         <Button
           type="button"
           variant="outline"

@@ -58,13 +58,6 @@ function RouteComponent() {
         }
       }
 
-      if (values.discountType === 'PERCENTAGE') {
-        form.append('maximumDiscountAmount', String(values.maximumDiscountAmount ?? ''))
-      } else {
-        // Clear/unset if it's fixed amount
-        form.append('maximumDiscountAmount', '')
-      }
-
       // Arrays as JSON strings
       form.append('packageIds', JSON.stringify(values.packageIds ?? []))
       form.append('userIds', JSON.stringify(values.userIds ?? []))
@@ -85,7 +78,8 @@ function RouteComponent() {
       navigate({ to: '/coupons' })
     },
     onError: (err: any) => {
-      toast.error(err?.response?.data?.error ?? 'Failed to update coupon')
+      console.error(err)
+      toast.error(err?.error ?? 'Failed to update coupon')
     },
   })
 
@@ -125,7 +119,6 @@ function RouteComponent() {
     discountType: coupon.discountType,
     discountValue: coupon.discountValue,
     minimumBookingAmount: coupon.minimumBookingAmount,
-    maximumDiscountAmount: coupon.maximumDiscountAmount ?? '',
     totalUsageLimit: coupon.totalUsageLimit,
     perUserUsageLimit: coupon.perUserUsageLimit,
     applicableFor: coupon.applicableFor ?? 'ALL',

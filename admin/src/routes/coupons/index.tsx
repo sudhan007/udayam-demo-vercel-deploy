@@ -31,7 +31,8 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Plus, Pencil, Trash2, Search, Check, X, Tag } from 'lucide-react'
+import { Plus, Pencil, Trash2, Check, X, Tag } from 'lucide-react'
+import { SearchInput } from '@/components/SearchInput'
 import { toast } from 'sonner'
 
 export const Route = createFileRoute('/coupons/')({
@@ -149,15 +150,12 @@ function CouponsIndexComponent() {
 
       {/* Filter Bar */}
       <div className="flex flex-col md:flex-row gap-3 items-stretch md:items-center bg-muted/20 p-4 rounded-xl border">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search code, title or desc..."
-            value={filters.search}
-            onChange={(e) => setFilter('search', e.target.value)}
-            className="pl-9 bg-background h-9 text-sm"
-          />
-        </div>
+        <SearchInput
+          placeholder="Search code, title or desc..."
+          className="flex-1"
+          value={filters.search}
+          onChange={(v) => setFilter('search', v)}
+        />
 
         <div className="flex flex-wrap items-center gap-3">
           <Select

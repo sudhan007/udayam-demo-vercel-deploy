@@ -8,6 +8,7 @@ import { DecodeUserPaseto } from "@lib/paseto"
 import { saveFile, deleteFile } from "@lib/file"
 import { GetCouponsQuery } from "./coupon.schema"
 import { Types } from "mongoose"
+import dayjs from "@lib/dayjs"
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -55,9 +56,6 @@ export const createCoupon = async (ctx: Context) => {
 
         const discountValue = Number(body.discountValue)
         const minimumBookingAmount = Number(body.minimumBookingAmount ?? 0)
-        const maximumDiscountAmount = body.maximumDiscountAmount !== undefined && body.maximumDiscountAmount !== "" 
-            ? Number(body.maximumDiscountAmount) 
-            : undefined
 
         const totalUsageLimit = Number(body.totalUsageLimit ?? 1)
         const perUserUsageLimit = Number(body.perUserUsageLimit ?? 1)
@@ -73,7 +71,6 @@ export const createCoupon = async (ctx: Context) => {
             discountType: body.discountType,
             discountValue,
             minimumBookingAmount,
-            maximumDiscountAmount,
             totalUsageLimit,
             perUserUsageLimit,
             usedCount: 0,
@@ -81,8 +78,10 @@ export const createCoupon = async (ctx: Context) => {
             packageIds: packageIds.map((id: string) => new Types.ObjectId(id)),
             userType: body.userType ?? "ALL_USERS",
             userIds: userIds.map((id: string) => new Types.ObjectId(id)),
-            validFrom: new Date(body.validFrom),
-            validTo: new Date(body.validTo),
+            // validFrom: new Date(body.validFrom),
+            // validTo: new Date(body.validTo),
+            validFrom: dayjs.tz(body.validFrom, "Asia/Kolkata").utc().toDate(),
+            validTo: dayjs.tz(body.validTo, "Asia/Kolkata").utc().toDate(),
             status: body.status ?? "ACTIVE",
             isDeleted: false,
             createdBy: new Types.ObjectId(adminId),
@@ -137,15 +136,15 @@ export const updateCoupon = async (ctx: Context<{ params: { id: string } }>) => 
 
         if (body.discountValue !== undefined) updateData.discountValue = Number(body.discountValue)
         if (body.minimumBookingAmount !== undefined) updateData.minimumBookingAmount = Number(body.minimumBookingAmount)
-        if (body.maximumDiscountAmount !== undefined) {
-            updateData.maximumDiscountAmount = body.maximumDiscountAmount !== "" ? Number(body.maximumDiscountAmount) : undefined
-        }
         if (body.totalUsageLimit !== undefined) updateData.totalUsageLimit = Number(body.totalUsageLimit)
         if (body.perUserUsageLimit !== undefined) updateData.perUserUsageLimit = Number(body.perUserUsageLimit)
 
-        if (body.validFrom !== undefined) updateData.validFrom = new Date(body.validFrom)
-        if (body.validTo !== undefined) updateData.validTo = new Date(body.validTo)
-
+        if (body.validFrom !== undefined) {
+            updateData.validFrom = dayjs.tz(body.validFrom, "Asia/Kolkata").utc().toDate()
+        }
+        if (body.validTo !== undefined) {
+            updateData.validTo = dayjs.tz(body.validTo, "Asia/Kolkata").utc().toDate()
+        }
         // Replace banner image if a new one was sent
         if (body.bannerImage && typeof body.bannerImage !== "string") {
             // Delete old image
@@ -164,10 +163,6 @@ export const updateCoupon = async (ctx: Context<{ params: { id: string } }>) => 
         updateData.updatedBy = new Types.ObjectId(adminId)
 
         const updatedObj: Record<string, any> = { $set: updateData }
-        if (body.maximumDiscountAmount === "") {
-            updatedObj.$unset = { maximumDiscountAmount: "" }
-            delete updateData.maximumDiscountAmount
-        }
 
         const updated = await CouponModel.findByIdAndUpdate(
             params.id,

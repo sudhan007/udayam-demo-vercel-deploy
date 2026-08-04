@@ -22,8 +22,8 @@ import {
 } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
 import { toast } from 'sonner'
+import { SearchInput } from '@/components/SearchInput'
 import {
-  Search,
   User as UserIcon,
   Shield,
   Ban,
@@ -150,19 +150,15 @@ function AdminUsersComponent() {
 
       {/* Filter Bar */}
       <div className="flex flex-col md:flex-row gap-3 items-stretch md:items-center bg-muted/20 p-4 rounded-xl border">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search by full name, email, or mobile number..."
-            value={filters.search}
-            onChange={(e) => setFilter('search', e.target.value)}
-            className="pl-9 bg-background h-9 text-sm"
-          />
-        </div>
+        <SearchInput
+          placeholder="Search by full name, email, or mobile number..."
+          className="flex-1"
+          value={filters.search}
+          onChange={(v) => setFilter('search', v)}
+        />
 
         <div className="flex flex-wrap items-center gap-3">
-          {/* Login Type Filter */}
-          <Select
+          {/* <Select
             value={filters.loginType}
             onValueChange={(v) => setFilter('loginType', v)}
           >
@@ -174,9 +170,8 @@ function AdminUsersComponent() {
               <SelectItem value="GOOGLE">Google OAuth</SelectItem>
               <SelectItem value="MOBILE">Mobile OTP</SelectItem>
             </SelectContent>
-          </Select>
+          </Select> */}
 
-          {/* Status Filter */}
           <Select
             value={filters.status}
             onValueChange={(v) => setFilter('status', v)}
@@ -188,7 +183,7 @@ function AdminUsersComponent() {
               <SelectItem value="ALL">All Account Statuses</SelectItem>
               <SelectItem value="ACTIVE">ACTIVE</SelectItem>
               <SelectItem value="BLOCKED">BLOCKED</SelectItem>
-              <SelectItem value="DELETED">DELETED</SelectItem>
+              {/* <SelectItem value="DELETED">DELETED</SelectItem> */}
             </SelectContent>
           </Select>
 
@@ -202,7 +197,7 @@ function AdminUsersComponent() {
                 setFilters({ search: '', loginType: 'ALL', status: 'ALL' })
                 setPage(1)
               }}
-              className="text-xs h-9"
+              className="text-xs h-9 cursor-pointer"
             >
               Clear Filters
             </Button>
