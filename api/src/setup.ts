@@ -1,11 +1,11 @@
 import cors from "@elysiajs/cors";
 import { swagger } from "@elysiajs/swagger";
+import { couponExpiryJob } from "@lib/jobs/couponExpiry.job";
 import { logger } from "@rasla/logify";
 import { APP_CONSTANTS } from "constant";
 import { BaseRouter } from "controllers/routes";
 import { Elysia } from "elysia";
 import mongoose from "mongoose";
-import { TestimonialModel } from "./models/testimonial.model";
 
 const URL = APP_CONSTANTS.DB_URL
 
@@ -62,6 +62,9 @@ app.use(
     })
 );
 
+
+
+couponExpiryJob.start();
 app.use(BaseRouter);
 
 app.onError(({ code, error }) => {

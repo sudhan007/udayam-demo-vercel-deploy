@@ -1838,16 +1838,16 @@ function RotatingCities() {
   return (
     <span
       style={{ fontFamily: "'Inter',sans-serif" }}
-      className="relative inline-flex h-[1.8em] min-w-[8.5rem] items-center overflow-hidden"
+      className="relative inline-flex h-[1.8em] min-w-[8.5rem] items-center justify-center sm:justify-start overflow-hidden"
     >
       {cities.map((city, i) => (
         <span
           key={city}
           aria-hidden={i !== index}
-          className={`absolute inset-0 flex items-center text-[1rem] font-bold text-green-700 transition-all duration-500 ease-in-out sm:text-[1.15rem] ${
+          className={`absolute inset-0 flex items-center justify-center sm:justify-start text-[1rem] font-bold text-green-700 transition-all duration-500 ease-in-out sm:text-[1.15rem] ${
             i === index
               ? "translate-y-0 opacity-100"
-              : "translate-y-3 opacity-0"
+              : "translate-y-3 opacity-0 invisible"
           }`}
         >
           {city}
@@ -2359,48 +2359,6 @@ const Tourism = () => {
             <div className="ir-overlay pointer-events-none absolute inset-0 bg-gradient-to-r from-[rgba(247,245,240,0.15)] to-transparent" />
           </div>
         </section>
-        {/* ─── Mobile Filter Bar ─────────────────────────────────────────────── */}
-        <div
-          className="mob-filter-bar"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: "12px 20px",
-            background: "#fff",
-            borderBottom: "1px solid #E8E4DC",
-          }}
-        >
-          <span
-            style={{
-              fontFamily: f,
-              fontSize: ".82rem",
-              fontWeight: 600,
-              color: "#1B2B6B",
-            }}
-          >
-            {isLoading ? "Loading…" : `${total} Packages`}
-          </span>
-          <button
-            onClick={() => setSheetOpen(true)}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              padding: "9px 18px",
-              borderRadius: 999,
-              border: "1.5px solid #E8E4DC",
-              fontFamily: f,
-              fontSize: ".78rem",
-              fontWeight: 600,
-              color: "#1B2B6B",
-              background: "#fff",
-              cursor: "pointer",
-            }}
-          >
-            ⚙ Filters & Sort
-          </button>
-        </div>
 
         {/* ─── Mobile Sheet ──────────────────────────────────────────────────── */}
         <MobileSheet open={sheetOpen} onClose={() => setSheetOpen(false)}>
@@ -2467,9 +2425,48 @@ const Tourism = () => {
               overflowX: "hidden",
             }}
           >
+            {/* ─── Mobile Filter Bar ─────────────────────────────────────────────── */}
+            <div
+              className="mob-filter-bar"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: f,
+                  fontSize: ".82rem",
+                  fontWeight: 600,
+                  color: "#1B2B6B",
+                }}
+              >
+                {isLoading ? "Loading…" : `${total} Packages`}
+              </span>
+              <button
+                onClick={() => setSheetOpen(true)}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  padding: "9px 18px",
+                  borderRadius: 999,
+                  border: "1.5px solid #E8E4DC",
+                  fontFamily: f,
+                  fontSize: ".78rem",
+                  fontWeight: 600,
+                  color: "#1B2B6B",
+                  background: "#fff",
+                  cursor: "pointer",
+                }}
+              >
+                ⚙ Filters & Sort
+              </button>
+            </div>
             {/* View toggle */}
             {/* Services Available Section */}
-            <div className="flex items-center justify-center bg-[#F7F5F0] py-5 text-center">
+            <div className="flex flex-col sm:flex-row items-center justify-center bg-[#F7F5F0] py-5 text-center gap-1 sm:gap-0">
               <span
                 style={{ fontFamily: "'Libre Baskerville',serif" }}
                 className="text-[1rem] font-semibold tracking-wide text-[#1B2B6B] sm:text-[1.15rem]"

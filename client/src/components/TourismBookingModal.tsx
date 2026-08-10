@@ -1857,9 +1857,15 @@ export const TourismBookingModal: React.FC<TourismBookingModalProps> = ({
           <h2
             style={{
               fontFamily: "'Libre Baskerville', serif",
-              fontSize: "1.3rem",
+              fontSize: "1.45rem",
               fontWeight: 700,
+              color: "#fff",
               margin: 0,
+              lineHeight: 1.25,
+              textShadow: "0 2px 4px rgba(0,0,0,0.3)",
+              whiteSpace: "normal",
+              overflowWrap: "break-word",
+              wordBreak: "break-word",
             }}
           >
             {pkg.title}

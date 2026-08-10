@@ -666,6 +666,7 @@ import { useQuery } from "@tanstack/react-query"
 import { _axios } from "@/lib/axios"
 import { useAuth } from "@/lib/useAuth"
 import { toast } from "sonner"
+import dayjs from "dayjs"
 import {
   Copy,
   Check,
@@ -819,11 +820,7 @@ export const CouponShowcase: React.FC = () => {
 
   const meta = useMemo(() => {
     if (!coupon) return null
-    const formattedDate = new Date(coupon.validTo).toLocaleDateString("en-IN", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    })
+    const formattedDate = dayjs(coupon.validTo).format("DD MMM YYYY, hh:mm A")
     const daysLeft = Math.ceil(
       (new Date(coupon.validTo).getTime() - Date.now()) / 86400000
     )
@@ -923,7 +920,7 @@ export const CouponShowcase: React.FC = () => {
                     <Sparkles className="h-3 w-3" /> New user
                   </span>
                 )}
-                {isExpiringSoon && (
+                {/* {isExpiringSoon && (
                   <span
                     className="inline-flex items-center gap-1 rounded-md px-2.5 py-1 text-[10px] font-bold tracking-wide text-white uppercase shadow-sm"
                     style={{ backgroundColor: RED }}
@@ -931,7 +928,7 @@ export const CouponShowcase: React.FC = () => {
                     <Flame className="h-3 w-3" />{" "}
                     {meta.daysLeft <= 0 ? "Last day" : `${meta.daysLeft}d left`}
                   </span>
-                )}
+                )} */}
               </div>
 
               {/* discount overlay, matches the price-on-image treatment on package cards */}

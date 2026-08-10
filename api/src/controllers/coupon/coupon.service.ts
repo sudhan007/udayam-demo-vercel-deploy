@@ -345,7 +345,11 @@ export const getApplicablePackages = async (ctx: Context) => {
             const ids = parseJsonField(query.ids)
             if (Array.isArray(ids) && ids.length) {
                 const objectIds = ids.map(id => new Types.ObjectId(id))
-                const packages = await TourismModel.find({ _id: { $in: objectIds } }).select("title destination packageType bookingType").lean()
+                const queryFilter: Record<string, any> = { _id: { $in: objectIds } }
+                if (query.bookingType) {
+                    queryFilter.bookingType = query.bookingType
+                }
+                const packages = await TourismModel.find(queryFilter).select("title destination packageType bookingType").lean()
                 return { status: true, data: packages }
             }
         }
@@ -356,6 +360,9 @@ export const getApplicablePackages = async (ctx: Context) => {
         const search = query.search?.trim()
 
         const filter: Record<string, any> = { isActive: true }
+        if (query.bookingType) {
+            filter.bookingType = query.bookingType
+        }
         if (search) {
             filter.$or = [
                 { title: { $regex: search, $options: "i" } },
