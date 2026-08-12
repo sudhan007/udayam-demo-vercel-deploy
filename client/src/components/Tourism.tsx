@@ -60,24 +60,7 @@ interface ApiResponse {
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const DEST_FILTERS = [
-  { label: "India", value: "INDIA" },
-  { label: "Europe", value: "EUROPE" },
-  { label: "South-East Asia", value: "SOUTH_EAST_ASIA" },
-  { label: "Middle East", value: "MIDDLE_EAST" },
-  { label: "Americas", value: "AMERICAS" },
-  { label: "Africa", value: "AFRICA" },
-  { label: "Oceania", value: "OCEANIA" },
-]
 
-const TRIP_TYPE_FILTERS = [
-  { label: "Honeymoon", value: "HONEYMOON" },
-  { label: "Family", value: "FAMILY" },
-  { label: "Adventure", value: "ADVENTURE" },
-  { label: "Solo Travel", value: "SOLO" },
-  { label: "Group", value: "GROUP" },
-  { label: "Pilgrimage", value: "PILGRIMAGE" },
-]
 
 const DURATION_FILTERS = [
   { label: "Any", value: "" },
@@ -102,7 +85,7 @@ export const BADGE_STYLES: Record<string, { bg: string; color: string }> = {
   new: { bg: "#1B2B6B", color: "#fff" },
 }
 
-const PAGE_LIMIT = 6
+const PAGE_LIMIT = 100
 
 // ─── API fetch ────────────────────────────────────────────────────────────────
 
@@ -226,6 +209,8 @@ interface SidebarProps {
   setSortBy: (v: string) => void
   onReset: () => void
   total: number
+  destinationRegions: { value: string; label: string }[]
+  tripTypesList: { value: string; label: string }[]
 }
 
 const SidebarContent: React.FC<SidebarProps> = ({
@@ -245,6 +230,8 @@ const SidebarContent: React.FC<SidebarProps> = ({
   setSortBy,
   onReset,
   total,
+  destinationRegions,
+  tripTypesList,
 }) => {
   const pricePct = ((maxPrice - 5000) / (200000 - 5000)) * 100
   const fmtPrice = (v: number) => "₹" + v.toLocaleString("en-IN")
@@ -353,7 +340,7 @@ const SidebarContent: React.FC<SidebarProps> = ({
           marginBottom: 32,
         }}
       >
-        {DEST_FILTERS.map((d) => {
+        {destinationRegions.map((d) => {
           const checked = activeDestRegions.includes(d.value)
           return (
             <label
@@ -484,7 +471,7 @@ const SidebarContent: React.FC<SidebarProps> = ({
           marginBottom: 32,
         }}
       >
-        {TRIP_TYPE_FILTERS.map((t) => {
+        {tripTypesList.map((t) => {
           const checked = activeTripTypes.includes(t.value)
           return (
             <label
@@ -880,8 +867,8 @@ export const PCard: React.FC<{
               <div
                 style={{
                   fontFamily: f,
-                  fontSize: ".68rem",
-                  color: "rgba(255,255,255,.55)",
+                  fontSize: ".78rem",
+                  color: "#fff",
                   textDecoration: "line-through",
                 }}
               >
@@ -938,7 +925,7 @@ export const PCard: React.FC<{
             ;(e.currentTarget as HTMLElement).style.color = "#1B2B6B"
           }}
         >
-          sss {card.title}
+          {card.title}
         </div>
         <div
           style={{
@@ -1838,16 +1825,16 @@ function RotatingCities() {
   return (
     <span
       style={{ fontFamily: "'Inter',sans-serif" }}
-      className="relative inline-flex h-[1.8em] min-w-[8.5rem] items-center justify-center sm:justify-start overflow-hidden"
+      className="relative inline-flex h-[1.8em] min-w-[8.5rem] items-center justify-center overflow-hidden sm:justify-start"
     >
       {cities.map((city, i) => (
         <span
           key={city}
           aria-hidden={i !== index}
-          className={`absolute inset-0 flex items-center justify-center sm:justify-start text-[1rem] font-bold text-green-700 transition-all duration-500 ease-in-out sm:text-[1.15rem] ${
+          className={`absolute inset-0 flex items-center justify-center text-[1rem] font-bold text-green-700 transition-all duration-500 ease-in-out sm:justify-start sm:text-[1.15rem] ${
             i === index
               ? "translate-y-0 opacity-100"
-              : "translate-y-3 opacity-0 invisible"
+              : "invisible translate-y-3 opacity-0"
           }`}
         >
           {city}
@@ -1899,6 +1886,25 @@ const Tourism = () => {
 
   const pageWrapRef = useRef<HTMLDivElement>(null)
   const queryClient = useQueryClient()
+
+  const { data: regionsQuery } = useQuery({
+    queryKey: ["public-regions-list"],
+    queryFn: async () => {
+      const res = await _axios.get("/regions", { params: { isActive: "true" } })
+      return res.data?.data || []
+    },
+  })
+
+  const { data: tripTypesQuery } = useQuery({
+    queryKey: ["public-trip-types-list"],
+    queryFn: async () => {
+      const res = await _axios.get("/trip-types", { params: { isActive: "true" } })
+      return res.data?.data || []
+    },
+  })
+
+  const destinationRegions = regionsQuery?.map((r: any) => ({ value: r._id, label: r.name })) || []
+  const tripTypesList = tripTypesQuery?.map((t: any) => ({ value: t._id, label: t.name })) || []
 
   // Debounce search
   useEffect(() => {
@@ -2099,6 +2105,8 @@ const Tourism = () => {
     setSortBy,
     onReset,
     total,
+    destinationRegions,
+    tripTypesList,
   }
 
   return (
@@ -2466,7 +2474,7 @@ const Tourism = () => {
             </div>
             {/* View toggle */}
             {/* Services Available Section */}
-            <div className="flex flex-col sm:flex-row items-center justify-center bg-[#F7F5F0] py-5 text-center gap-1 sm:gap-0">
+            <div className="flex flex-col items-center justify-center gap-1 bg-[#F7F5F0] py-5 text-center sm:flex-row sm:gap-0">
               <span
                 style={{ fontFamily: "'Libre Baskerville',serif" }}
                 className="text-[1rem] font-semibold tracking-wide text-[#1B2B6B] sm:text-[1.15rem]"
@@ -3115,81 +3123,7 @@ const Tourism = () => {
               </div>
             )}
 
-            {/* ─── Load More ────────────────────────────────────────────────── */}
-            {!isFirstLoad && !isError && accumulatedPackages.length > 0 && (
-              <div style={{ textAlign: "center", padding: "16px 0 32px" }}>
-                {hasNext ? (
-                  <button
-                    onClick={handleLoadMore}
-                    disabled={isLoadingMore}
-                    style={{
-                      fontFamily: f,
-                      fontSize: ".88rem",
-                      fontWeight: 600,
-                      background: "transparent",
-                      color: "#1B2B6B",
-                      border: "1.5px solid rgba(27,43,107,.2)",
-                      padding: "14px 40px",
-                      borderRadius: 999,
-                      cursor: isLoadingMore ? "not-allowed" : "pointer",
-                      transition: "all .3s",
-                      opacity: isLoadingMore ? 0.6 : 1,
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: 8,
-                    }}
-                    onMouseEnter={(e) => {
-                      if (isLoadingMore) return
-                      ;(e.currentTarget as HTMLButtonElement).style.background =
-                        "#1B2B6B"
-                      ;(e.currentTarget as HTMLButtonElement).style.color =
-                        "#fff"
-                      ;(
-                        e.currentTarget as HTMLButtonElement
-                      ).style.borderColor = "#1B2B6B"
-                    }}
-                    onMouseLeave={(e) => {
-                      ;(e.currentTarget as HTMLButtonElement).style.background =
-                        "transparent"
-                      ;(e.currentTarget as HTMLButtonElement).style.color =
-                        "#1B2B6B"
-                      ;(
-                        e.currentTarget as HTMLButtonElement
-                      ).style.borderColor = "rgba(27,43,107,.2)"
-                    }}
-                  >
-                    {isLoadingMore ? "Loading…" : `Load More Packages`}{" "}
-                    {!isLoadingMore && "↓"}
-                  </button>
-                ) : (
-                  <div
-                    style={{
-                      fontFamily: f,
-                      fontSize: ".82rem",
-                      color: "#9494b0",
-                    }}
-                  >
-                    All {total} packages shown
-                  </div>
-                )}
-
-                {/* Pagination info */}
-                {data?.pagination && (
-                  <div
-                    style={{
-                      fontFamily: f,
-                      fontSize: ".72rem",
-                      color: "#9494b0",
-                      marginTop: 10,
-                    }}
-                  >
-                    Showing {accumulatedPackages.length} of {total} packages
-                    {data.pagination.totalPages > 1 &&
-                      ` · Page ${page} of ${data.pagination.totalPages}`}
-                  </div>
-                )}
-              </div>
-            )}
+            {/* ─── Load More (disabled per request) ─── */}
           </main>
         </div>
       </div>

@@ -7,6 +7,7 @@ import { _axios } from '@/lib/axios'
 import { TourismForm, type TourismFormValues } from '@/components/TourismForm'
 
 export const Route = createFileRoute('/tourism/add')({
+  validateSearch: (search: Record<string, unknown>) => search,
   component: RouteComponent,
 })
 
@@ -43,7 +44,7 @@ function RouteComponent() {
 
       for (const key of scalars) {
         const val = values[key]
-        if (val !== undefined && val !== '') {
+        if (val !== undefined) {
           form.append(key, String(val))
         }
       }
@@ -94,7 +95,7 @@ function RouteComponent() {
           variant="ghost"
           size="icon"
           className="cursor-pointer"
-          onClick={() => navigate({ to: '/tourism' })}
+          onClick={() => navigate({ to: '/tourism', search: (prev) => prev })}
         >
           <ArrowLeft className="w-4 h-4" />
         </Button>
@@ -110,7 +111,7 @@ function RouteComponent() {
         submitLabel="Create Package"
         isSubmitting={mutation.isPending}
         onSubmit={(data) => mutation.mutate(data)}
-        onCancel={() => navigate({ to: '/tourism' })}
+        onCancel={() => navigate({ to: '/tourism', search: (prev) => prev })}
       />
     </div>
   )

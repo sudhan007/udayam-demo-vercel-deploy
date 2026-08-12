@@ -108,7 +108,7 @@ export const updateTouristPlace = async (
 
     try {
         const existing = await TourismModel.findById(params.id)
-        if (!existing) {
+        if (!existing || existing.isDeleted) {
             set.status = 404
             return { error: "Tourism package not found", status: false }
         }
@@ -191,12 +191,13 @@ export const deleteTouristPlace = async (
 
     try {
         const place = await TourismModel.findById(params.id)
-        if (!place) {
+        if (!place || place.isDeleted) {
             set.status = 404
             return { error: "Tourism package not found", status: false }
         }
 
-        await TourismModel.findByIdAndDelete(params.id)
+        place.isDeleted = true
+        await place.save()
 
         return { message: "Tourism package deleted successfully", status: true }
     } catch (error: any) {
@@ -315,16 +316,16 @@ export const getTourismDashboardStats = async (ctx: Context) => {
                 { $group: { _id: null, total: { $sum: "$pricingDetails.finalAmount" } } }
             ]),
             UserModel.countDocuments(),
-            TourismModel.countDocuments({ isActive: true })
+            TourismModel.countDocuments({ isActive: true, isDeleted: false })
         ])
 
         const totalRevenue = revenueResult[0]?.total || 0
 
         // 2. Fetch packages categories for pie chart matching
-        const domesticPackages = await TourismModel.find({ packageType: "DOMESTIC" }).select("_id").lean()
+        const domesticPackages = await TourismModel.find({ packageType: "DOMESTIC", isDeleted: false }).select("_id").lean()
         const domesticIds = domesticPackages.map(p => p._id)
 
-        const internationalPackages = await TourismModel.find({ packageType: "INTERNATIONAL" }).select("_id").lean()
+        const internationalPackages = await TourismModel.find({ packageType: "INTERNATIONAL", isDeleted: false }).select("_id").lean()
         const internationalIds = internationalPackages.map(p => p._id)
 
         // 3. Count successful bookings by type/category
@@ -397,7 +398,7 @@ export const getAllTouristPlaces = async (
         const limit = Math.min(50, Math.max(1, parseInt(query.limit ?? "12")))
         const skip = (page - 1) * limit
 
-        const filter: Record<string, any> = {}
+        const filter: Record<string, any> = { isDeleted: false }
 
         // ── Package type filter (All / Domestic / Intl) ──────────────────────────
         if (query.packageType && query.packageType !== "ALL") {
@@ -413,7 +414,10 @@ export const getAllTouristPlaces = async (
         if (query.destinationRegions) {
             const regions = query.destinationRegions
                 .split(",")
-                .map((r) => r.trim().toUpperCase())
+                .map((r) => {
+                    const trimmed = r.trim()
+                    return trimmed.length === 24 ? trimmed.toLowerCase() : trimmed.toUpperCase()
+                })
                 .filter(Boolean)
             if (regions.length) filter.destinationRegion = { $in: regions }
         }
@@ -422,7 +426,10 @@ export const getAllTouristPlaces = async (
         if (query.tripTypes) {
             const types = query.tripTypes
                 .split(",")
-                .map((t) => t.trim().toUpperCase())
+                .map((t) => {
+                    const trimmed = t.trim()
+                    return trimmed.length === 24 ? trimmed.toLowerCase() : trimmed.toUpperCase()
+                })
                 .filter(Boolean)
             if (types.length) filter.tripTypes = { $in: types }
         }
@@ -475,7 +482,13 @@ export const getAllTouristPlaces = async (
         const sort = sortMap[query.sortBy ?? "newest"] ?? { order: 1, createdAt: -1 }
 
         const [data, total] = await Promise.all([
-            TourismModel.find(filter).sort(sort).skip(skip).limit(limit).lean(),
+            TourismModel.find(filter)
+                .sort(sort)
+                .skip(skip)
+                .limit(limit)
+                .populate("destinationRegion")
+                .populate("tripTypes")
+                .lean(),
             TourismModel.countDocuments(filter),
         ])
 
@@ -506,8 +519,11 @@ export const getTouristPlaceById = async (
     const { params, set } = ctx
 
     try {
-        const place = await TourismModel.findById(params.id).lean()
-        if (!place) {
+        const place = await TourismModel.findById(params.id)
+            .populate("destinationRegion")
+            .populate("tripTypes")
+            .lean()
+        if (!place || place.isDeleted) {
             set.status = 404
             return { error: "Tourism package not found", status: false }
         }
@@ -528,7 +544,7 @@ export const toggleFeaturedTouristPlace = async (
 
     try {
         const existing = await TourismModel.findById(params.id)
-        if (!existing) {
+        if (!existing || existing.isDeleted) {
             set.status = 404
             return { error: "Tourism package not found", status: false }
         }
@@ -554,9 +570,11 @@ export const getFeaturedTouristPlaces = async (ctx: Context) => {
     const { set } = ctx
 
     try {
-        const data = await TourismModel.find({ isFeatured: true, isActive: true })
+        const data = await TourismModel.find({ isFeatured: true, isActive: true, isDeleted: false })
             .sort({ order: 1, createdAt: -1 })
             .limit(10)
+            .populate("destinationRegion")
+            .populate("tripTypes")
             .lean()
 
         return {

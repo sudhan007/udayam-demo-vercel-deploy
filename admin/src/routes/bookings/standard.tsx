@@ -1,6 +1,5 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
-import { useState } from 'react'
 import { _axios } from '@/lib/axios'
 import { Pagination } from '@/components/Pagination'
 import { Button } from '@/components/ui/button'
@@ -24,7 +23,25 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Eye, Calendar, User, Tag } from 'lucide-react'
 import { SearchInput } from '@/components/SearchInput'
 
+interface StandardBookingsSearch {
+  page?: number
+  limit?: number
+  search?: string
+  status?: string
+  startDate?: string
+  endDate?: string
+}
+
 export const Route = createFileRoute('/bookings/standard')({
+  validateSearch: (search: Record<string, unknown>): StandardBookingsSearch => ({
+    page: search.page ? Number(search.page) : 1,
+    limit: search.limit ? Number(search.limit) : 10,
+    search: typeof search.search === 'string' ? search.search : undefined,
+    status: typeof search.status === 'string' ? search.status : undefined,
+    startDate:
+      typeof search.startDate === 'string' ? search.startDate : undefined,
+    endDate: typeof search.endDate === 'string' ? search.endDate : undefined,
+  }),
   component: StandardBookingsComponent,
 })
 
@@ -77,18 +94,34 @@ type FilterState = {
 }
 
 function StandardBookingsComponent() {
-  const [page, setPage] = useState(1)
-  const [limit, setLimit] = useState(10)
-  const [filters, setFilters] = useState<FilterState>({
-    search: '',
-    status: 'ALL',
-    startDate: '',
-    endDate: '',
-  })
+  const searchParams = Route.useSearch()
+  const navigate = useNavigate({ from: Route.fullPath })
+
+  const page = searchParams.page ?? 1
+  const limit = searchParams.limit ?? 10
+  const filters: FilterState = {
+    search: searchParams.search ?? '',
+    status: searchParams.status ?? 'ALL',
+    startDate: searchParams.startDate ?? '',
+    endDate: searchParams.endDate ?? '',
+  }
+
+  const setPage = (p: number) => {
+    navigate({ search: (prev) => ({ ...prev, page: p }) })
+  }
+
+  const setLimit = (l: number) => {
+    navigate({ search: (prev) => ({ ...prev, limit: l, page: 1 }) })
+  }
 
   const setFilter = (key: keyof FilterState, value: string) => {
-    setFilters((prev) => ({ ...prev, [key]: value }))
-    setPage(1)
+    navigate({
+      search: (prev) => ({
+        ...prev,
+        [key]: value || undefined,
+        page: 1,
+      }),
+    })
   }
 
   const queryParams = {
@@ -219,13 +252,20 @@ function StandardBookingsComponent() {
             />
           </div>
 
-          {(filters.search || filters.status !== 'ALL' || filters.startDate || filters.endDate) && (
+          {(filters.search ||
+            filters.status !== 'ALL' ||
+            filters.startDate ||
+            filters.endDate) && (
             <Button
               variant="ghost"
               size="sm"
               onClick={() => {
-                setFilters({ search: '', status: 'ALL', startDate: '', endDate: '' })
-                setPage(1)
+                navigate({
+                  search: (prev) => ({
+                    page: 1,
+                    limit: prev.limit,
+                  }),
+                })
               }}
               className="text-xs h-9"
             >
@@ -340,8 +380,16 @@ function StandardBookingsComponent() {
 
                   {/* Actions */}
                   <TableCell className="text-right">
-                    <Link to="/bookings/$id" params={{ id: booking._id }} search={{ type: 'standard' }}>
-                      <Button variant="outline" size="sm" className="gap-1.5 h-8 text-xs cursor-pointer">
+                    <Link
+                      to="/bookings/$id"
+                      params={{ id: booking._id }}
+                      search={(prev) => ({ ...prev, type: 'standard' })}
+                    >
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="gap-1.5 h-8 text-xs cursor-pointer"
+                      >
                         <Eye className="w-3.5 h-3.5" /> View
                       </Button>
                     </Link>

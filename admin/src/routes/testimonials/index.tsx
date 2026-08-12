@@ -1,6 +1,5 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { useState } from 'react'
 import { _axios } from '@/lib/axios'
 import { Pagination } from '@/components/Pagination'
 import { Button } from '@/components/ui/button'
@@ -23,7 +22,18 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Plus, Pencil, Check, X } from 'lucide-react'
 import { toast } from 'sonner'
 
+interface TestimonialsSearch {
+  page?: number
+  limit?: number
+  isActive?: string
+}
+
 export const Route = createFileRoute('/testimonials/')({
+  validateSearch: (search: Record<string, unknown>): TestimonialsSearch => ({
+    page: search.page ? Number(search.page) : 1,
+    limit: search.limit ? Number(search.limit) : 10,
+    isActive: typeof search.isActive === 'string' ? search.isActive : undefined,
+  }),
   component: TestimonialsIndexComponent,
 })
 
@@ -35,6 +45,7 @@ type Testimonial = {
   text: string
   trip: string
   isActive: boolean
+  order?: number
 }
 
 type PaginationMeta = {
@@ -48,10 +59,30 @@ type PaginationMeta = {
 
 function TestimonialsIndexComponent() {
   const queryClient = useQueryClient()
+  const searchParams = Route.useSearch()
+  const navigate = useNavigate({ from: Route.fullPath })
 
-  const [page, setPage] = useState(1)
-  const [limit, setLimit] = useState(10)
-  const [isActiveFilter, setIsActiveFilter] = useState('all')
+  const page = searchParams.page ?? 1
+  const limit = searchParams.limit ?? 10
+  const isActiveFilter = searchParams.isActive ?? 'all'
+
+  const setPage = (p: number) => {
+    navigate({ search: (prev) => ({ ...prev, page: p }) })
+  }
+
+  const setLimit = (l: number) => {
+    navigate({ search: (prev) => ({ ...prev, limit: l, page: 1 }) })
+  }
+
+  const setIsActiveFilter = (v: string) => {
+    navigate({
+      search: (prev) => ({
+        ...prev,
+        isActive: v === 'all' ? undefined : v,
+        page: 1,
+      }),
+    })
+  }
 
   const queryParams = {
     page: page.toString(),
@@ -96,7 +127,7 @@ function TestimonialsIndexComponent() {
             Manage client testimonials displayed on the homepage
           </p>
         </div>
-        <Link to="/testimonials/add">
+        <Link to="/testimonials/add" search={(prev) => prev}>
           <Button className="gap-2 cursor-pointer">
             <Plus className="w-4 h-4" />
             Add Testimonial
@@ -110,7 +141,6 @@ function TestimonialsIndexComponent() {
           value={isActiveFilter}
           onValueChange={(v) => {
             setIsActiveFilter(v)
-            setPage(1)
           }}
         >
           <SelectTrigger className="h-9 w-40 text-sm cursor-pointer">
@@ -140,6 +170,7 @@ function TestimonialsIndexComponent() {
               <TableHead className="w-32">Rating</TableHead>
               <TableHead className="w-64">Trip Details</TableHead>
               <TableHead>Testimonial Message</TableHead>
+              <TableHead className="w-20 text-center">Order</TableHead>
               <TableHead className="w-28">Status</TableHead>
               <TableHead className="w-24 text-right">Actions</TableHead>
             </TableRow>
@@ -148,7 +179,7 @@ function TestimonialsIndexComponent() {
             {isLoading ? (
               Array.from({ length: limit }).map((_, i) => (
                 <TableRow key={i}>
-                  {Array.from({ length: 7 }).map((_, j) => (
+                  {Array.from({ length: 8 }).map((_, j) => (
                     <TableCell key={j}>
                       <Skeleton className="h-4 w-full" />
                     </TableCell>
@@ -158,7 +189,7 @@ function TestimonialsIndexComponent() {
             ) : isError ? (
               <TableRow>
                 <TableCell
-                  colSpan={7}
+                  colSpan={8}
                   className="text-center py-12 text-muted-foreground"
                 >
                   Failed to load testimonials. Try again.
@@ -167,7 +198,7 @@ function TestimonialsIndexComponent() {
             ) : testimonials.length === 0 ? (
               <TableRow>
                 <TableCell
-                  colSpan={7}
+                  colSpan={8}
                   className="text-center py-12 text-muted-foreground"
                 >
                   No testimonials found. Adjust filters or{' '}
@@ -202,6 +233,9 @@ function TestimonialsIndexComponent() {
                   <TableCell className="text-sm py-3 max-w-md truncate">
                     {t.text}
                   </TableCell>
+                  <TableCell className="text-center font-medium text-sm text-muted-foreground">
+                    {t.order ?? 0}
+                  </TableCell>
                   <TableCell>
                     <button
                       onClick={() => toggleMutation.mutate(t._id)}
@@ -224,8 +258,16 @@ function TestimonialsIndexComponent() {
                     </button>
                   </TableCell>
                   <TableCell className="text-right">
-                    <Link to="/testimonials/$id/edit" params={{ id: t._id }}>
-                      <Button variant="ghost" size="icon" className="h-8 w-8">
+                    <Link
+                      to="/testimonials/$id/edit"
+                      params={{ id: t._id }}
+                      search={(prev) => prev}
+                    >
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 cursor-pointer"
+                      >
                         <Pencil className="w-3.5 h-3.5" />
                       </Button>
                     </Link>

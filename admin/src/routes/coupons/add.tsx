@@ -7,6 +7,7 @@ import { _axios } from '@/lib/axios'
 import { CouponForm, type CouponFormValues } from '@/components/CouponForm'
 
 export const Route = createFileRoute('/coupons/add')({
+  validateSearch: (search: Record<string, unknown>) => search,
   component: RouteComponent,
 })
 
@@ -37,7 +38,7 @@ function RouteComponent() {
 
       for (const key of scalars) {
         const val = values[key]
-        if (val !== undefined && val !== '') {
+        if (val !== undefined) {
           form.append(key, String(val))
         }
       }
@@ -73,7 +74,7 @@ function RouteComponent() {
         <Button
           variant="ghost"
           size="icon"
-          onClick={() => navigate({ to: '/coupons' })}
+          onClick={() => navigate({ to: '/coupons', search: (prev) => prev })}
           className="cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />
@@ -90,7 +91,7 @@ function RouteComponent() {
         submitLabel="Create Coupon"
         isSubmitting={mutation.isPending}
         onSubmit={(data) => mutation.mutate(data)}
-        onCancel={() => navigate({ to: '/coupons' })}
+        onCancel={() => navigate({ to: '/coupons', search: (prev) => prev })}
       />
     </div>
   )

@@ -741,7 +741,9 @@
 //   )
 // }
 import { useRef, useState } from 'react'
-import { useForm, Controller, type FieldErrors } from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
+import { useQuery } from '@tanstack/react-query'
+import { _axios } from '@/lib/axios'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
@@ -797,34 +799,22 @@ type Props = {
   onCancel: () => void
 }
 
-// ─── Constants ────────────────────────────────────────────────────────────────
 
-const DESTINATION_REGIONS = [
-  { value: 'INDIA', label: 'India' },
-  { value: 'EUROPE', label: 'Europe' },
-  { value: 'SOUTH_EAST_ASIA', label: 'South-East Asia' },
-  { value: 'MIDDLE_EAST', label: 'Middle East' },
-  { value: 'AMERICAS', label: 'Americas' },
-  { value: 'AFRICA', label: 'Africa' },
-  { value: 'OCEANIA', label: 'Oceania' },
-]
 
-const TRIP_TYPES = [
-  { value: 'HONEYMOON', label: '💑 Honeymoon' },
-  { value: 'FAMILY', label: '👨‍👩‍👧 Family' },
-  { value: 'ADVENTURE', label: '🧗 Adventure' },
-  { value: 'SOLO', label: '🎒 Solo Travel' },
-  { value: 'GROUP', label: '👥 Group' },
-  { value: 'PILGRIMAGE', label: '🛕 Pilgrimage' },
-]
-
-const BADGE_VARIANTS: { value: BadgeVariant; label: string }[] = [
-  { value: 'domestic', label: 'Domestic' },
-  { value: 'intl', label: 'International' },
-  { value: 'hot', label: '🔥 Hot' },
-  { value: 'sale', label: '🏷 Sale' },
-  { value: 'new', label: '✨ New' },
-]
+export const BADGE_STYLES: Record<
+  BadgeVariant,
+  { bg: string; color: string; label: string }
+> = {
+  domestic: { bg: '#e8f5e9', color: '#2E7D32', label: 'Domestic' },
+  intl: {
+    bg: 'rgba(27,43,107,0.85)',
+    color: '#ffffff',
+    label: 'International',
+  },
+  hot: { bg: '#E53E3E', color: '#ffffff', label: 'Hot' },
+  sale: { bg: '#F59E0B', color: '#ffffff', label: 'Sale' },
+  new: { bg: '#1B2B6B', color: '#ffffff', label: 'New' },
+}
 
 // ─── Error helpers ──────────────────────────────────────────────────────────
 
@@ -832,23 +822,6 @@ const BADGE_VARIANTS: { value: BadgeVariant; label: string }[] = [
 // Uses explicit red-* utilities (not the semantic `destructive` token) with `!important`
 // so it reliably wins over the shadcn component's own default border/ring classes.
 const errCls = (hasError?: boolean) => cn(hasError && '')
-
-// Walks the whole react-hook-form errors object (including nested arrays like
-// badges.0.text) and pulls out a flat list of human-readable messages.
-function flattenErrors(errors: FieldErrors<TourismFormValues>): string[] {
-  const out: string[] = []
-  const walk = (node: unknown) => {
-    if (!node || typeof node !== 'object') return
-    const maybeMessage = (node as { message?: unknown }).message
-    if (typeof maybeMessage === 'string' && maybeMessage) {
-      out.push(maybeMessage)
-      return
-    }
-    Object.values(node as Record<string, unknown>).forEach(walk)
-  }
-  Object.values(errors).forEach(walk)
-  return out
-}
 
 // ─── Section wrapper ──────────────────────────────────────────────────────────
 
@@ -909,6 +882,24 @@ export function TourismForm({
   submitLabel,
   onCancel,
 }: Props) {
+  const { data: regionsQuery } = useQuery({
+    queryKey: ['regions-list'],
+    queryFn: async () => {
+      const res = await _axios.get('/regions', { params: { isActive: 'true' } })
+      return res.data?.data || []
+    },
+  })
+
+  const { data: tripTypesQuery } = useQuery({
+    queryKey: ['trip-types-list'],
+    queryFn: async () => {
+      const res = await _axios.get('/trip-types', { params: { isActive: 'true' } })
+      return res.data?.data || []
+    },
+  })
+
+  const destinationRegions = regionsQuery?.map((r: any) => ({ value: r._id, label: r.name })) || []
+  const tripTypesList = tripTypesQuery?.map((t: any) => ({ value: t._id, label: t.name })) || []
   const {
     register,
     handleSubmit,
@@ -992,28 +983,10 @@ export function TourismForm({
     onSubmit(data)
   }
 
-  // Fires when required fields are missing / invalid — this is the "intimation"
-  // to the user, on top of the inline red highlighting on each field.
-  const handleInvalid = (formErrors: FieldErrors<TourismFormValues>) => {
-    // const messages = flattenErrors(formErrors)
-    // const count = messages.length
-    // if (count === 0) {
-    //   toast.error('Please fix the highlighted fields before continuing.')
-    //   return
-    // }
-    // const preview = messages.slice(0, 3).join(', ')
-    // toast.error(
-    //   `${count} field${count > 1 ? 's need' : ' needs'} your attention: ${preview}${
-    //     count > 3 ? `, +${count - 3} more` : ''
-    //   }`,
-    //   { duration: 5000 },
-    // )
-  }
-
   return (
     <form
       autoComplete="off"
-      onSubmit={handleSubmit(handleValid, handleInvalid)}
+      onSubmit={handleSubmit(handleValid)}
       className="space-y-5"
       noValidate
     >
@@ -1068,7 +1041,7 @@ export function TourismForm({
                     <SelectValue placeholder="Select region" />
                   </SelectTrigger>
                   <SelectContent>
-                    {DESTINATION_REGIONS.map((r) => (
+                    {destinationRegions.map((r) => (
                       <SelectItem
                         className="cursor-pointer"
                         key={r.value}
@@ -1158,7 +1131,7 @@ export function TourismForm({
                   'flex flex-wrap gap-2 rounded-lg border border-transparent p-2 -m-2 transition-colors',
                 )}
               >
-                {TRIP_TYPES.map((t) => {
+                {tripTypesList.map((t) => {
                   const active = field.value?.includes(t.value)
                   return (
                     <button
@@ -1456,21 +1429,38 @@ export function TourismForm({
                     name={`badges.${i}.variant`}
                     control={control}
                     render={({ field }) => (
-                      <Select
-                        value={field.value}
-                        onValueChange={field.onChange}
-                      >
-                        <SelectTrigger className="w-36">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {BADGE_VARIANTS.map((v) => (
-                            <SelectItem key={v.value} value={v.value}>
-                              {v.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <div className="flex gap-1.5 items-center p-1.5 border rounded-lg bg-muted/20 shrink-0">
+                        {(Object.keys(BADGE_STYLES) as BadgeVariant[]).map(
+                          (v) => {
+                            const s = BADGE_STYLES[v]
+                            const isSelected = field.value === v
+                            return (
+                              <button
+                                key={v}
+                                type="button"
+                                onClick={() => field.onChange(v)}
+                                style={{ backgroundColor: s.bg }}
+                                className={cn(
+                                  'w-6 h-6 rounded-full border transition-all duration-200 relative hover:scale-110 flex items-center justify-center cursor-pointer',
+                                  isSelected
+                                    ? 'ring-2 ring-primary ring-offset-2 scale-105 border-transparent'
+                                    : 'border-muted-foreground/30 hover:border-muted-foreground/80',
+                                )}
+                                title={s.label}
+                              >
+                                {isSelected && (
+                                  <span
+                                    style={{ color: s.color }}
+                                    className="text-[10px] font-bold select-none"
+                                  >
+                                    ✓
+                                  </span>
+                                )}
+                              </button>
+                            )
+                          },
+                        )}
+                      </div>
                     )}
                   />
                   <Button

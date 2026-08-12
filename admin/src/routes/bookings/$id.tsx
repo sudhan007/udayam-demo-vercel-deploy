@@ -32,6 +32,7 @@ import { _axios } from '@/lib/axios'
 export const Route = createFileRoute('/bookings/$id')({
   validateSearch: (search: Record<string, unknown>) => {
     return {
+      ...search,
       type: (search.type as string) || '',
     }
   },
@@ -186,9 +187,9 @@ function BookingDetailsComponent() {
           onClick={() => {
             const lowerType = type?.toLowerCase()
             if (lowerType === 'customized') {
-              navigate({ to: '/bookings/customized' })
+              navigate({ to: '/bookings/customized', search: (prev) => prev })
             } else {
-              navigate({ to: '/bookings/standard' })
+              navigate({ to: '/bookings/standard', search: (prev) => prev })
             }
           }}
         >
@@ -274,10 +275,16 @@ function BookingDetailsComponent() {
             size="icon"
             onClick={() => {
               const lowerType = type?.toLowerCase()
-              if (lowerType === 'customized' || booking?.bookingType === 'CUSTOMIZED') {
-                navigate({ to: '/bookings/customized' })
+              if (
+                lowerType === 'customized' ||
+                booking?.bookingType === 'CUSTOMIZED'
+              ) {
+                navigate({
+                  to: '/bookings/customized',
+                  search: (prev) => prev,
+                })
               } else {
-                navigate({ to: '/bookings/standard' })
+                navigate({ to: '/bookings/standard', search: (prev) => prev })
               }
             }}
             className="cursor-pointer"

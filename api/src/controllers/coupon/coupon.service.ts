@@ -345,7 +345,7 @@ export const getApplicablePackages = async (ctx: Context) => {
             const ids = parseJsonField(query.ids)
             if (Array.isArray(ids) && ids.length) {
                 const objectIds = ids.map(id => new Types.ObjectId(id))
-                const queryFilter: Record<string, any> = { _id: { $in: objectIds } }
+                const queryFilter: Record<string, any> = { _id: { $in: objectIds }, isDeleted: false }
                 if (query.bookingType) {
                     queryFilter.bookingType = query.bookingType
                 }
@@ -359,7 +359,7 @@ export const getApplicablePackages = async (ctx: Context) => {
         const skip = (page - 1) * limit
         const search = query.search?.trim()
 
-        const filter: Record<string, any> = { isActive: true }
+        const filter: Record<string, any> = { isActive: true, isDeleted: false }
         if (query.bookingType) {
             filter.bookingType = query.bookingType
         }

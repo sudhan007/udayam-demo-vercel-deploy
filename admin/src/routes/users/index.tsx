@@ -1,10 +1,8 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { useState } from 'react'
 import { _axios } from '@/lib/axios'
 import { Pagination } from '@/components/Pagination'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import {
   Table,
   TableBody,
@@ -24,8 +22,6 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { toast } from 'sonner'
 import { SearchInput } from '@/components/SearchInput'
 import {
-  User as UserIcon,
-  Shield,
   Ban,
   CheckCircle2,
   Mail,
@@ -33,7 +29,23 @@ import {
   Calendar,
 } from 'lucide-react'
 
+interface UsersSearch {
+  page?: number
+  limit?: number
+  search?: string
+  loginType?: string
+  status?: string
+}
+
 export const Route = createFileRoute('/users/')({
+  validateSearch: (search: Record<string, unknown>): UsersSearch => ({
+    page: search.page ? Number(search.page) : 1,
+    limit: search.limit ? Number(search.limit) : 10,
+    search: typeof search.search === 'string' ? search.search : undefined,
+    loginType:
+      typeof search.loginType === 'string' ? search.loginType : undefined,
+    status: typeof search.status === 'string' ? search.status : undefined,
+  }),
   component: AdminUsersComponent,
 })
 
@@ -67,18 +79,34 @@ type FilterState = {
 
 function AdminUsersComponent() {
   const queryClient = useQueryClient()
+  const searchParams = Route.useSearch()
+  const navigate = useNavigate({ from: Route.fullPath })
 
-  const [page, setPage] = useState(1)
-  const [limit, setLimit] = useState(10)
-  const [filters, setFilters] = useState<FilterState>({
-    search: '',
-    loginType: 'ALL',
-    status: 'ALL',
-  })
+  const page = searchParams.page ?? 1
+  const limit = searchParams.limit ?? 10
+
+  const filters: FilterState = {
+    search: searchParams.search ?? '',
+    loginType: searchParams.loginType ?? 'ALL',
+    status: searchParams.status ?? 'ALL',
+  }
+
+  const setPage = (p: number) => {
+    navigate({ search: (prev) => ({ ...prev, page: p }) })
+  }
+
+  const setLimit = (l: number) => {
+    navigate({ search: (prev) => ({ ...prev, limit: l, page: 1 }) })
+  }
 
   const setFilter = (key: keyof FilterState, value: string) => {
-    setFilters((prev) => ({ ...prev, [key]: value }))
-    setPage(1)
+    navigate({
+      search: (prev) => ({
+        ...prev,
+        [key]: value || undefined,
+        page: 1,
+      }),
+    })
   }
 
   const queryParams = {
@@ -194,8 +222,12 @@ function AdminUsersComponent() {
               variant="ghost"
               size="sm"
               onClick={() => {
-                setFilters({ search: '', loginType: 'ALL', status: 'ALL' })
-                setPage(1)
+                navigate({
+                  search: (prev) => ({
+                    page: 1,
+                    limit: prev.limit,
+                  }),
+                })
               }}
               className="text-xs h-9 cursor-pointer"
             >

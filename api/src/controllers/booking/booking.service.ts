@@ -173,7 +173,7 @@ export const getEligibleCouponsForPackage = async (ctx: Context<{ params: { pack
 
     try {
         const pkg = await TourismModel.findById(params.packageId)
-        if (!pkg || !pkg.isActive) {
+        if (!pkg || !pkg.isActive || pkg.isDeleted) {
             set.status = 404
             return { status: false, error: "Package not found or inactive" }
         }
@@ -256,7 +256,7 @@ export const createStandardBookingOrder = async (ctx: Context) => {
         }
 
         const pkg = await TourismModel.findById(packageId)
-        if (!pkg || !pkg.isActive) {
+        if (!pkg || !pkg.isActive || pkg.isDeleted) {
             set.status = 404
             return { status: false, error: "Package not found or inactive" }
         }
@@ -671,7 +671,7 @@ export const createCustomizedEnquiry = async (ctx: Context) => {
         }
 
         const pkg = await TourismModel.findById(packageId)
-        if (!pkg || !pkg.isActive) {
+        if (!pkg || !pkg.isActive || pkg.isDeleted) {
             set.status = 404
             return { status: false, error: "Package not found or inactive" }
         }

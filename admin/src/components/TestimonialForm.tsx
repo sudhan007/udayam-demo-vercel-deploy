@@ -19,6 +19,7 @@ export type TestimonialFormValues = {
   text: string
   trip: string
   isActive: boolean
+  order?: number
 }
 
 type Props = {
@@ -90,6 +91,7 @@ export function TestimonialForm({
       text: '',
       trip: '',
       isActive: true,
+      order: 0,
       ...defaultValues,
     },
   })
@@ -107,7 +109,10 @@ export function TestimonialForm({
             />
           </Field>
 
-          <Field label="Avatar Initial (Optional)" error={errors.avatarInitial?.message}>
+          <Field
+            label="Avatar Initial (Optional)"
+            error={errors.avatarInitial?.message}
+          >
             <Input
               placeholder="e.g. P"
               maxLength={2}
@@ -140,15 +145,34 @@ export function TestimonialForm({
             />
           </Field>
 
-          <Field label="Trip Details / Subtitle" required error={errors.trip?.message}>
+          <Field
+            label="Trip Details / Subtitle"
+            required
+            error={errors.trip?.message}
+          >
             <Input
               placeholder="e.g. Rajasthan Heritage Tour · 2025"
               {...register('trip', { required: 'Trip details are required' })}
             />
           </Field>
+
+          <Field label="Display Order" error={errors.order?.message}>
+            <Input
+              type="number"
+              placeholder="0"
+              {...register('order', {
+                valueAsNumber: true,
+                min: { value: 0, message: 'Must be ≥ 0' },
+              })}
+            />
+          </Field>
         </div>
 
-        <Field label="Testimonial Message" required error={errors.text?.message}>
+        <Field
+          label="Testimonial Message"
+          required
+          error={errors.text?.message}
+        >
           <div className="space-y-1.5">
             <Textarea
               placeholder="Write client testimonial message here..."
@@ -174,7 +198,8 @@ export function TestimonialForm({
                     : 'text-green-600 font-medium'
               }`}
             >
-              {textValue.length}/400 characters {textValue.length < 250 && '(Min 250 required)'}
+              {textValue.length}/400 characters{' '}
+              {textValue.length < 250 && '(Min 250 required)'}
             </div>
           </div>
         </Field>
@@ -189,7 +214,10 @@ export function TestimonialForm({
                 onCheckedChange={field.onChange}
                 id="isActive"
               />
-              <Label htmlFor="isActive" className="cursor-pointer text-sm font-medium">
+              <Label
+                htmlFor="isActive"
+                className="cursor-pointer text-sm font-medium"
+              >
                 Active / Published
               </Label>
             </div>
@@ -199,6 +227,7 @@ export function TestimonialForm({
 
       <div className="flex justify-end gap-3 pb-6">
         <Button
+          className="cursor-pointer"
           type="button"
           variant="outline"
           onClick={onCancel}
@@ -206,7 +235,11 @@ export function TestimonialForm({
         >
           Cancel
         </Button>
-        <Button type="submit" disabled={isSubmitting} className="min-w-28">
+        <Button
+          type="submit"
+          disabled={isSubmitting}
+          className="min-w-28 cursor-pointer"
+        >
           {isSubmitting ? 'Saving…' : submitLabel}
         </Button>
       </div>

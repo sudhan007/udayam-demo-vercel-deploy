@@ -10,6 +10,8 @@ import {
   CalendarCheck,
   Users,
   Sparkles,
+  Tag,
+  Globe,
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Outlet, useLocation, useNavigate } from '@tanstack/react-router'
@@ -53,6 +55,8 @@ const allLinks: NavLink[] = [
   { name: 'Tourism', href: '/tourism', icon: MapIcon },
   { name: 'Testimonials', href: '/testimonials', icon: MessageSquare },
   { name: 'Coupons', href: '/coupons', icon: TicketPercent },
+  { name: 'Trip Types', href: '/trip-types', icon: Tag },
+  { name: 'Regions', href: '/regions', icon: Globe },
 ]
 
 interface LayoutProps {

@@ -872,7 +872,7 @@
 //   )
 // }
 import { useEffect, useRef, useState } from 'react'
-import { useForm, Controller, type FieldErrors } from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
 import { useQuery } from '@tanstack/react-query'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -889,7 +889,6 @@ import { X, ImageIcon, Tag, Calendar, AlertCircle } from 'lucide-react'
 import { SearchInput } from '@/components/SearchInput'
 import { cn } from '@/lib/utils'
 import { _axios } from '@/lib/axios'
-import { toast } from 'sonner'
 import dayjs from 'dayjs'
 export type CouponFormValues = {
   title: string
@@ -935,22 +934,6 @@ function FieldError({ message }: { message?: string }) {
   )
 }
 
-// Walks the entire (nested) react-hook-form errors object and returns a flat
-// list of human-readable messages, used for the "missing fields" toast.
-function flattenErrors(errors: FieldErrors<CouponFormValues>): string[] {
-  const out: string[] = []
-  const walk = (node: unknown) => {
-    if (!node || typeof node !== 'object') return
-    const maybeMessage = (node as { message?: unknown }).message
-    if (typeof maybeMessage === 'string' && maybeMessage) {
-      out.push(maybeMessage)
-      return
-    }
-    Object.values(node as Record<string, unknown>).forEach(walk)
-  }
-  Object.values(errors).forEach(walk)
-  return out
-}
 
 function Section({
   title,
@@ -1187,27 +1170,10 @@ export function CouponForm({
     setValue('userIds', active, { shouldValidate: true })
   }
 
-  // Fires when required fields are missing / invalid — this is the "intimation"
-  // to the user, on top of the inline red highlighting on each field.
-  const handleInvalid = (formErrors: FieldErrors<CouponFormValues>) => {
-    // const messages = flattenErrors(formErrors)
-    // const count = messages.length
-    // if (count === 0) {
-    //   toast.error('Please fix the highlighted fields before continuing.')
-    //   return
-    // }
-    // const preview = messages.slice(0, 3).join(', ')
-    // toast.error(
-    //   `${count} field${count > 1 ? 's need' : ' needs'} your attention: ${preview}${
-    //     count > 3 ? `, +${count - 3} more` : ''
-    //   }`,
-    //   { duration: 5000 },
-    // )
-  }
 
   return (
     <form
-      onSubmit={handleSubmit(onSubmit, handleInvalid)}
+      onSubmit={handleSubmit(onSubmit)}
       className="space-y-6 max-w-4xl pb-12"
       noValidate
     >

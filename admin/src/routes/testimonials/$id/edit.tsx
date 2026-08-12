@@ -5,8 +5,11 @@ import { toast } from 'sonner'
 import { TestimonialForm } from '@/components/TestimonialForm'
 import type { TestimonialFormValues } from '@/components/TestimonialForm'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Button } from '@/components/ui/button'
+import { ArrowLeft } from 'lucide-react'
 
 export const Route = createFileRoute('/testimonials/$id/edit')({
+  validateSearch: (search: Record<string, unknown>) => search,
   component: EditTestimonialComponent,
 })
 
@@ -30,7 +33,7 @@ function EditTestimonialComponent() {
       toast.success('Testimonial updated successfully')
       queryClient.invalidateQueries({ queryKey: ['testimonials-admin'] })
       queryClient.invalidateQueries({ queryKey: ['testimonial', id] })
-      navigate({ to: '/testimonials' })
+      navigate({ to: '/testimonials', search: (prev) => prev })
     },
     onError: () => {
       toast.error('Failed to update testimonial')
@@ -57,8 +60,20 @@ function EditTestimonialComponent() {
   return (
     <div className="p-6 max-w-4xl space-y-5">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Edit Testimonial</h1>
-        <p className="text-sm text-muted-foreground mt-0.5">
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="cursor-pointer"
+            onClick={() => navigate({ to: '/testimonials', search: (prev) => prev })}
+          >
+            <ArrowLeft className="w-4 h-4" />
+          </Button>
+          <h1 className="text-2xl font-semibold tracking-tight">
+            Edit Testimonial
+          </h1>
+        </div>
+        <p className="text-sm text-muted-foreground mt-0.5 px-10">
           Modify testimonial details.
         </p>
       </div>
@@ -68,7 +83,7 @@ function EditTestimonialComponent() {
         onSubmit={(updateData) => editMutation.mutate(updateData)}
         isSubmitting={editMutation.isPending}
         submitLabel="Save Changes"
-        onCancel={() => navigate({ to: '/testimonials' })}
+        onCancel={() => navigate({ to: '/testimonials', search: (prev) => prev })}
       />
     </div>
   )

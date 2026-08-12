@@ -1,10 +1,9 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { _axios } from '@/lib/axios'
 import { Pagination } from '@/components/Pagination'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import {
   Table,
   TableBody,
@@ -35,7 +34,27 @@ import { Plus, Pencil, Trash2, Check, X, Tag } from 'lucide-react'
 import { SearchInput } from '@/components/SearchInput'
 import { toast } from 'sonner'
 
+interface CouponsSearch {
+  page?: number
+  limit?: number
+  search?: string
+  status?: string
+  applicableFor?: string
+  sortBy?: string
+}
+
 export const Route = createFileRoute('/coupons/')({
+  validateSearch: (search: Record<string, unknown>): CouponsSearch => ({
+    page: search.page ? Number(search.page) : 1,
+    limit: search.limit ? Number(search.limit) : 10,
+    search: typeof search.search === 'string' ? search.search : undefined,
+    status: typeof search.status === 'string' ? search.status : undefined,
+    applicableFor:
+      typeof search.applicableFor === 'string'
+        ? search.applicableFor
+        : undefined,
+    sortBy: typeof search.sortBy === 'string' ? search.sortBy : undefined,
+  }),
   component: CouponsIndexComponent,
 })
 
@@ -73,21 +92,37 @@ type FilterState = {
 
 function CouponsIndexComponent() {
   const queryClient = useQueryClient()
-  const [page, setPage] = useState(1)
-  const [limit, setLimit] = useState(10)
+  const searchParams = Route.useSearch()
+  const navigate = useNavigate({ from: Route.fullPath })
 
-  const [filters, setFilters] = useState<FilterState>({
-    search: '',
-    status: 'ALL',
-    applicableFor: 'ALL_TYPES',
-    sortBy: 'newest',
-  })
+  const page = searchParams.page ?? 1
+  const limit = searchParams.limit ?? 10
+
+  const filters: FilterState = {
+    search: searchParams.search ?? '',
+    status: searchParams.status ?? 'ALL',
+    applicableFor: searchParams.applicableFor ?? 'ALL_TYPES',
+    sortBy: searchParams.sortBy ?? 'newest',
+  }
 
   const [deleteId, setDeleteId] = useState<string | null>(null)
 
+  const setPage = (p: number) => {
+    navigate({ search: (prev) => ({ ...prev, page: p }) })
+  }
+
+  const setLimit = (l: number) => {
+    navigate({ search: (prev) => ({ ...prev, limit: l, page: 1 }) })
+  }
+
   const setFilter = (key: keyof FilterState, value: string) => {
-    setFilters((prev) => ({ ...prev, [key]: value }))
-    setPage(1)
+    navigate({
+      search: (prev) => ({
+        ...prev,
+        [key]: value || undefined,
+        page: 1,
+      }),
+    })
   }
 
   const queryParams = {
@@ -95,7 +130,9 @@ function CouponsIndexComponent() {
     limit: limit.toString(),
     ...(filters.search && { search: filters.search }),
     ...(filters.status !== 'ALL' && { status: filters.status }),
-    ...(filters.applicableFor !== 'ALL_TYPES' && { applicableFor: filters.applicableFor }),
+    ...(filters.applicableFor !== 'ALL_TYPES' && {
+      applicableFor: filters.applicableFor,
+    }),
     ...(filters.sortBy && { sortBy: filters.sortBy }),
   }
 
@@ -140,7 +177,7 @@ function CouponsIndexComponent() {
             Create, manage, and configure discount coupons for users and packages
           </p>
         </div>
-        <Link to="/coupons/add">
+        <Link to="/coupons/add" search={(prev) => prev}>
           <Button className="gap-2 shrink-0 cursor-pointer">
             <Plus className="w-4 h-4" />
             Add Coupon
@@ -203,18 +240,19 @@ function CouponsIndexComponent() {
             </SelectContent>
           </Select>
 
-          {(filters.search || filters.status !== 'ALL' || filters.applicableFor !== 'ALL_TYPES') && (
+          {(filters.search ||
+            filters.status !== 'ALL' ||
+            filters.applicableFor !== 'ALL_TYPES') && (
             <Button
               variant="ghost"
               size="sm"
               onClick={() => {
-                setFilters({
-                  search: '',
-                  status: 'ALL',
-                  applicableFor: 'ALL_TYPES',
-                  sortBy: 'newest',
+                navigate({
+                  search: (prev) => ({
+                    page: 1,
+                    limit: prev.limit,
+                  }),
                 })
-                setPage(1)
               }}
               className="text-xs h-9"
             >
@@ -314,8 +352,16 @@ function CouponsIndexComponent() {
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-1">
-                      <Link to="/coupons/$id/edit" params={{ id: coupon._id }}>
-                        <Button variant="ghost" size="icon" className="h-8 w-8 cursor-pointer">
+                      <Link
+                        to="/coupons/$id/edit"
+                        params={{ id: coupon._id }}
+                        search={(prev) => prev}
+                      >
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 cursor-pointer"
+                        >
                           <Pencil className="w-3.5 h-3.5" />
                         </Button>
                       </Link>

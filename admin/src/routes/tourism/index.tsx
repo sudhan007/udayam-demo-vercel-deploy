@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { _axios } from '@/lib/axios'
@@ -44,7 +44,53 @@ import {
 } from 'lucide-react'
 import { toast } from 'sonner'
 
+interface TourismSearch {
+  page?: number
+  limit?: number
+  search?: string
+  packageType?: string
+  bookingType?: string
+  destinationRegions?: string[]
+  tripTypes?: string[]
+  durationCategories?: string[]
+  minPrice?: string
+  maxPrice?: string
+  sortBy?: string
+  isActive?: string
+  isFeatured?: string
+}
+
 export const Route = createFileRoute('/tourism/')({
+  validateSearch: (search: Record<string, unknown>): TourismSearch => ({
+    page: search.page ? Number(search.page) : 1,
+    limit: search.limit ? Number(search.limit) : 1,
+    search: typeof search.search === 'string' ? search.search : undefined,
+    packageType:
+      typeof search.packageType === 'string' ? search.packageType : undefined,
+    bookingType:
+      typeof search.bookingType === 'string' ? search.bookingType : undefined,
+    destinationRegions: Array.isArray(search.destinationRegions)
+      ? (search.destinationRegions as string[])
+      : typeof search.destinationRegions === 'string'
+        ? [search.destinationRegions]
+        : undefined,
+    tripTypes: Array.isArray(search.tripTypes)
+      ? (search.tripTypes as string[])
+      : typeof search.tripTypes === 'string'
+        ? [search.tripTypes]
+        : undefined,
+    durationCategories: Array.isArray(search.durationCategories)
+      ? (search.durationCategories as string[])
+      : typeof search.durationCategories === 'string'
+        ? [search.durationCategories]
+        : undefined,
+    minPrice: typeof search.minPrice === 'string' ? search.minPrice : undefined,
+    maxPrice: typeof search.maxPrice === 'string' ? search.maxPrice : undefined,
+    sortBy: typeof search.sortBy === 'string' ? search.sortBy : undefined,
+    isActive: typeof search.isActive === 'string' ? search.isActive : undefined,
+    isFeatured:
+      typeof search.isFeatured === 'string' ? search.isFeatured : undefined,
+  }),
   component: RouteComponent,
 })
 
@@ -102,26 +148,7 @@ type FilterState = {
   isFeatured: string
 }
 
-// ─── Constants ───────────────────────────────────────────────────────────────
 
-const DESTINATION_REGIONS = [
-  { value: 'INDIA', label: 'India' },
-  { value: 'EUROPE', label: 'Europe' },
-  { value: 'SOUTH_EAST_ASIA', label: 'South-East Asia' },
-  { value: 'MIDDLE_EAST', label: 'Middle East' },
-  { value: 'AMERICAS', label: 'Americas' },
-  { value: 'AFRICA', label: 'Africa' },
-  { value: 'OCEANIA', label: 'Oceania' },
-]
-
-const TRIP_TYPES = [
-  { value: 'HONEYMOON', label: 'Honeymoon' },
-  { value: 'FAMILY', label: 'Family' },
-  { value: 'ADVENTURE', label: 'Adventure' },
-  { value: 'SOLO', label: 'Solo Travel' },
-  { value: 'GROUP', label: 'Group' },
-  { value: 'PILGRIMAGE', label: 'Pilgrimage' },
-]
 
 const DURATION_CATEGORIES = [
   { value: '1-3', label: '1–3 Days' },
@@ -130,37 +157,58 @@ const DURATION_CATEGORIES = [
   { value: '15+', label: '15+ Days' },
 ]
 
-const BADGE_COLOR: Record<string, string> = {
-  domestic: 'bg-blue-100 text-blue-700',
-  intl: 'bg-purple-100 text-purple-700',
-  hot: 'bg-orange-100 text-orange-700',
-  sale: 'bg-green-100 text-green-700',
-  new: 'bg-pink-100 text-pink-700',
+const BADGE_STYLES: Record<string, { bg: string; color: string }> = {
+  domestic: { bg: '#e8f5e9', color: '#2E7D32' },
+  intl: { bg: 'rgba(27,43,107,0.85)', color: '#ffffff' },
+  hot: { bg: '#E53E3E', color: '#ffffff' },
+  sale: { bg: '#F59E0B', color: '#ffffff' },
+  new: { bg: '#1B2B6B', color: '#ffffff' },
 }
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
 function RouteComponent() {
-  const queryClient = useQueryClient()
+  const { data: regionsQuery } = useQuery({
+    queryKey: ['regions-list'],
+    queryFn: async () => {
+      const res = await _axios.get('/regions', { params: { isActive: 'true' } })
+      return res.data?.data || []
+    },
+  })
 
-  const [page, setPage] = useState(1)
-  const [limit, setLimit] = useState(10)
+  const { data: tripTypesQuery } = useQuery({
+    queryKey: ['trip-types-list'],
+    queryFn: async () => {
+      const res = await _axios.get('/trip-types', { params: { isActive: 'true' } })
+      return res.data?.data || []
+    },
+  })
+
+  const destinationRegions = regionsQuery?.map((r: any) => ({ value: r._id, label: r.name })) || []
+  const tripTypesList = tripTypesQuery?.map((t: any) => ({ value: t._id, label: t.name })) || []
+
+  const queryClient = useQueryClient()
+  const searchParams = Route.useSearch()
+  const navigate = useNavigate({ from: Route.fullPath })
+
+  const page = searchParams.page ?? 1
+  const limit = searchParams.limit ?? 1
   const [deleteId, setDeleteId] = useState<string | null>(null)
   const [showFilters, setShowFilters] = useState(false)
 
-  const [filters, setFilters] = useState<FilterState>({
-    search: '',
-    packageType: 'ALL',
-    bookingType: 'ALL',
-    destinationRegions: [],
-    tripTypes: [],
-    durationCategories: [],
-    minPrice: '',
-    maxPrice: '',
-    sortBy: 'newest',
-    isActive: 'true',
-    isFeatured: 'all',
-  })
+  const filters: FilterState = {
+    search: searchParams.search ?? '',
+    packageType: searchParams.packageType ?? 'ALL',
+    bookingType: searchParams.bookingType ?? 'ALL',
+    destinationRegions: searchParams.destinationRegions ?? [],
+    tripTypes: searchParams.tripTypes ?? [],
+    durationCategories: searchParams.durationCategories ?? [],
+    minPrice: searchParams.minPrice ?? '',
+    maxPrice: searchParams.maxPrice ?? '',
+    sortBy: searchParams.sortBy ?? 'newest',
+    isActive: searchParams.isActive ?? 'true',
+    isFeatured: searchParams.isFeatured ?? 'all',
+  }
 
   // Build query params
   const queryParams = {
@@ -218,39 +266,48 @@ function RouteComponent() {
     },
   })
 
+  const setPage = (p: number) => {
+    navigate({ search: (prev) => ({ ...prev, page: p }) })
+  }
+
+  const setLimit = (l: number) => {
+    navigate({ search: (prev) => ({ ...prev, limit: l, page: 1 }) })
+  }
+
   const toggleMulti = (
     key: 'destinationRegions' | 'tripTypes' | 'durationCategories',
     value: string,
   ) => {
-    setFilters((prev) => ({
-      ...prev,
-      [key]: prev[key].includes(value)
-        ? prev[key].filter((v) => v !== value)
-        : [...prev[key], value],
-    }))
-    setPage(1)
+    const current = filters[key] || []
+    const next = current.includes(value)
+      ? current.filter((v) => v !== value)
+      : [...current, value]
+    navigate({
+      search: (prev) => ({
+        ...prev,
+        [key]: next.length ? next : undefined,
+        page: 1,
+      }),
+    })
   }
 
   const setFilter = (key: keyof FilterState, value: string) => {
-    setFilters((prev) => ({ ...prev, [key]: value }))
-    setPage(1)
+    navigate({
+      search: (prev) => ({
+        ...prev,
+        [key]: value || undefined,
+        page: 1,
+      }),
+    })
   }
 
   const clearFilters = () => {
-    setFilters({
-      search: '',
-      packageType: 'ALL',
-      bookingType: 'ALL',
-      destinationRegions: [],
-      tripTypes: [],
-      durationCategories: [],
-      minPrice: '',
-      maxPrice: '',
-      sortBy: 'newest',
-      isActive: 'true',
-      isFeatured: 'all',
+    navigate({
+      search: (prev) => ({
+        page: 1,
+        limit: prev.limit,
+      }),
     })
-    setPage(1)
   }
 
   const activeFilterCount = [
@@ -278,7 +335,7 @@ function RouteComponent() {
             Manage all travel packages
           </p>
         </div>
-        <Link to="/tourism/add">
+        <Link to="/tourism/add" search={(prev) => prev}>
           <Button className="gap-2 cursor-pointer">
             <Plus className="w-4 h-4" />
             Add Package
@@ -435,7 +492,7 @@ function RouteComponent() {
               Destinations
             </p>
             <div className="flex flex-wrap gap-1.5">
-              {DESTINATION_REGIONS.map((r) => (
+              {destinationRegions.map((r) => (
                 <button
                   key={r.value}
                   onClick={() => toggleMulti('destinationRegions', r.value)}
@@ -457,7 +514,7 @@ function RouteComponent() {
               Trip Type
             </p>
             <div className="flex flex-wrap gap-1.5">
-              {TRIP_TYPES.map((t) => (
+              {tripTypesList.map((t) => (
                 <button
                   key={t.value}
                   onClick={() => toggleMulti('tripTypes', t.value)}
@@ -651,14 +708,24 @@ function RouteComponent() {
                   </TableCell>
                   <TableCell className="hidden md:table-cell">
                     <div className="flex flex-wrap gap-1">
-                      {pkg.badges.map((b, i) => (
-                        <span
-                          key={i}
-                          className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${BADGE_COLOR[b.variant] ?? 'bg-gray-100 text-gray-700'}`}
-                        >
-                          {b.text}
-                        </span>
-                      ))}
+                      {pkg.badges.map((b, i) => {
+                        const s = BADGE_STYLES[b.variant] || {
+                          bg: '#ccc',
+                          color: '#fff',
+                        }
+                        return (
+                          <span
+                            key={i}
+                            style={{
+                              backgroundColor: s.bg,
+                              color: s.color,
+                            }}
+                            className="text-[10px] px-1.5 py-0.5 rounded-full font-medium"
+                          >
+                            {b.text}
+                          </span>
+                        )
+                      })}
                     </div>
                   </TableCell>
                   <TableCell className="hidden sm:table-cell">
@@ -692,7 +759,11 @@ function RouteComponent() {
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-1">
-                      <Link to="/tourism/$id/edit" params={{ id: pkg._id }}>
+                      <Link
+                        to="/tourism/$id/edit"
+                        params={{ id: pkg._id }}
+                        search={(prev) => prev}
+                      >
                         <Button
                           variant="ghost"
                           size="icon"

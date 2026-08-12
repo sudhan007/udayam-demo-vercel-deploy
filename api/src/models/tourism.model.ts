@@ -13,10 +13,10 @@ export interface IBadge {
 export interface ITourism {
     title: string
     destination: string
-    destinationRegion: DestinationRegion
+    destinationRegion: any
     packageType: PackageType
     bookingType: BookingType
-    tripTypes: TripType[]
+    tripTypes: any[]
 
 
     price?: number
@@ -46,6 +46,7 @@ export interface ITourism {
 
     isActive: boolean
     isFeatured: boolean
+    isDeleted: boolean
     label?: string
 
     createdAt?: Date
@@ -69,8 +70,8 @@ const tourismSchema = new Schema<ITourism>(
         title: { type: String, required: true, trim: true },
         destination: { type: String, required: true, trim: true },
         destinationRegion: {
-            type: String,
-            enum: ["INDIA", "EUROPE", "SOUTH_EAST_ASIA", "MIDDLE_EAST", "AMERICAS", "AFRICA", "OCEANIA"],
+            type: Schema.Types.ObjectId,
+            ref: "region",
             required: true,
         },
         packageType: {
@@ -86,8 +87,8 @@ const tourismSchema = new Schema<ITourism>(
         },
         tripTypes: [
             {
-                type: String,
-                enum: ["HONEYMOON", "FAMILY", "ADVENTURE", "SOLO", "GROUP", "PILGRIMAGE"],
+                type: Schema.Types.ObjectId,
+                ref: "triptype",
             },
         ],
 
@@ -133,6 +134,7 @@ const tourismSchema = new Schema<ITourism>(
 
         isActive: { type: Boolean, default: true },
         isFeatured: { type: Boolean, default: false },
+        isDeleted: { type: Boolean, default: false },
         label: { type: String, trim: true },
     },
     { timestamps: true }
@@ -145,6 +147,7 @@ tourismSchema.index({ tripTypes: 1 })
 tourismSchema.index({ durationCategory: 1 })
 tourismSchema.index({ price: 1 })
 tourismSchema.index({ isActive: 1 })
+tourismSchema.index({ isDeleted: 1 })
 tourismSchema.index({ isFeatured: -1, createdAt: -1 })
 tourismSchema.index({ order: 1, createdAt: -1 })
 tourismSchema.index({ title: "text", destination: "text", description: "text" })

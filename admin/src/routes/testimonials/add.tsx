@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { ArrowLeft } from 'lucide-react'
 
 export const Route = createFileRoute('/testimonials/add')({
+  validateSearch: (search: Record<string, unknown>) => search,
   component: AddTestimonialComponent,
 })
 
@@ -36,7 +37,7 @@ function AddTestimonialComponent() {
             variant="ghost"
             size="icon"
             className="cursor-pointer"
-            onClick={() => navigate({ to: '/tourism' })}
+            onClick={() => navigate({ to: '/testimonials', search: (prev) => prev })}
           >
             <ArrowLeft className="w-4 h-4" />
           </Button>
@@ -53,7 +54,7 @@ function AddTestimonialComponent() {
         onSubmit={(data) => addMutation.mutate(data)}
         isSubmitting={addMutation.isPending}
         submitLabel="Create Testimonial"
-        onCancel={() => navigate({ to: '/testimonials' })}
+        onCancel={() => navigate({ to: '/testimonials', search: (prev) => prev })}
       />
     </div>
   )

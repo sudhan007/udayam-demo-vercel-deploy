@@ -1,26 +1,37 @@
-import { Schema, model } from "mongoose"
+import { Schema, model } from "mongoose";
 
 export interface ITestimonial {
-    name: string
-    avatarInitial?: string
-    rating: number
-    text: string
-    trip: string
-    isActive: boolean
-    createdAt?: Date
-    updatedAt?: Date
+  name: string;
+  avatarInitial?: string;
+  rating: number;
+  text: string;
+  trip: string;
+  isActive: boolean;
+  order?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 const testimonialSchema = new Schema<ITestimonial>(
-    {
-        name: { type: String, required: true, trim: true },
-        avatarInitial: { type: String, trim: true },
-        rating: { type: Number, required: true, min: 1, max: 5, default: 5 },
-        text: { type: String, required: true, trim: true, minlength: 250, maxlength: 400 },
-        trip: { type: String, required: true, trim: true },
-        isActive: { type: Boolean, default: true },
+  {
+    name: { type: String, required: true, trim: true },
+    avatarInitial: { type: String, trim: true },
+    rating: { type: Number, required: true, min: 1, max: 5, default: 5 },
+    text: {
+      type: String,
+      required: true,
+      trim: true,
+      minlength: 250,
+      maxlength: 400,
     },
-    { timestamps: true }
-)
+    trip: { type: String, required: true, trim: true },
+    isActive: { type: Boolean, default: true },
+    order: { type: Number, default: 0 },
+  },
+  { timestamps: true },
+);
 
-export const TestimonialModel = model<ITestimonial>("testimonial", testimonialSchema)
+export const TestimonialModel = model<ITestimonial>(
+  "testimonial",
+  testimonialSchema,
+);

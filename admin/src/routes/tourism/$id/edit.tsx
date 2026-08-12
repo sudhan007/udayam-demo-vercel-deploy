@@ -8,6 +8,7 @@ import { _axios } from '@/lib/axios'
 import { TourismForm, type TourismFormValues } from '@/components/TourismForm'
 
 export const Route = createFileRoute('/tourism/$id/edit')({
+  validateSearch: (search: Record<string, unknown>) => search,
   component: RouteComponent,
 })
 
@@ -60,7 +61,7 @@ function RouteComponent() {
 
       for (const key of scalars) {
         const val = values[key]
-        if (val !== undefined && val !== '') {
+        if (val !== undefined) {
           form.append(key, String(val))
         }
       }
@@ -96,7 +97,7 @@ function RouteComponent() {
       toast.success('Package updated successfully')
       queryClient.invalidateQueries({ queryKey: ['tourism'] })
       queryClient.invalidateQueries({ queryKey: ['tourism', id] })
-      navigate({ to: '/tourism' })
+      navigate({ to: '/tourism', search: (prev) => prev })
     },
     onError: (err: any) => {
       toast.error(err?.response?.data?.error ?? 'Failed to update package')
@@ -135,10 +136,15 @@ function RouteComponent() {
   const defaultValues: Partial<TourismFormValues> = {
     title: pkg.title,
     destination: pkg.destination,
-    destinationRegion: pkg.destinationRegion,
+    destinationRegion:
+      typeof pkg.destinationRegion === 'object'
+        ? pkg.destinationRegion?._id
+        : pkg.destinationRegion,
     packageType: pkg.packageType,
     bookingType: pkg.bookingType ?? 'STANDARD',
-    tripTypes: pkg.tripTypes ?? [],
+    tripTypes: (pkg.tripTypes ?? []).map((t: any) =>
+      typeof t === 'object' ? t?._id : t
+    ),
     price: pkg.price,
     strikePrice: pkg.strikePrice,
     discount: pkg.discount ?? '',
@@ -166,7 +172,7 @@ function RouteComponent() {
           variant="ghost"
           size="icon"
           className="cursor-pointer"
-          onClick={() => navigate({ to: '/tourism' })}
+          onClick={() => navigate({ to: '/tourism', search: (prev) => prev })}
         >
           <ArrowLeft className="w-4 h-4" />
         </Button>
@@ -186,7 +192,7 @@ function RouteComponent() {
         submitLabel="Save Changes"
         isSubmitting={mutation.isPending}
         onSubmit={(data) => mutation.mutate(data)}
-        onCancel={() => navigate({ to: '/tourism' })}
+        onCancel={() => navigate({ to: '/tourism', search: (prev) => prev })}
       />
     </div>
   )

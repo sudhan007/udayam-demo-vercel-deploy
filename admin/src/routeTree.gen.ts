@@ -12,8 +12,10 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as UsersIndexRouteImport } from './routes/users/index'
+import { Route as TripTypesIndexRouteImport } from './routes/trip-types/index'
 import { Route as TourismIndexRouteImport } from './routes/tourism/index'
 import { Route as TestimonialsIndexRouteImport } from './routes/testimonials/index'
+import { Route as RegionsIndexRouteImport } from './routes/regions/index'
 import { Route as CouponsIndexRouteImport } from './routes/coupons/index'
 import { Route as BookingsIndexRouteImport } from './routes/bookings/index'
 import { Route as TourismAddRouteImport } from './routes/tourism/add'
@@ -41,6 +43,11 @@ const UsersIndexRoute = UsersIndexRouteImport.update({
   path: '/users/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TripTypesIndexRoute = TripTypesIndexRouteImport.update({
+  id: '/trip-types/',
+  path: '/trip-types/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TourismIndexRoute = TourismIndexRouteImport.update({
   id: '/tourism/',
   path: '/tourism/',
@@ -49,6 +56,11 @@ const TourismIndexRoute = TourismIndexRouteImport.update({
 const TestimonialsIndexRoute = TestimonialsIndexRouteImport.update({
   id: '/testimonials/',
   path: '/testimonials/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RegionsIndexRoute = RegionsIndexRouteImport.update({
+  id: '/regions/',
+  path: '/regions/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CouponsIndexRoute = CouponsIndexRouteImport.update({
@@ -118,8 +130,10 @@ export interface FileRoutesByFullPath {
   '/tourism/add': typeof TourismAddRoute
   '/bookings/': typeof BookingsIndexRoute
   '/coupons/': typeof CouponsIndexRoute
+  '/regions/': typeof RegionsIndexRoute
   '/testimonials/': typeof TestimonialsIndexRoute
   '/tourism/': typeof TourismIndexRoute
+  '/trip-types/': typeof TripTypesIndexRoute
   '/users/': typeof UsersIndexRoute
   '/coupons/$id/edit': typeof CouponsIdEditRoute
   '/testimonials/$id/edit': typeof TestimonialsIdEditRoute
@@ -136,8 +150,10 @@ export interface FileRoutesByTo {
   '/tourism/add': typeof TourismAddRoute
   '/bookings': typeof BookingsIndexRoute
   '/coupons': typeof CouponsIndexRoute
+  '/regions': typeof RegionsIndexRoute
   '/testimonials': typeof TestimonialsIndexRoute
   '/tourism': typeof TourismIndexRoute
+  '/trip-types': typeof TripTypesIndexRoute
   '/users': typeof UsersIndexRoute
   '/coupons/$id/edit': typeof CouponsIdEditRoute
   '/testimonials/$id/edit': typeof TestimonialsIdEditRoute
@@ -155,8 +171,10 @@ export interface FileRoutesById {
   '/tourism/add': typeof TourismAddRoute
   '/bookings/': typeof BookingsIndexRoute
   '/coupons/': typeof CouponsIndexRoute
+  '/regions/': typeof RegionsIndexRoute
   '/testimonials/': typeof TestimonialsIndexRoute
   '/tourism/': typeof TourismIndexRoute
+  '/trip-types/': typeof TripTypesIndexRoute
   '/users/': typeof UsersIndexRoute
   '/coupons/$id/edit': typeof CouponsIdEditRoute
   '/testimonials/$id/edit': typeof TestimonialsIdEditRoute
@@ -175,8 +193,10 @@ export interface FileRouteTypes {
     | '/tourism/add'
     | '/bookings/'
     | '/coupons/'
+    | '/regions/'
     | '/testimonials/'
     | '/tourism/'
+    | '/trip-types/'
     | '/users/'
     | '/coupons/$id/edit'
     | '/testimonials/$id/edit'
@@ -193,8 +213,10 @@ export interface FileRouteTypes {
     | '/tourism/add'
     | '/bookings'
     | '/coupons'
+    | '/regions'
     | '/testimonials'
     | '/tourism'
+    | '/trip-types'
     | '/users'
     | '/coupons/$id/edit'
     | '/testimonials/$id/edit'
@@ -211,8 +233,10 @@ export interface FileRouteTypes {
     | '/tourism/add'
     | '/bookings/'
     | '/coupons/'
+    | '/regions/'
     | '/testimonials/'
     | '/tourism/'
+    | '/trip-types/'
     | '/users/'
     | '/coupons/$id/edit'
     | '/testimonials/$id/edit'
@@ -230,8 +254,10 @@ export interface RootRouteChildren {
   TourismAddRoute: typeof TourismAddRoute
   BookingsIndexRoute: typeof BookingsIndexRoute
   CouponsIndexRoute: typeof CouponsIndexRoute
+  RegionsIndexRoute: typeof RegionsIndexRoute
   TestimonialsIndexRoute: typeof TestimonialsIndexRoute
   TourismIndexRoute: typeof TourismIndexRoute
+  TripTypesIndexRoute: typeof TripTypesIndexRoute
   UsersIndexRoute: typeof UsersIndexRoute
   CouponsIdEditRoute: typeof CouponsIdEditRoute
   TestimonialsIdEditRoute: typeof TestimonialsIdEditRoute
@@ -261,6 +287,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UsersIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/trip-types/': {
+      id: '/trip-types/'
+      path: '/trip-types'
+      fullPath: '/trip-types/'
+      preLoaderRoute: typeof TripTypesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tourism/': {
       id: '/tourism/'
       path: '/tourism'
@@ -273,6 +306,13 @@ declare module '@tanstack/react-router' {
       path: '/testimonials'
       fullPath: '/testimonials/'
       preLoaderRoute: typeof TestimonialsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/regions/': {
+      id: '/regions/'
+      path: '/regions'
+      fullPath: '/regions/'
+      preLoaderRoute: typeof RegionsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/coupons/': {
@@ -366,8 +406,10 @@ const rootRouteChildren: RootRouteChildren = {
   TourismAddRoute: TourismAddRoute,
   BookingsIndexRoute: BookingsIndexRoute,
   CouponsIndexRoute: CouponsIndexRoute,
+  RegionsIndexRoute: RegionsIndexRoute,
   TestimonialsIndexRoute: TestimonialsIndexRoute,
   TourismIndexRoute: TourismIndexRoute,
+  TripTypesIndexRoute: TripTypesIndexRoute,
   UsersIndexRoute: UsersIndexRoute,
   CouponsIdEditRoute: CouponsIdEditRoute,
   TestimonialsIdEditRoute: TestimonialsIdEditRoute,
