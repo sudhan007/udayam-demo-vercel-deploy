@@ -1568,7 +1568,7 @@ export const TourismBookingModal: React.FC<TourismBookingModalProps> = ({
         setCouponError(res.data?.error || "Failed to validate coupon")
       }
     } catch (err: any) {
-      setCouponError(err?.response?.data?.error || "Invalid coupon code")
+      setCouponError(err?.response?.data?.error || "Selected coupon code is not applicable")
     } finally {
       setValidatingCoupon(false)
     }

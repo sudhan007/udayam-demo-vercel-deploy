@@ -1041,7 +1041,7 @@ export function CouponForm({
     minimumBookingAmount: 0,
     totalUsageLimit: 1,
     perUserUsageLimit: 1,
-    applicableFor: 'ALL',
+    applicableFor: 'STANDARD',
     packageIds: [],
     userType: 'ALL_USERS',
     userIds: [],
@@ -1572,7 +1572,7 @@ export function CouponForm({
                     <SelectValue placeholder="Select applicability" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="ALL">All Packages</SelectItem>
+                    {/* <SelectItem value="ALL">All Packages</SelectItem> */}
                     <SelectItem value="STANDARD">
                       Standard Packages Only
                     </SelectItem>
