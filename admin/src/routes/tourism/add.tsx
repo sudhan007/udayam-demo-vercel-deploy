@@ -61,12 +61,8 @@ function RouteComponent() {
       form.append('badges', JSON.stringify(values.badges))
       form.append('inclusions', JSON.stringify(values.inclusions))
       form.append('exclusions', JSON.stringify(values.exclusions))
-      if (values.highlights?.length) {
-        form.append('highlights', JSON.stringify(values.highlights))
-      }
-      if (values.itinerary?.length) {
-        form.append('itinerary', JSON.stringify(values.itinerary))
-      }
+      form.append('highlights', JSON.stringify(values.highlights ?? []))
+      form.append('itinerary', JSON.stringify(values.itinerary ?? []))
 
       // File
       if (values.imageUrl) {

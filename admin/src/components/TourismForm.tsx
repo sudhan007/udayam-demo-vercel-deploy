@@ -741,7 +741,7 @@
 //   )
 // }
 import { useRef, useState } from 'react'
-import { useForm, Controller } from 'react-hook-form'
+import { useForm, Controller, useFieldArray } from 'react-hook-form'
 import { useQuery } from '@tanstack/react-query'
 import { _axios } from '@/lib/axios'
 import { Input } from '@/components/ui/input'
@@ -798,8 +798,6 @@ type Props = {
   submitLabel: string
   onCancel: () => void
 }
-
-
 
 export const BADGE_STYLES: Record<
   BadgeVariant,
@@ -893,13 +891,17 @@ export function TourismForm({
   const { data: tripTypesQuery } = useQuery({
     queryKey: ['trip-types-list'],
     queryFn: async () => {
-      const res = await _axios.get('/trip-types', { params: { isActive: 'true' } })
+      const res = await _axios.get('/trip-types', {
+        params: { isActive: 'true' },
+      })
       return res.data?.data || []
     },
   })
 
-  const destinationRegions = regionsQuery?.map((r: any) => ({ value: r._id, label: r.name })) || []
-  const tripTypesList = tripTypesQuery?.map((t: any) => ({ value: t._id, label: t.name })) || []
+  const destinationRegions =
+    regionsQuery?.map((r: any) => ({ value: r._id, label: r.name })) || []
+  const tripTypesList =
+    tripTypesQuery?.map((t: any) => ({ value: t._id, label: t.name })) || []
   const {
     register,
     handleSubmit,
@@ -933,10 +935,18 @@ export function TourismForm({
   )
   const fileInputRef = useRef<HTMLInputElement>(null)
 
+  const {
+    fields: itineraryFields,
+    append: appendItinerary,
+    remove: removeItinerary,
+  } = useFieldArray({
+    control,
+    name: 'itinerary',
+  })
+
   const badges = watch('badges')
   const inclusions = watch('inclusions')
   const exclusions = watch('exclusions') ?? []
-  const itinerary = watch('itinerary') ?? []
   const bookingType = watch('bookingType')
 
   const addBadge = () => {
@@ -968,19 +978,23 @@ export function TourismForm({
     )
 
   const addItineraryDay = () =>
-    setValue('itinerary', [
-      ...itinerary,
-      { day: itinerary.length + 1, title: '', description: '' },
-    ])
-  const removeItineraryDay = (i: number) =>
-    setValue(
-      'itinerary',
-      itinerary.filter((_, idx) => idx !== i),
-    )
+    appendItinerary({
+      day: itineraryFields.length + 1,
+      title: '',
+      description: '',
+    })
+  const removeItineraryDay = (i: number) => removeItinerary(i)
 
   // Fires when the form passes validation.
   const handleValid = (data: TourismFormValues) => {
-    onSubmit(data)
+    const formattedData = {
+      ...data,
+      itinerary: data.itinerary?.map((item, idx) => ({
+        ...item,
+        day: idx + 1,
+      })),
+    }
+    onSubmit(formattedData)
   }
 
   return (
@@ -1041,7 +1055,7 @@ export function TourismForm({
                     <SelectValue placeholder="Select region" />
                   </SelectTrigger>
                   <SelectContent>
-                    {destinationRegions.map((r) => (
+                    {destinationRegions.map((r: any) => (
                       <SelectItem
                         className="cursor-pointer"
                         key={r.value}
@@ -1131,7 +1145,7 @@ export function TourismForm({
                   'flex flex-wrap gap-2 rounded-lg border border-transparent p-2 -m-2 transition-colors',
                 )}
               >
-                {tripTypesList.map((t) => {
+                {tripTypesList.map((t: any) => {
                   const active = field.value?.includes(t.value)
                   return (
                     <button
@@ -1606,13 +1620,13 @@ export function TourismForm({
       {/* Itinerary */}
       <Section title="Itinerary (optional)">
         <div className="space-y-3">
-          {itinerary.map((_, i) => {
+          {itineraryFields.map((field, i) => {
             const titleError = errors.itinerary?.[i]?.title?.message
             const descError = errors.itinerary?.[i]?.description?.message
             const hasRowError = !!titleError || !!descError
             return (
               <div
-                key={i}
+                key={field.id}
                 className={cn(
                   'rounded-lg border p-4 space-y-3 bg-muted/20',
                   hasRowError && 'border-red-500 bg-red-50',

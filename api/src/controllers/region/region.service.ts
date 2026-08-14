@@ -28,6 +28,7 @@ export const createRegion = async (ctx: Context<{ body: any }>) => {
       name,
       isActive: body.isActive !== undefined ? body.isActive : true,
       isDeleted: false,
+      order: body.order !== undefined && body.order !== "" ? Number(body.order) : 0,
     });
 
     set.status = 201;
@@ -78,6 +79,10 @@ export const updateRegion = async (
 
     if (body.isActive !== undefined) {
       updateData.isActive = body.isActive;
+    }
+
+    if (body.order !== undefined) {
+      updateData.order = body.order !== "" ? Number(body.order) : 0;
     }
 
     const updated = await RegionModel.findByIdAndUpdate(
@@ -175,7 +180,7 @@ export const getAllRegions = async (ctx: Context<{ query: any }>) => {
 
       const [data, total] = await Promise.all([
         RegionModel.find(filter)
-          .sort({ name: 1, createdAt: -1 })
+          .sort({ order: 1, createdAt: -1 })
           .skip(skip)
           .limit(limit)
           .lean(),
@@ -197,8 +202,8 @@ export const getAllRegions = async (ctx: Context<{ query: any }>) => {
     } else {
       // Return list without pagination
       const data = await RegionModel.find(filter)
-        .select("name")
-        .sort({ name: 1, createdAt: -1 })
+        .select("name order")
+        .sort({ order: 1, createdAt: -1 })
         .lean();
 
       return {

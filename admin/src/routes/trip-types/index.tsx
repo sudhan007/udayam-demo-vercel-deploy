@@ -66,6 +66,7 @@ type TripType = {
   _id: string
   name: string
   isActive: boolean
+  order?: number
   createdAt: string
 }
 
@@ -104,9 +105,11 @@ function TripTypesIndexComponent() {
   // Forms state
   const [newName, setNewName] = useState('')
   const [newIsActive, setNewIsActive] = useState(true)
+  const [newOrder, setNewOrder] = useState<number>(0)
 
   const [editName, setEditName] = useState('')
   const [editIsActive, setEditIsActive] = useState(true)
+  const [editOrder, setEditOrder] = useState<number>(0)
 
   const setPage = (p: number) => {
     navigate({ search: (prev) => ({ ...prev, page: p }) })
@@ -142,13 +145,14 @@ function TripTypesIndexComponent() {
   })
 
   const addMutation = useMutation({
-    mutationFn: (body: { name: string; isActive: boolean }) =>
+    mutationFn: (body: { name: string; isActive: boolean; order: number }) =>
       _axios.post('/trip-types', body),
     onSuccess: (res: any) => {
       toast.success(res.data?.message || 'Trip type created successfully')
       setIsAddOpen(false)
       setNewName('')
       setNewIsActive(true)
+      setNewOrder(0)
       queryClient.invalidateQueries({ queryKey: ['trip-types'] })
     },
     onError: (err: any) => {
@@ -157,14 +161,21 @@ function TripTypesIndexComponent() {
   })
 
   const editMutation = useMutation({
-    mutationFn: (body: { id: string; name: string; isActive: boolean }) =>
+    mutationFn: (body: {
+      id: string
+      name: string
+      isActive: boolean
+      order: number
+    }) =>
       _axios.patch(`/trip-types/${body.id}`, {
         name: body.name,
         isActive: body.isActive,
+        order: body.order,
       }),
     onSuccess: (res: any) => {
       toast.success(res.data?.message || 'Trip type updated successfully')
       setEditItem(null)
+      setEditOrder(0)
       queryClient.invalidateQueries({ queryKey: ['trip-types'] })
     },
     onError: (err: any) => {
@@ -210,6 +221,7 @@ function TripTypesIndexComponent() {
     setEditItem(item)
     setEditName(item.name)
     setEditIsActive(item.isActive)
+    setEditOrder(item.order ?? 0)
   }
 
   return (
@@ -283,6 +295,7 @@ function TripTypesIndexComponent() {
             <TableRow className="bg-muted/50">
               <TableHead>Trip Type Name</TableHead>
               <TableHead>Created Date</TableHead>
+              <TableHead className="w-20 text-center">Order</TableHead>
               <TableHead className="w-32">Status</TableHead>
               <TableHead className="w-24 text-right">Actions</TableHead>
             </TableRow>
@@ -291,7 +304,7 @@ function TripTypesIndexComponent() {
             {isLoading ? (
               Array.from({ length: limit }).map((_, i) => (
                 <TableRow key={i}>
-                  {Array.from({ length: 4 }).map((_, j) => (
+                  {Array.from({ length: 5 }).map((_, j) => (
                     <TableCell key={j}>
                       <Skeleton className="h-4 w-full" />
                     </TableCell>
@@ -301,7 +314,7 @@ function TripTypesIndexComponent() {
             ) : isError ? (
               <TableRow>
                 <TableCell
-                  colSpan={4}
+                  colSpan={5}
                   className="text-center py-12 text-muted-foreground"
                 >
                   Failed to load trip types. Please try again.
@@ -310,7 +323,7 @@ function TripTypesIndexComponent() {
             ) : tripTypes.length === 0 ? (
               <TableRow>
                 <TableCell
-                  colSpan={4}
+                  colSpan={5}
                   className="text-center py-12 text-muted-foreground"
                 >
                   No trip types found.
@@ -327,6 +340,9 @@ function TripTypesIndexComponent() {
                       <Calendar className="w-3.5 h-3.5" />
                       {formatDate(item.createdAt)}
                     </div>
+                  </TableCell>
+                  <TableCell className="text-center font-medium text-sm text-muted-foreground">
+                    {item.order ?? 0}
                   </TableCell>
                   <TableCell>
                     <button
@@ -410,6 +426,16 @@ function TripTypesIndexComponent() {
                 onChange={(e) => setNewName(e.target.value)}
               />
             </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="order">Display Order</Label>
+              <Input
+                id="order"
+                type="number"
+                placeholder="0"
+                value={newOrder}
+                onChange={(e) => setNewOrder(Number(e.target.value))}
+              />
+            </div>
             {/* <div className="flex items-center justify-between rounded-lg border p-3.5 shadow-xs">
               <div className="space-y-0.5">
                 <Label htmlFor="isActive" className="text-sm font-medium">
@@ -437,7 +463,11 @@ function TripTypesIndexComponent() {
             <Button
               disabled={addMutation.isPending || !newName.trim()}
               onClick={() =>
-                addMutation.mutate({ name: newName, isActive: newIsActive })
+                addMutation.mutate({
+                  name: newName,
+                  isActive: newIsActive,
+                  order: newOrder,
+                })
               }
               className="cursor-pointer"
             >
@@ -466,6 +496,16 @@ function TripTypesIndexComponent() {
                 id="editName"
                 value={editName}
                 onChange={(e) => setEditName(e.target.value)}
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="editOrder">Display Order</Label>
+              <Input
+                id="editOrder"
+                type="number"
+                placeholder="0"
+                value={editOrder}
+                onChange={(e) => setEditOrder(Number(e.target.value))}
               />
             </div>
             {/* <div className="flex items-center justify-between rounded-lg border p-3.5 shadow-xs">
@@ -500,6 +540,7 @@ function TripTypesIndexComponent() {
                   id: editItem._id,
                   name: editName,
                   isActive: editIsActive,
+                  order: editOrder,
                 })
               }
               className="cursor-pointer"

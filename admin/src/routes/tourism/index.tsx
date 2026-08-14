@@ -63,7 +63,7 @@ interface TourismSearch {
 export const Route = createFileRoute('/tourism/')({
   validateSearch: (search: Record<string, unknown>): TourismSearch => ({
     page: search.page ? Number(search.page) : 1,
-    limit: search.limit ? Number(search.limit) : 1,
+    limit: search.limit ? Number(search.limit) : 10,
     search: typeof search.search === 'string' ? search.search : undefined,
     packageType:
       typeof search.packageType === 'string' ? search.packageType : undefined,
@@ -148,8 +148,6 @@ type FilterState = {
   isFeatured: string
 }
 
-
-
 const DURATION_CATEGORIES = [
   { value: '1-3', label: '1–3 Days' },
   { value: '4-7', label: '4–7 Days' },
@@ -179,20 +177,24 @@ function RouteComponent() {
   const { data: tripTypesQuery } = useQuery({
     queryKey: ['trip-types-list'],
     queryFn: async () => {
-      const res = await _axios.get('/trip-types', { params: { isActive: 'true' } })
+      const res = await _axios.get('/trip-types', {
+        params: { isActive: 'true' },
+      })
       return res.data?.data || []
     },
   })
 
-  const destinationRegions = regionsQuery?.map((r: any) => ({ value: r._id, label: r.name })) || []
-  const tripTypesList = tripTypesQuery?.map((t: any) => ({ value: t._id, label: t.name })) || []
+  const destinationRegions =
+    regionsQuery?.map((r: any) => ({ value: r._id, label: r.name })) || []
+  const tripTypesList =
+    tripTypesQuery?.map((t: any) => ({ value: t._id, label: t.name })) || []
 
   const queryClient = useQueryClient()
   const searchParams = Route.useSearch()
   const navigate = useNavigate({ from: Route.fullPath })
 
   const page = searchParams.page ?? 1
-  const limit = searchParams.limit ?? 1
+  const limit = searchParams.limit ?? 10
   const [deleteId, setDeleteId] = useState<string | null>(null)
   const [showFilters, setShowFilters] = useState(false)
 

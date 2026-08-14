@@ -77,12 +77,8 @@ function RouteComponent() {
       form.append('badges', JSON.stringify(values.badges))
       form.append('inclusions', JSON.stringify(values.inclusions))
       form.append('exclusions', JSON.stringify(values.exclusions))
-      if (values.highlights?.length) {
-        form.append('highlights', JSON.stringify(values.highlights))
-      }
-      if (values.itinerary?.length) {
-        form.append('itinerary', JSON.stringify(values.itinerary))
-      }
+      form.append('highlights', JSON.stringify(values.highlights ?? []))
+      form.append('itinerary', JSON.stringify(values.itinerary ?? []))
 
       // Only append image if a new file was selected
       if (values.imageUrl instanceof File) {
@@ -143,7 +139,7 @@ function RouteComponent() {
     packageType: pkg.packageType,
     bookingType: pkg.bookingType ?? 'STANDARD',
     tripTypes: (pkg.tripTypes ?? []).map((t: any) =>
-      typeof t === 'object' ? t?._id : t
+      typeof t === 'object' ? t?._id : t,
     ),
     price: pkg.price,
     strikePrice: pkg.strikePrice,

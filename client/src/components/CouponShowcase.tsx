@@ -677,6 +677,9 @@ import {
   Ticket,
   Flame,
   CalendarClock,
+  Info,
+  MapPin,
+  X,
 } from "lucide-react"
 
 export interface ICoupon {
@@ -741,6 +744,7 @@ export const CouponShowcase: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState(0)
   const [copiedCode, setCopiedCode] = useState<string | null>(null)
   const [isPaused, setIsPaused] = useState(false)
+  const [isPopupOpen, setIsPopupOpen] = useState(false)
   const touchStartX = useRef<number | null>(null)
   const prefersReducedMotion = usePrefersReducedMotion()
 
@@ -763,12 +767,24 @@ export const CouponShowcase: React.FC = () => {
   }, [slideCount, activeIndex])
 
   useEffect(() => {
-    if (slideCount <= 1 || isPaused || prefersReducedMotion) return
+    if (slideCount <= 1 || isPaused || prefersReducedMotion || isPopupOpen)
+      return
     const interval = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % slideCount)
     }, SLIDE_DURATION_MS)
     return () => clearInterval(interval)
-  }, [slideCount, isPaused, activeIndex, prefersReducedMotion])
+  }, [slideCount, isPaused, activeIndex, prefersReducedMotion, isPopupOpen])
+
+  useEffect(() => {
+    if (isPopupOpen) {
+      document.body.style.overflow = "hidden"
+    } else {
+      document.body.style.overflow = ""
+    }
+    return () => {
+      document.body.style.overflow = ""
+    }
+  }, [isPopupOpen])
 
   const goTo = useCallback(
     (index: number) => {
@@ -1024,7 +1040,27 @@ export const CouponShowcase: React.FC = () => {
                       className="h-1.5 w-1.5 shrink-0 rounded-full"
                       style={{ backgroundColor: GREEN }}
                     />
-                    {routeLabel(coupon)}
+                    {coupon.applicableFor === "SELECTED" &&
+                    coupon.packageIds?.length ? (
+                      <span className="inline-flex items-center gap-1.5">
+                        <span>{coupon.packageIds[0]?.destination}</span>
+                        {coupon.packageIds.length > 1 && (
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              setIsPopupOpen(true)
+                            }}
+                            className="inline-flex h-4 w-4 cursor-pointer items-center justify-center rounded-full bg-gray-100 text-gray-500 transition-all duration-200 hover:bg-[#1F7A4D]/10 hover:text-[#1F7A4D] focus:ring-1 focus:ring-[#1F7A4D]/30 focus:outline-none"
+                            title="View all applicable packages"
+                          >
+                            <Info className="h-3 w-3" />
+                          </button>
+                        )}
+                      </span>
+                    ) : (
+                      routeLabel(coupon)
+                    )}
                   </span>
                   <span className="flex items-center gap-1.5">
                     <CalendarClock className="h-3.5 w-3.5 shrink-0 text-gray-400" />
@@ -1149,6 +1185,84 @@ export const CouponShowcase: React.FC = () => {
         </div>
       )}
 
+      {/* Popup Modal for Selected Packages details */}
+      {isPopupOpen && coupon && coupon.packageIds && (
+        <div
+          className="fixed inset-0 z-[99999] flex animate-[fadeIn_0.2s_ease-out] items-center justify-center bg-[#0F1A42]/60 p-4 backdrop-blur-[2px]"
+          onClick={() => setIsPopupOpen(false)}
+        >
+          <div
+            className="relative w-full max-w-md animate-[scaleUp_0.2s_cubic-bezier(0.34,1.56,0.64,1)] rounded-2xl bg-white p-6 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close button */}
+            <button
+              onClick={() => setIsPopupOpen(false)}
+              className="absolute top-4 right-4 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-gray-50 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
+            >
+              <X size={16} />
+            </button>
+
+            {/* Header */}
+            <div className="mb-4 flex items-center gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#1F7A4D]/10 text-[#1F7A4D]">
+                <Info size={20} />
+              </div>
+              <div>
+                <h3
+                  className="text-lg font-bold"
+                  style={{
+                    color: NAVY,
+                    fontFamily: "'Libre Baskerville', serif",
+                  }}
+                >
+                  Applicable Packages
+                </h3>
+                <p className="text-xs text-gray-400">
+                  This coupon code is valid for the following selected tours:
+                </p>
+              </div>
+            </div>
+
+            {/* Package List */}
+            <div className="max-h-64 space-y-2 overflow-y-auto pr-1">
+              {coupon.packageIds.map((pkg) => (
+                <div
+                  key={pkg._id}
+                  className="flex items-start gap-3 rounded-xl border border-gray-100 bg-gray-50/50 p-3 transition-colors hover:bg-gray-50"
+                >
+                  <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white text-gray-400 shadow-sm">
+                    <MapPin size={14} className="text-[#1F7A4D]" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div
+                      className="truncate text-sm font-bold"
+                      style={{ color: NAVY }}
+                    >
+                      {pkg.destination}
+                    </div>
+                    <div className="mt-0.5 truncate text-xs text-gray-500">
+                      {pkg.title}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Footer */}
+            <div className="mt-5">
+              <button
+                onClick={() => setIsPopupOpen(false)}
+                className="w-full cursor-pointer rounded-full py-2.5 text-center text-sm font-bold text-white transition-colors duration-200 hover:opacity-90"
+                style={{ backgroundColor: NAVY }}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <style>{`
         @keyframes coupon-progress {
           from { width: 0%; }
@@ -1157,6 +1271,14 @@ export const CouponShowcase: React.FC = () => {
         @keyframes card-enter {
           from { opacity: 0; }
           to { opacity: 1; }
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes scaleUp {
+          from { opacity: 0; transform: scale(0.95); }
+          to { opacity: 1; transform: scale(1); }
         }
         .card-enter {
           animation: card-enter 320ms ease-out;

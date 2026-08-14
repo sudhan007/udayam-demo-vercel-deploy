@@ -4,6 +4,7 @@ export const createRegionDto = {
     body: t.Object({
         name: t.String({ minLength: 1, error: "Name must be at least 1 character long" }),
         isActive: t.Optional(t.Boolean()),
+        order: t.Optional(t.Any()),
     }),
     detail: {
         summary: "Create a new region",
@@ -15,6 +16,7 @@ export const updateRegionDto = {
     body: t.Object({
         name: t.Optional(t.String({ minLength: 1 })),
         isActive: t.Optional(t.Boolean()),
+        order: t.Optional(t.Any()),
     }),
     detail: {
         summary: "Update a region",

@@ -60,8 +60,6 @@ interface ApiResponse {
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-
-
 const DURATION_FILTERS = [
   { label: "Any", value: "" },
   { label: "1–3 Days", value: "1-3" },
@@ -1898,13 +1896,17 @@ const Tourism = () => {
   const { data: tripTypesQuery } = useQuery({
     queryKey: ["public-trip-types-list"],
     queryFn: async () => {
-      const res = await _axios.get("/trip-types", { params: { isActive: "true" } })
+      const res = await _axios.get("/trip-types", {
+        params: { isActive: "true" },
+      })
       return res.data?.data || []
     },
   })
 
-  const destinationRegions = regionsQuery?.map((r: any) => ({ value: r._id, label: r.name })) || []
-  const tripTypesList = tripTypesQuery?.map((t: any) => ({ value: t._id, label: t.name })) || []
+  const destinationRegions =
+    regionsQuery?.map((r: any) => ({ value: r._id, label: r.name })) || []
+  const tripTypesList =
+    tripTypesQuery?.map((t: any) => ({ value: t._id, label: t.name })) || []
 
   // Debounce search
   useEffect(() => {
@@ -2695,8 +2697,7 @@ const Tourism = () => {
                             marginBottom: 20,
                           }}
                         >
-                          {featuredPkg.description ||
-                            `Explore ${featuredPkg.destination} on this beautiful ${featuredPkg.days}-day tour.`}
+                          {featuredPkg.description}
                         </p>
                         <div
                           style={{

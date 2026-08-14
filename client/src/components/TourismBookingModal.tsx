@@ -1568,7 +1568,9 @@ export const TourismBookingModal: React.FC<TourismBookingModalProps> = ({
         setCouponError(res.data?.error || "Failed to validate coupon")
       }
     } catch (err: any) {
-      setCouponError(err?.response?.data?.error || "Selected coupon code is not applicable")
+      setCouponError(
+        err?.response?.data?.error || "Selected coupon code is not applicable"
+      )
     } finally {
       setValidatingCoupon(false)
     }
@@ -1717,7 +1719,7 @@ export const TourismBookingModal: React.FC<TourismBookingModalProps> = ({
           key: orderData.keyId,
           amount: orderData.amountInPaise,
           currency: "INR",
-          name: "Udayam Holidays",
+          name: "UV Holidays",
           description: `Booking: ${pkg.title}`,
           order_id: orderData.razorpayOrderId,
           handler: async function (response: any) {
@@ -2798,7 +2800,8 @@ export const TourismBookingModal: React.FC<TourismBookingModalProps> = ({
                     cursor: "pointer",
                   }}
                 >
-                  I have read and agree to the{" "}
+                  I understand and agree to the above and have read and accepted
+                  the UV Holidays{" "}
                   <a
                     href="/tour-terms-and-conditions"
                     target="_blank"
@@ -2810,7 +2813,8 @@ export const TourismBookingModal: React.FC<TourismBookingModalProps> = ({
                       textDecoration: "underline",
                     }}
                   >
-                    Terms &amp; Conditions
+                    Terms &amp; Conditions , Payment Schedule and Cancellation &
+                    Refund Policy
                   </a>{" "}
                   of this tour booking. *
                 </label>
