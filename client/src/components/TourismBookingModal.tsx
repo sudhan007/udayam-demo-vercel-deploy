@@ -1569,7 +1569,7 @@ export const TourismBookingModal: React.FC<TourismBookingModalProps> = ({
       }
     } catch (err: any) {
       setCouponError(
-        err?.response?.data?.error || "Selected coupon code is not applicable"
+        err?.response?.data?.error || "This coupon can't be applied. Please check the coupon conditions "
       )
     } finally {
       setValidatingCoupon(false)

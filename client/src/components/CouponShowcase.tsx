@@ -1017,7 +1017,7 @@ export const CouponShowcase: React.FC = () => {
                         className="h-1.5 w-1.5 shrink-0 rounded-full"
                         style={{ backgroundColor: GREEN }}
                       />
-                      Tour Package Cost{" "}
+                      Min. Tour Package Cost{" "}
                       <strong className="font-semibold" style={{ color: NAVY }}>
                         ₹{coupon.minimumBookingAmount.toLocaleString("en-IN")}
                       </strong>
