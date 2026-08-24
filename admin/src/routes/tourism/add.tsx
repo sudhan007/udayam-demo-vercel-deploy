@@ -33,6 +33,7 @@ function RouteComponent() {
         'label',
         'description',
         'order',
+        'gstPercentage',
       ]
 
       if (values.bookingType === 'STANDARD') {

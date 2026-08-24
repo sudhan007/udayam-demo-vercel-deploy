@@ -142,7 +142,8 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
         toast.error(res.data?.message || "Google login failed")
       }
     } catch (err: any) {
-      toast.error(err?.response?.data?.message || "Google login failed")
+      const msg = err?.response?.data?.message || err?.message || "Google login failed"
+      toast.error(msg, { duration: 6000 })
     } finally {
       setGoogleLoading(false)
     }
@@ -169,7 +170,8 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
         toast.error(res.data?.message || "Failed to send OTP")
       }
     } catch (err: any) {
-      toast.error(err?.response?.data?.message || "Failed to send OTP")
+      const msg = err?.response?.data?.message || err?.message || "Failed to send OTP"
+      toast.error(msg, { duration: 6000 })
     } finally {
       setSendingOtp(false)
     }
@@ -229,7 +231,13 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
         toast.error(res.data?.message || "Invalid OTP")
       }
     } catch (err: any) {
-      toast.error(err?.response?.data?.message || "OTP verification failed")
+      const msg = err?.response?.data?.message || err?.message || "OTP verification failed"
+      // 403 = account blocked — show a persistent, high-visibility error
+      if (err?.response?.status === 403) {
+        toast.error(msg, { duration: 10000, description: "Please contact support to resolve this." })
+      } else {
+        toast.error(msg, { duration: 6000 })
+      }
     } finally {
       setVerifyingOtp(false)
     }

@@ -290,6 +290,10 @@ export const createStandardBookingOrder = async (ctx: Context) => {
             couponIdObj = val.coupon!._id
         }
 
+        const gstPercentage = pkg.gstPercentage ?? 0
+        const gstAmount = Math.round((finalAmount * gstPercentage) / 100)
+        finalAmount = finalAmount + gstAmount
+
         const bookingNumber = `UV-STD-${Date.now()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`
 
         // Create Production Razorpay Order via REST API
@@ -351,6 +355,8 @@ export const createStandardBookingOrder = async (ctx: Context) => {
             pricingDetails: {
                 originalAmount,
                 discountAmount,
+                gstAmount,
+                gstPercentage,
                 finalAmount,
                 currency: "INR",
             },
@@ -698,6 +704,8 @@ export const createCustomizedEnquiry = async (ctx: Context) => {
             pricingDetails: {
                 originalAmount: 0,
                 discountAmount: 0,
+                gstAmount: 0,
+                gstPercentage: pkg.gstPercentage ?? 0,
                 finalAmount: 0,
                 currency: "INR",
             },
@@ -991,13 +999,21 @@ export const updateCustomizedQuotation = async (ctx: Context<{ params: { id: str
         const oldStatus = booking.status
         const nextStatus = status || "QUOTATION_SHARED"
 
+        const pkg = await TourismModel.findById(booking.packageId)
+        const gstPercentage = pkg?.gstPercentage ?? 0
+        const baseAmount = Number(amount)
+        const gstAmount = Math.round((baseAmount * gstPercentage) / 100)
+        const finalAmount = baseAmount + gstAmount
+
         booking.quotation = {
-            amount: Number(amount),
+            amount: baseAmount,
             notes,
             sharedAt: new Date(),
         }
-        booking.pricingDetails.originalAmount = Number(amount)
-        booking.pricingDetails.finalAmount = Number(amount)
+        booking.pricingDetails.originalAmount = baseAmount
+        booking.pricingDetails.gstPercentage = gstPercentage
+        booking.pricingDetails.gstAmount = gstAmount
+        booking.pricingDetails.finalAmount = finalAmount
         booking.status = nextStatus
 
         await booking.save()

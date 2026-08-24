@@ -22,6 +22,7 @@ export interface ITourism {
     price?: number
     strikePrice?: number
     discount?: string
+    gstPercentage?: number
 
     days: number
     nights: number
@@ -101,6 +102,7 @@ const tourismSchema = new Schema<ITourism>(
         },
         strikePrice: { type: Number, min: 0 },
         discount: { type: String, trim: true },
+        gstPercentage: { type: Number, default: 0, min: 0 },
 
         days: { type: Number, required: true, min: 1 },
         nights: { type: Number, required: true, min: 0 },

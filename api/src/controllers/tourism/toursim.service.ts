@@ -80,6 +80,7 @@ export const createTouristPlace = async (
             isFeatured: body.isFeatured ?? false,
             label: body.label,
             order: body.order !== undefined && body.order !== "" ? Number(body.order) : 0,
+            gstPercentage: body.gstPercentage !== undefined && body.gstPercentage !== "" ? Number(body.gstPercentage) : 0,
         }
 
         if (bookingType === "STANDARD") {
@@ -125,6 +126,10 @@ export const updateTouristPlace = async (
 
         if (body.order !== undefined) {
             updateData.order = body.order !== "" ? Number(body.order) : 0
+        }
+
+        if (body.gstPercentage !== undefined) {
+            updateData.gstPercentage = body.gstPercentage !== "" ? Number(body.gstPercentage) : 0
         }
 
         if (body.bookingType !== undefined) {

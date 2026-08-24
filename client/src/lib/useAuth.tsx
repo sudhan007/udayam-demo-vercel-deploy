@@ -7,7 +7,7 @@ import {
   useCallback,
   ReactNode,
 } from "react"
-import { _axios } from "./axios"
+import { _axios, setLogoutHandler } from "./axios"
 
 export interface AuthUser {
   _id: string
@@ -17,6 +17,7 @@ export interface AuthUser {
   countryCode?: string
   profileImage?: string
   loginType: "MOBILE" | "GOOGLE"
+  status?: "ACTIVE" | "BLOCKED" | "DELETED"
 }
 
 interface AuthContextType {
@@ -48,6 +49,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUser(null)
       }
     } catch {
+      // A 401 from the session endpoint means the user is logged out or blocked
       setUser(null)
     } finally {
       setIsLoading(false)
@@ -63,9 +65,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUser(null)
   }, [])
 
+  // Initial session fetch on mount
   useEffect(() => {
     fetchSession()
   }, [fetchSession])
+
+  // Register logout with the axios interceptor so any 401 from a protected
+  // API call (e.g. booking, profile) immediately clears the user session
+  // without waiting for the 60-second poll. This replaces the polling interval.
+  useEffect(() => {
+    setLogoutHandler(() => setUser(null))
+  }, [])
 
   return (
     <AuthContext.Provider

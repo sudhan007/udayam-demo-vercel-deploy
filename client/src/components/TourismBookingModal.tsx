@@ -1402,6 +1402,7 @@ export type ApiPackage = {
   minPax: number
   maxPax: number
   isActive: boolean
+  gstPercentage?: number
 }
 
 interface TourismBookingModalProps {
@@ -1569,7 +1570,10 @@ export const TourismBookingModal: React.FC<TourismBookingModalProps> = ({
   const basePrice = pkg.price || 0
   const subtotal = basePrice * numberOfPersons
   const discountAmount = appliedCoupon ? appliedCoupon.discountAmount : 0
-  const finalPayable = Math.max(0, subtotal - discountAmount)
+  const amountAfterDiscount = Math.max(0, subtotal - discountAmount)
+  const gstPercentage = pkg.gstPercentage || 0
+  const gstAmount = Math.round((amountAfterDiscount * gstPercentage) / 100)
+  const finalPayable = amountAfterDiscount + gstAmount
 
   const handleApplyCoupon = async (codeToApply?: string) => {
     const code = (codeToApply || couponCodeInput).trim()
@@ -2771,6 +2775,20 @@ export const TourismBookingModal: React.FC<TourismBookingModalProps> = ({
                       >
                         <span>Coupon Discount:</span>
                         <span>- ₹{discountAmount.toLocaleString("en-IN")}</span>
+                      </div>
+                    )}
+                    {gstAmount > 0 && (
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          fontFamily: f,
+                          fontSize: ".78rem",
+                          color: "#5a5a7a",
+                        }}
+                      >
+                        <span>GST ({gstPercentage}%):</span>
+                        <span>+ ₹{gstAmount.toLocaleString("en-IN")}</span>
                       </div>
                     )}
                     <div

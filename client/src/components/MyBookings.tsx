@@ -3,22 +3,23 @@ import { useQuery } from "@tanstack/react-query"
 import { _axios } from "@/lib/axios"
 import { useAuth } from "@/lib/useAuth"
 import { useNavigate } from "react-router-dom"
+import { pdf } from "@react-pdf/renderer"
+import { BookingInvoicePDF } from "./BookingInvoicePDF"
 import {
   Calendar,
   MapPin,
   Search,
-  Filter,
   Users,
   ChevronLeft,
   ChevronRight,
   Eye,
   ShoppingBag,
   Clock,
-  CheckCircle2,
   FileText,
-  CreditCard,
   X,
   Sparkles,
+  Download,
+  Loader2,
 } from "lucide-react"
 
 export const MyBookings: React.FC = () => {
@@ -34,6 +35,9 @@ export const MyBookings: React.FC = () => {
 
   // Selected booking detail modal state
   const [selectedBookingId, setSelectedBookingId] = useState<string | null>(null)
+
+  // Track which booking is being downloaded (PDF)
+  const [downloadingId, setDownloadingId] = useState<string | null>(null)
 
   // Prevent background page scroll when detail modal is active
   React.useEffect(() => {
@@ -75,6 +79,32 @@ export const MyBookings: React.FC = () => {
     },
     enabled: !!selectedBookingId,
   })
+
+  // ── Download PDF handler ────────────────────────────────────────────────
+  const handleDownloadPdf = async (bookingId: string, bookingNumber: string) => {
+    if (downloadingId) return
+    setDownloadingId(bookingId)
+    try {
+      const res = await _axios.get(`/booking/my-bookings/${bookingId}`)
+      const bookingData = res.data?.data
+      if (!bookingData) throw new Error("No booking data")
+
+      const blob = await pdf(<BookingInvoicePDF booking={bookingData} />).toBlob()
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement("a")
+      link.href = url
+      link.download = `Invoice-${bookingNumber}.pdf`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      URL.revokeObjectURL(url)
+    } catch (err) {
+      console.error("PDF generation failed:", err)
+      alert("Failed to generate invoice. Please try again.")
+    } finally {
+      setDownloadingId(null)
+    }
+  }
 
   if (!user) {
     return (
@@ -334,12 +364,30 @@ export const MyBookings: React.FC = () => {
                           </p>
                         </div>
 
-                        <button
-                          onClick={() => setSelectedBookingId(bk._id)}
-                          className="flex items-center gap-2 rounded-xl bg-[#E8ECFA] px-4 py-2 text-xs font-bold text-[#1B2B6B] transition-colors hover:bg-[#1B2B6B] hover:text-white"
-                        >
-                          <Eye size={14} /> View Full Details
-                        </button>
+                        <div className="flex flex-wrap items-center gap-2">
+                          {/* View Full Details */}
+                          <button
+                            onClick={() => setSelectedBookingId(bk._id)}
+                            className="flex items-center gap-2 rounded-xl bg-[#E8ECFA] px-4 py-2 text-xs font-bold text-[#1B2B6B] transition-colors hover:bg-[#1B2B6B] hover:text-white"
+                          >
+                            <Eye size={14} /> View Details
+                          </button>
+
+                          {/* Download Invoice */}
+                          <button
+                            onClick={() => handleDownloadPdf(bk._id, bk.bookingNumber)}
+                            disabled={downloadingId === bk._id}
+                            title="Download PDF Invoice"
+                            className="flex items-center gap-2 rounded-xl border border-[#1B2B6B]/20 bg-white px-4 py-2 text-xs font-bold text-[#1B2B6B] transition-all hover:bg-[#1B2B6B] hover:text-white hover:border-[#1B2B6B] disabled:opacity-60 disabled:cursor-not-allowed"
+                          >
+                            {downloadingId === bk._id ? (
+                              <Loader2 size={14} className="animate-spin" />
+                            ) : (
+                              <Download size={14} />
+                            )}
+                            {downloadingId === bk._id ? "Generating..." : "Invoice PDF"}
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -526,6 +574,12 @@ export const MyBookings: React.FC = () => {
                           <div className="flex justify-between py-1 border-b border-gray-200 text-emerald-700 font-semibold">
                             <span>Coupon Discount:</span>
                             <span>-₹{bookingDetailsData.pricingDetails.discountAmount?.toLocaleString("en-IN")}</span>
+                          </div>
+                        )}
+                        {bookingDetailsData.pricingDetails.gstAmount > 0 && (
+                          <div className="flex justify-between py-1 border-b border-gray-200 text-gray-600">
+                            <span>GST ({bookingDetailsData.pricingDetails.gstPercentage}%):</span>
+                            <span>+₹{bookingDetailsData.pricingDetails.gstAmount?.toLocaleString("en-IN")}</span>
                           </div>
                         )}
                         <div className="flex justify-between pt-2 text-sm font-bold text-[#1B2B6B]">

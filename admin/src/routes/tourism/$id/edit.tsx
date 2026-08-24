@@ -50,6 +50,7 @@ function RouteComponent() {
         // 'isActive',
         // 'isFeatured',
         'order',
+        'gstPercentage',
       ]
 
       if (values.bookingType === 'STANDARD') {
@@ -158,6 +159,7 @@ function RouteComponent() {
     // isFeatured: pkg.isFeatured,
     label: pkg.label ?? '',
     order: pkg.order ?? 0,
+    gstPercentage: pkg.gstPercentage ?? 0,
   }
 
   return (

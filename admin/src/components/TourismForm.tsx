@@ -788,6 +788,7 @@ export type TourismFormValues = {
   // isFeatured: boolean
   label?: string
   order?: number
+  gstPercentage?: number
 }
 
 type Props = {
@@ -926,6 +927,7 @@ export function TourismForm({
       highlights: [],
       itinerary: [],
       order: 0,
+      gstPercentage: 0,
       ...defaultValues,
     },
   })
@@ -1262,6 +1264,18 @@ export function TourismForm({
               {...register('order', {
                 valueAsNumber: true,
                 min: { value: 0, message: 'Must be ≥ 0' },
+              })}
+            />
+          </Field>
+          <Field label="GST (%)" error={errors.gstPercentage?.message}>
+            <Input
+              type="number"
+              placeholder="e.g. 5"
+              className={errCls(!!errors.gstPercentage)}
+              {...register('gstPercentage', {
+                valueAsNumber: true,
+                min: { value: 0, message: 'Must be ≥ 0' },
+                max: { value: 100, message: 'Must be ≤ 100' },
               })}
             />
           </Field>

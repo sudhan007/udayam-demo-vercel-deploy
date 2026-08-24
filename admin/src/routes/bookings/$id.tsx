@@ -732,6 +732,15 @@ function BookingDetailsComponent() {
                   </span>
                 </div>
               )}
+              {booking.pricingDetails?.gstAmount > 0 && (
+                <div className="flex justify-between text-muted-foreground">
+                  <span>GST ({booking.pricingDetails.gstPercentage}%):</span>
+                  <span>
+                    + ₹
+                    {booking.pricingDetails.gstAmount.toLocaleString('en-IN')}
+                  </span>
+                </div>
+              )}
               <div className="flex justify-between text-sm font-bold text-primary pt-2 border-t">
                 <span>Final Payable Amount:</span>
                 <span>

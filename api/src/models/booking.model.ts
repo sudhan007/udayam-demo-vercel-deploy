@@ -49,6 +49,8 @@ export interface ITravellerInfo {
 export interface IPricingDetails {
     originalAmount: number
     discountAmount: number
+    gstAmount: number
+    gstPercentage: number
     finalAmount: number
     currency: string
 }
@@ -111,6 +113,8 @@ const pricingDetailsSchema = new Schema<IPricingDetails>(
     {
         originalAmount: { type: Number, required: true, default: 0, min: 0 },
         discountAmount: { type: Number, required: true, default: 0, min: 0 },
+        gstAmount: { type: Number, required: true, default: 0, min: 0 },
+        gstPercentage: { type: Number, required: true, default: 0, min: 0 },
         finalAmount: { type: Number, required: true, default: 0, min: 0 },
         currency: { type: String, required: true, default: "INR" },
     },
