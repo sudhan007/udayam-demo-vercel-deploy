@@ -154,6 +154,23 @@ function CustomizedBookingsComponent() {
     })
   }
 
+  const formatTripType = (type?: string) => {
+    if (!type) return null
+    const map: Record<string, { label: string; icon: string }> = {
+      FAMILY: { label: 'Family', icon: '👨‍👩‍👧' },
+      HONEYMOON: { label: 'Honeymoon', icon: '💑' },
+      ADVENTURE: { label: 'Adventure', icon: '🧗' },
+      SOLO: { label: 'Solo Travel', icon: '🎒' },
+      GROUP: { label: 'Group', icon: '👥' },
+      PILGRIMAGE: { label: 'Pilgrimage', icon: '🛕' },
+    }
+    const match = map[type.toUpperCase()]
+    if (match) {
+      return `${match.icon} ${match.label}`
+    }
+    return type.replace(/_/g, ' ')
+  }
+
   const getStatusBadgeStyle = (status: string) => {
     switch (status) {
       case 'BOOKED':
@@ -242,22 +259,22 @@ function CustomizedBookingsComponent() {
             filters.status !== 'ALL' ||
             filters.startDate ||
             filters.endDate) && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => {
-                navigate({
-                  search: (prev) => ({
-                    page: 1,
-                    limit: prev.limit,
-                  }),
-                })
-              }}
-              className="text-xs h-9"
-            >
-              Clear Filters
-            </Button>
-          )}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  navigate({
+                    search: (prev) => ({
+                      page: 1,
+                      limit: prev.limit,
+                    }),
+                  })
+                }}
+                className="text-xs h-9"
+              >
+                Clear Filters
+              </Button>
+            )}
         </div>
       </div>
 
@@ -269,6 +286,7 @@ function CustomizedBookingsComponent() {
               <TableHead>Booking #</TableHead>
               <TableHead>Package & Destination</TableHead>
               <TableHead>Traveller Contact</TableHead>
+              <TableHead>Date of Booking</TableHead>
               <TableHead>Travel Date & Pax</TableHead>
               <TableHead>Pricing / Quote</TableHead>
               <TableHead>Status</TableHead>
@@ -279,7 +297,7 @@ function CustomizedBookingsComponent() {
             {isLoading ? (
               Array.from({ length: limit }).map((_, i) => (
                 <TableRow key={i}>
-                  {Array.from({ length: 7 }).map((__, j) => (
+                  {Array.from({ length: 8 }).map((__, j) => (
                     <TableCell key={j}>
                       <Skeleton className="h-4 w-full" />
                     </TableCell>
@@ -288,13 +306,13 @@ function CustomizedBookingsComponent() {
               ))
             ) : isError ? (
               <TableRow>
-                <TableCell colSpan={7} className="text-center py-12 text-muted-foreground">
+                <TableCell colSpan={8} className="text-center py-12 text-muted-foreground">
                   Failed to load bookings. Please try again.
                 </TableCell>
               </TableRow>
             ) : bookings.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={7} className="text-center py-12 text-muted-foreground">
+                <TableCell colSpan={8} className="text-center py-12 text-muted-foreground">
                   No customized bookings match your filter criteria.
                 </TableCell>
               </TableRow>
@@ -332,13 +350,28 @@ function CustomizedBookingsComponent() {
                     </div>
                   </TableCell>
 
-                  {/* Travel Date & Pax */}
+                  {/* Date of Booking */}
                   <TableCell className="text-xs text-muted-foreground space-y-0.5">
+                    <div className="flex items-center gap-1 font-medium text-foreground">
+                      <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
+                      {formatDate(booking.createdAt)}
+                    </div>
+                  </TableCell>
+
+                  {/* Travel Date & Pax */}
+                  <TableCell className="text-xs text-muted-foreground space-y-1">
                     <div className="flex items-center gap-1 font-medium text-foreground">
                       <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
                       {formatDate(booking.travellerInfo.travelDate)}
                     </div>
-                    <div>👥 {booking.travellerInfo.numberOfPersons} Persons</div>
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span>👥 {booking.travellerInfo.numberOfPersons} Persons</span>
+                      {booking.travellerInfo.travelType && (
+                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-50 text-blue-700 border border-blue-200">
+                          {formatTripType(booking.travellerInfo.travelType)}
+                        </span>
+                      )}
+                    </div>
                   </TableCell>
 
                   {/* Pricing */}

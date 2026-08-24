@@ -32,6 +32,7 @@ function RouteComponent() {
         'validFrom',
         'validTo',
         'status',
+        'order',
         'applicableFor',
         'userType',
       ]

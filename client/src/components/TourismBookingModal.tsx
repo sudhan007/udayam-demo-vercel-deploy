@@ -1473,6 +1473,33 @@ export const TourismBookingModal: React.FC<TourismBookingModalProps> = ({
   const [validatingCoupon, setValidatingCoupon] = useState(false)
   const [couponError, setCouponError] = useState<string | null>(null)
 
+  const { data: tripTypesData } = useQuery({
+    queryKey: ["public-trip-types-list"],
+    queryFn: async () => {
+      const res = await _axios.get("/trip-types", {
+        params: { isActive: "true" },
+      })
+      return res.data?.data || []
+    },
+  })
+
+  const fallbackTripTypes = [
+    { value: "FAMILY", label: "Family" },
+    { value: "HONEYMOON", label: "Honeymoon" },
+    { value: "ADVENTURE", label: "Adventure" },
+    { value: "SOLO", label: "Solo Travel" },
+    { value: "GROUP", label: "Group" },
+    { value: "PILGRIMAGE", label: "Pilgrimage" },
+  ]
+
+  const availableTripTypes =
+    tripTypesData && tripTypesData.length > 0
+      ? tripTypesData.map((t: any) => ({
+        value: (t.name || "").toUpperCase().replace(/\s+/g, "_"),
+        label: t.name,
+      }))
+      : fallbackTripTypes
+
   // Lock background page scroll when modal is open
   useEffect(() => {
     if (isOpen && pkg) {
@@ -2328,12 +2355,11 @@ export const TourismBookingModal: React.FC<TourismBookingModalProps> = ({
                       <option value="" disabled hidden>
                         Select Trip Style
                       </option>
-                      <option value="FAMILY">Family</option>
-                      <option value="HONEYMOON">Honeymoon</option>
-                      <option value="ADVENTURE">Adventure</option>
-                      <option value="SOLO">Solo Travel</option>
-                      <option value="GROUP">Group</option>
-                      <option value="PILGRIMAGE">Pilgrimage</option>
+                      {availableTripTypes.map((item: any) => (
+                        <option key={item.value} value={item.value}>
+                          {item.label}
+                        </option>
+                      ))}
                     </select>
                   </div>
                 </div>

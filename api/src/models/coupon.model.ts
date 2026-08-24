@@ -26,6 +26,7 @@ export interface ICoupon {
     validTo: Date
 
     status: "ACTIVE" | "INACTIVE"
+    order?: number
     isDeleted: boolean
 
     createdBy: Types.ObjectId
@@ -77,6 +78,7 @@ const couponSchema = new Schema<ICoupon>(
             required: true,
             default: "ACTIVE"
         },
+        order: { type: Number, default: 0 },
         isDeleted: { type: Boolean, required: true, default: false },
         createdBy: { type: Schema.Types.ObjectId, ref: "admin", required: true },
         updatedBy: { type: Schema.Types.ObjectId, ref: "admin", required: true }
@@ -91,5 +93,6 @@ couponSchema.index(
 )
 couponSchema.index({ status: 1, isDeleted: 1 })
 couponSchema.index({ validFrom: 1, validTo: 1 })
+couponSchema.index({ order: 1, createdAt: -1 })
 
 export const CouponModel = model<ICoupon>("coupon", couponSchema)

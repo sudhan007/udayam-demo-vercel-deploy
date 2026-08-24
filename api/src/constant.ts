@@ -1,4 +1,7 @@
+import dns from "node:dns";
 import dotenv from "dotenv";
+
+dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
 const envFileMap: Record<string, string> = {
     localdev: ".env.dev",
@@ -8,14 +11,7 @@ const envFileMap: Record<string, string> = {
 
 const mode = process.env.NODE_ENV ?? "localdev";
 
-const nodeEnv = process.env.NODE_ENV;
-for (const key in process.env) {
-    if (key !== 'NODE_ENV' && key !== 'PATH') {
-        delete process.env[key];
-    }
-}
-
-dotenv.config({ path: envFileMap[mode] });
+dotenv.config({ path: envFileMap[mode], override: true });
 
 export const APP_CONSTANTS = {
     PORT: process.env.PORT,

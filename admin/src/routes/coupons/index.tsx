@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { _axios } from '@/lib/axios'
 import { Pagination } from '@/components/Pagination'
 import { Button } from '@/components/ui/button'
+import { Switch } from '@/components/ui/switch'
 import {
   Table,
   TableBody,
@@ -71,6 +72,7 @@ type Coupon = {
   validFrom: string
   validTo: string
   applicableFor: 'ALL' | 'STANDARD' | 'CUSTOMIZED' | 'SELECTED'
+  order?: number
 }
 
 type PaginationMeta = {
@@ -153,6 +155,17 @@ function CouponsIndexComponent() {
     },
     onError: (err: any) => {
       toast.error(err.response?.data?.error || 'Failed to delete coupon')
+    },
+  })
+
+  const toggleActiveMutation = useMutation({
+    mutationFn: (id: string) => _axios.patch(`/coupon/${id}/toggle-active`),
+    onSuccess: (res: any) => {
+      toast.success(res.data?.message || 'Coupon status updated')
+      queryClient.invalidateQueries({ queryKey: ['coupons'] })
+    },
+    onError: (err: any) => {
+      toast.error(err.response?.data?.error || 'Failed to update coupon status')
     },
   })
 
@@ -272,6 +285,7 @@ function CouponsIndexComponent() {
               <TableHead>Discount</TableHead>
               <TableHead>Usage (Per User / Total)</TableHead>
               <TableHead>Used Count</TableHead>
+              <TableHead className="text-center w-16">Order</TableHead>
               <TableHead>Validity</TableHead>
               <TableHead>Status</TableHead>
               <TableHead className="w-24 text-right">Actions</TableHead>
@@ -281,7 +295,7 @@ function CouponsIndexComponent() {
             {isLoading ? (
               Array.from({ length: limit }).map((_, i) => (
                 <TableRow key={i}>
-                  {Array.from({ length: 8 }).map((_, j) => (
+                  {Array.from({ length: 9 }).map((_, j) => (
                     <TableCell key={j}>
                       <Skeleton className="h-4 w-full" />
                     </TableCell>
@@ -290,13 +304,13 @@ function CouponsIndexComponent() {
               ))
             ) : isError ? (
               <TableRow>
-                <TableCell colSpan={8} className="text-center py-12 text-muted-foreground">
+                <TableCell colSpan={9} className="text-center py-12 text-muted-foreground">
                   Failed to load coupons. Please try again.
                 </TableCell>
               </TableRow>
             ) : coupons.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={8} className="text-center py-12 text-muted-foreground">
+                <TableCell colSpan={9} className="text-center py-12 text-muted-foreground">
                   No coupons found.{' '}
                   <Link to="/coupons/add" className="text-primary underline underline-offset-2">
                     Create one now
@@ -327,28 +341,20 @@ function CouponsIndexComponent() {
                   <TableCell className="text-sm font-medium">
                     {coupon.usedCount}
                   </TableCell>
+                  <TableCell className="text-center font-medium text-sm text-muted-foreground">
+                    {coupon.order ?? 0}
+                  </TableCell>
                   <TableCell className="text-xs text-muted-foreground space-y-0.5">
                     <div>From: {formatDate(coupon.validFrom)}</div>
                     <div>To: {formatDate(coupon.validTo)}</div>
                   </TableCell>
                   <TableCell>
-                    <span
-                      className={`text-xs px-2.5 py-1 rounded-full font-medium inline-flex items-center gap-1 ${
-                        coupon.status === 'ACTIVE'
-                          ? 'bg-green-50 text-green-700 border border-green-200'
-                          : 'bg-red-50 text-red-600 border border-red-200'
-                      }`}
-                    >
-                      {coupon.status === 'ACTIVE' ? (
-                        <>
-                          <Check className="w-3 h-3" /> Active
-                        </>
-                      ) : (
-                        <>
-                          <X className="w-3 h-3" /> Inactive
-                        </>
-                      )}
-                    </span>
+                    <Switch
+                      checked={coupon.status === 'ACTIVE'}
+                      onCheckedChange={() => toggleActiveMutation.mutate(coupon._id)}
+                      disabled={toggleActiveMutation.isPending}
+                      title={coupon.status === 'ACTIVE' ? 'Active (Click to deactivate)' : 'Inactive (Click to activate)'}
+                    />
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-1">

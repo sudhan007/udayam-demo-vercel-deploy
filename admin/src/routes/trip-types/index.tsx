@@ -345,25 +345,12 @@ function TripTypesIndexComponent() {
                     {item.order ?? 0}
                   </TableCell>
                   <TableCell>
-                    <button
-                      // onClick={() => toggleMutation.mutate(item._id)}
+                    <Switch
+                      checked={item.isActive}
+                      onCheckedChange={() => toggleMutation.mutate(item._id)}
                       disabled={toggleMutation.isPending}
-                      className={`text-xs px-2.5 py-1 rounded-full font-medium inline-flex items-center gap-1  transition-colors ${
-                        item.isActive
-                          ? 'bg-green-100 text-green-700 hover:bg-green-200'
-                          : 'bg-red-100 text-red-600 hover:bg-red-200'
-                      }`}
-                    >
-                      {item.isActive ? (
-                        <>
-                          <Check className="w-3 h-3" /> Active
-                        </>
-                      ) : (
-                        <>
-                          <X className="w-3 h-3" /> Inactive
-                        </>
-                      )}
-                    </button>
+                      title={item.isActive ? 'Active (Click to deactivate)' : 'Inactive (Click to activate)'}
+                    />
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-1">

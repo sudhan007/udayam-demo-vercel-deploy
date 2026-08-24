@@ -83,6 +83,7 @@ export const createCoupon = async (ctx: Context) => {
             validFrom: dayjs.tz(body.validFrom, "Asia/Kolkata").utc().toDate(),
             validTo: dayjs.tz(body.validTo, "Asia/Kolkata").utc().toDate(),
             status: body.status ?? "ACTIVE",
+            order: body.order !== undefined && body.order !== "" ? Number(body.order) : 0,
             isDeleted: false,
             createdBy: new Types.ObjectId(adminId),
             updatedBy: new Types.ObjectId(adminId),
@@ -144,6 +145,9 @@ export const updateCoupon = async (ctx: Context<{ params: { id: string } }>) => 
         }
         if (body.validTo !== undefined) {
             updateData.validTo = dayjs.tz(body.validTo, "Asia/Kolkata").utc().toDate()
+        }
+        if (body.order !== undefined) {
+            updateData.order = body.order !== "" ? Number(body.order) : 0
         }
         // Replace banner image if a new one was sent
         if (body.bannerImage && typeof body.bannerImage !== "string") {
@@ -236,12 +240,12 @@ export const getAllCoupons = async (ctx: Context<{ query: GetCouponsQuery }>) =>
 
         // Sorting
         const sortMap: Record<string, Record<string, 1 | -1>> = {
-            newest: { createdAt: -1 },
-            oldest: { createdAt: 1 },
-            discount_high: { discountValue: -1 },
-            discount_low: { discountValue: 1 },
+            newest: { order: 1, createdAt: -1 },
+            oldest: { order: 1, createdAt: 1 },
+            discount_high: { discountValue: -1, order: 1 },
+            discount_low: { discountValue: 1, order: 1 },
         }
-        const sort = sortMap[query.sortBy ?? "newest"] ?? { createdAt: -1 }
+        const sort = sortMap[query.sortBy ?? "newest"] ?? { order: 1, createdAt: -1 }
 
         const [data, total] = await Promise.all([
             CouponModel.find(filter).sort(sort).skip(skip).limit(limit).lean(),
@@ -418,7 +422,10 @@ export const getActiveCoupons = async (ctx: Context) => {
             isDeleted: false,
             validFrom: { $lte: now },
             validTo: { $gte: now },
-        }).populate("packageIds", "title destination imageUrl").lean()
+        })
+            .sort({ order: 1, createdAt: -1 })
+            .populate("packageIds", "title destination imageUrl")
+            .lean()
 
         const eligibleCoupons: any[] = []
 
@@ -474,4 +481,34 @@ export const getActiveCoupons = async (ctx: Context) => {
         return { status: false, error: "Failed to fetch active coupons" }
     }
 }
+
+// ─── TOGGLE ACTIVE / INACTIVE STATUS ──────────────────────────────────────────
+
+export const toggleActiveCoupon = async (
+    ctx: Context<{ params: { id: string } }>
+) => {
+    const { params, set } = ctx
+
+    try {
+        const existing = await CouponModel.findById(params.id)
+        if (!existing || existing.isDeleted) {
+            set.status = 404
+            return { error: "Coupon not found", status: false }
+        }
+
+        existing.status = existing.status === "ACTIVE" ? "INACTIVE" : "ACTIVE"
+        await existing.save()
+
+        return {
+            message: `Coupon status updated to ${existing.status.toLowerCase()}`,
+            data: existing,
+            status: true,
+        }
+    } catch (error: any) {
+        console.error("Toggle Active Coupon Error", error)
+        set.status = 500
+        return { error: "Failed to toggle coupon status", status: false }
+    }
+}
+
 

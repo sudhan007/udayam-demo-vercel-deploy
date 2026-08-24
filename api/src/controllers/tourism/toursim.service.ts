@@ -299,27 +299,67 @@ export const deleteTouristPlace = async (
 export const getTourismDashboardStats = async (ctx: Context) => {
     const { set } = ctx
 
-    // Only these booking statuses count as "real" revenue
-    const REVENUE_STATUSES = ["BOOKED", "CONFIRMED", "TRAVEL_STARTED", "COMPLETED"]
-
     try {
-        // 1. Fetch KPI metrics
+        // 1. Fetch KPI metrics including Standard & Customized Revenue breakdowns
         const [
             totalBookings,
-            revenueResult,
+            standardRevenueResult,
+            customizedRevenueResult,
             totalUsers,
             activePackages
         ] = await Promise.all([
             PaymentModel.countDocuments({ status: "SUCCESS" }),
             BookingModel.aggregate([
-                { $match: { status: { $in: REVENUE_STATUSES } } },
-                { $group: { _id: null, total: { $sum: "$pricingDetails.finalAmount" } } }
+                {
+                    $match: {
+                        bookingType: "STANDARD",
+                        status: { $in: ["PAYMENT_SUCCESS", "BOOKED", "CONFIRMED", "TRAVEL_STARTED", "COMPLETED"] }
+                    }
+                },
+                {
+                    $group: {
+                        _id: null,
+                        total: { $sum: "$pricingDetails.finalAmount" },
+                        count: { $sum: 1 }
+                    }
+                }
+            ]),
+            BookingModel.aggregate([
+                {
+                    $match: {
+                        bookingType: "CUSTOMIZED",
+                        status: { $nin: ["ENQUIRY_CANCELLED", "CANCELLED"] },
+                        $or: [
+                            { "quotation.amount": { $gt: 0 } },
+                            { "pricingDetails.finalAmount": { $gt: 0 } }
+                        ]
+                    }
+                },
+                {
+                    $group: {
+                        _id: null,
+                        total: {
+                            $sum: {
+                                $cond: [
+                                    { $gt: ["$quotation.amount", 0] },
+                                    "$quotation.amount",
+                                    "$pricingDetails.finalAmount"
+                                ]
+                            }
+                        },
+                        count: { $sum: 1 }
+                    }
+                }
             ]),
             UserModel.countDocuments(),
             TourismModel.countDocuments({ isActive: true, isDeleted: false })
         ])
 
-        const totalRevenue = revenueResult[0]?.total || 0
+        const standardRevenue = standardRevenueResult[0]?.total || 0
+        const standardBookingsCount = standardRevenueResult[0]?.count || 0
+        const customizedRevenue = customizedRevenueResult[0]?.total || 0
+        const customizedBookingsCount = customizedRevenueResult[0]?.count || 0
+        const totalRevenue = standardRevenue + customizedRevenue
 
         // 2. Fetch packages categories for pie chart matching
         const domesticPackages = await TourismModel.find({ packageType: "DOMESTIC", isDeleted: false }).select("_id").lean()
@@ -368,8 +408,22 @@ export const getTourismDashboardStats = async (ctx: Context) => {
                 kpis: {
                     totalBookings,
                     totalRevenue,
+                    standardRevenue,
+                    customizedRevenue,
+                    standardBookingsCount,
+                    customizedBookingsCount,
                     totalUsers,
                     activePackages
+                },
+                revenueBreakdown: {
+                    standard: {
+                        total: standardRevenue,
+                        count: standardBookingsCount
+                    },
+                    customized: {
+                        total: customizedRevenue,
+                        count: customizedBookingsCount
+                    }
                 },
                 pieChart: {
                     domestic: domesticCount,
@@ -532,6 +586,35 @@ export const getTouristPlaceById = async (
         console.error("Get Tourism By ID Error", error)
         set.status = 500
         return { error: "Failed to fetch tourism package", status: false }
+    }
+}
+
+// ─── TOGGLE ACTIVE ───────────────────────────────────────────────────────────
+
+export const toggleActiveTouristPlace = async (
+    ctx: Context<{ params: { id: string } }>
+) => {
+    const { params, set } = ctx
+
+    try {
+        const existing = await TourismModel.findById(params.id)
+        if (!existing || existing.isDeleted) {
+            set.status = 404
+            return { error: "Tourism package not found", status: false }
+        }
+
+        existing.isActive = !existing.isActive
+        await existing.save()
+
+        return {
+            message: `Tourism package status updated to ${existing.isActive ? "active" : "inactive"}`,
+            data: existing,
+            status: true,
+        }
+    } catch (error: any) {
+        console.error("Toggle Active Tourism Error", error)
+        set.status = 500
+        return { error: "Failed to toggle active status", status: false }
     }
 }
 

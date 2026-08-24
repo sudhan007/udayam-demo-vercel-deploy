@@ -907,6 +907,7 @@ export type CouponFormValues = {
   validFrom: string
   validTo: string
   status: 'ACTIVE' | 'INACTIVE'
+  order?: number
 }
 
 type Props = {
@@ -1048,6 +1049,7 @@ export function CouponForm({
     validFrom: '',
     validTo: '',
     status: 'ACTIVE',
+    order: 0,
     ...defaultValues,
   }
 
@@ -1546,6 +1548,27 @@ export function CouponForm({
             )}
           />
           <FieldError message={errors.status?.message} />
+        </div>
+
+        <div className="space-y-1.5">
+          <Label htmlFor="order" className="text-xs font-semibold">
+            Display Order
+          </Label>
+          <Input
+            id="order"
+            type="number"
+            min={0}
+            placeholder="e.g. 1 (lower numbers show first)"
+            className={errCls(!!errors.order)}
+            {...register('order', {
+              valueAsNumber: true,
+              min: { value: 0, message: 'Order must be ≥ 0' },
+            })}
+          />
+          <p className="text-[10px] text-muted-foreground">
+            Order in which the coupon is displayed on client side (e.g. 1 is shown first, 2 is shown second).
+          </p>
+          <FieldError message={errors.order?.message} />
         </div>
       </Section>
 

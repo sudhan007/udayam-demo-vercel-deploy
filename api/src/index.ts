@@ -1,3 +1,6 @@
+import dns from "node:dns";
+dns.setServers(["8.8.8.8", "8.8.4.4"]);
+
 import { config } from "dotenv";
 import { app } from "./setup";
 import { APP_CONSTANTS } from "constant";

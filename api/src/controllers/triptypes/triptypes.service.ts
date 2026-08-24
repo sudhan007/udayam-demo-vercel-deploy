@@ -158,11 +158,25 @@ export const deleteTripType = async (
   }
 };
 
+export const DEFAULT_TRIP_TYPES = [
+  { name: "Family", order: 1, isActive: true, isDeleted: false },
+  { name: "Honeymoon", order: 2, isActive: true, isDeleted: false },
+  { name: "Adventure", order: 3, isActive: true, isDeleted: false },
+  { name: "Solo Travel", order: 4, isActive: true, isDeleted: false },
+  { name: "Group", order: 5, isActive: true, isDeleted: false },
+  { name: "Pilgrimage", order: 6, isActive: true, isDeleted: false },
+];
+
 // ─── GET ALL (Public / No role restriction) ───────────────────────────────────
 export const getAllTripTypes = async (ctx: Context<{ query: any }>) => {
   const { query, set }: any = ctx;
 
   try {
+    const totalCount = await TripTypeModel.countDocuments();
+    if (totalCount === 0) {
+      await TripTypeModel.insertMany(DEFAULT_TRIP_TYPES);
+    }
+
     const filter: Record<string, any> = { isDeleted: false };
 
     const isActive = parseBool(query.isActive);

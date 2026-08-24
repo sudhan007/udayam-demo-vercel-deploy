@@ -189,7 +189,9 @@ export const getEligibleCouponsForPackage = async (ctx: Context<{ params: { pack
             validFrom: { $lte: now },
             validTo: { $gte: now },
             applicableFor: { $in: ["ALL", "STANDARD", "SELECTED"] },
-        }).lean()
+        })
+            .sort({ order: 1, createdAt: -1 })
+            .lean()
 
         const eligibleCoupons: any[] = []
 

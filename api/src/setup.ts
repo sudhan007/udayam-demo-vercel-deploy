@@ -5,9 +5,13 @@ import { logger } from "@rasla/logify";
 import { APP_CONSTANTS } from "constant";
 import { BaseRouter } from "controllers/routes";
 import { Elysia } from "elysia";
+import dns from "node:dns";
 import mongoose from "mongoose";
 
-const URL = APP_CONSTANTS.DB_URL
+// Resolve MongoDB SRV records via public DNS if system resolver refuses SRV queries
+dns.setServers(["8.8.8.8", "8.8.4.4"]);
+
+const URL = APP_CONSTANTS.DB_URL;
 
 try {
     await mongoose.connect(URL as string, {
@@ -16,7 +20,7 @@ try {
     });
     console.log("Connected to Database");
 } catch (e) {
-    console.log(e);
+    console.error("Failed to connect to Database:", e);
 }
 
 

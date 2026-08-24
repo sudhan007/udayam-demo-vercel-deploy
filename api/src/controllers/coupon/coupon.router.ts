@@ -8,6 +8,7 @@ import {
     getApplicableUsers,
     getApplicablePackages,
     getActiveCoupons,
+    toggleActiveCoupon,
 } from "./coupon.service"
 import {
     getCouponsDto,
@@ -26,4 +27,9 @@ export const couponRouter = new Elysia({
     .get("/helper/packages", getApplicablePackages, { beforeHandle: adminOnly })
     .get("/:id", getCouponById, { ...couponParamDto, beforeHandle: adminOnly })
     .patch("/:id", updateCoupon, { beforeHandle: adminOnly })
+    .patch("/:id/toggle-active", toggleActiveCoupon, {
+        ...couponParamDto,
+        beforeHandle: adminOnly,
+        detail: { summary: "Toggle active/inactive status of coupon" },
+    })
     .delete("/:id", deleteCoupon, { ...couponParamDto, beforeHandle: adminOnly })

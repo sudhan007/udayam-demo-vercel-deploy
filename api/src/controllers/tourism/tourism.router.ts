@@ -6,6 +6,7 @@ import {
     getAllTouristPlaces,
     getTouristPlaceById,
     getTourismDashboardStats,
+    toggleActiveTouristPlace,
     toggleFeaturedTouristPlace,
     getFeaturedTouristPlaces,
 } from "./toursim.service"
@@ -35,6 +36,11 @@ export const tourismRouter = new Elysia({
     .patch("/:id", updateTouristPlace, {
         ...updateTourismDto,
         beforeHandle: adminOnly,
+    })
+    .patch("/:id/toggle-active", toggleActiveTouristPlace, {
+        ...tourismParamDto,
+        beforeHandle: adminOnly,
+        detail: { summary: "Toggle active status of tourism package" }
     })
     .patch("/:id/toggle-featured", toggleFeaturedTouristPlace, {
         ...tourismParamDto,

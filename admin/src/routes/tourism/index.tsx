@@ -6,6 +6,7 @@ import { Pagination } from '@/components/Pagination'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Switch } from '@/components/ui/switch'
 import {
   Select,
   SelectContent,
@@ -208,7 +209,7 @@ function RouteComponent() {
     minPrice: searchParams.minPrice ?? '',
     maxPrice: searchParams.maxPrice ?? '',
     sortBy: searchParams.sortBy ?? 'newest',
-    isActive: searchParams.isActive ?? 'true',
+    isActive: searchParams.isActive ?? 'all',
     isFeatured: searchParams.isFeatured ?? 'all',
   }
 
@@ -231,7 +232,8 @@ function RouteComponent() {
     ...(filters.minPrice && { minPrice: filters.minPrice }),
     ...(filters.maxPrice && { maxPrice: filters.maxPrice }),
     ...(filters.sortBy && { sortBy: filters.sortBy }),
-    ...(filters.isActive && { isActive: filters.isActive }),
+    ...(filters.isActive &&
+      filters.isActive !== 'all' && { isActive: filters.isActive }),
     ...(filters.isFeatured &&
       filters.isFeatured !== 'all' && { isFeatured: filters.isFeatured }),
   }
@@ -254,6 +256,17 @@ function RouteComponent() {
     onError: () => {
       toast.error('Failed to delete package')
       setDeleteId(null)
+    },
+  })
+
+  const toggleActiveMutation = useMutation({
+    mutationFn: (id: string) => _axios.patch(`/tourism/${id}/toggle-active`),
+    onSuccess: (res: any) => {
+      toast.success(res.data?.message || 'Package status updated')
+      queryClient.invalidateQueries({ queryKey: ['tourism'] })
+    },
+    onError: () => {
+      toast.error('Failed to update package status')
     },
   })
 
@@ -731,15 +744,12 @@ function RouteComponent() {
                     </div>
                   </TableCell>
                   <TableCell className="hidden sm:table-cell">
-                    <span
-                      className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                        pkg.isActive
-                          ? 'bg-green-100 text-green-700'
-                          : 'bg-red-100 text-red-600'
-                      }`}
-                    >
-                      {pkg.isActive ? 'Active' : 'Inactive'}
-                    </span>
+                    <Switch
+                      checked={pkg.isActive}
+                      onCheckedChange={() => toggleActiveMutation.mutate(pkg._id)}
+                      disabled={toggleActiveMutation.isPending}
+                      title={pkg.isActive ? 'Active (Click to deactivate)' : 'Inactive (Click to activate)'}
+                    />
                   </TableCell>
                   <TableCell className="hidden sm:table-cell">
                     <Button

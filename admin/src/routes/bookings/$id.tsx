@@ -214,6 +214,23 @@ function BookingDetailsComponent() {
     })
   }
 
+  const formatTripType = (type?: string) => {
+    if (!type) return '-'
+    const map: Record<string, { label: string; icon: string }> = {
+      FAMILY: { label: 'Family', icon: '👨‍👩‍👧' },
+      HONEYMOON: { label: 'Honeymoon', icon: '💑' },
+      ADVENTURE: { label: 'Adventure', icon: '🧗' },
+      SOLO: { label: 'Solo Travel', icon: '🎒' },
+      GROUP: { label: 'Group', icon: '👥' },
+      PILGRIMAGE: { label: 'Pilgrimage', icon: '🛕' },
+    }
+    const match = map[type.toUpperCase()]
+    if (match) {
+      return `${match.icon} ${match.label}`
+    }
+    return type.replace(/_/g, ' ')
+  }
+
   const formatDateTime = (dateStr?: string) => {
     if (!dateStr) return '-'
     return new Date(dateStr).toLocaleString('en-IN', {
@@ -392,9 +409,13 @@ function BookingDetailsComponent() {
                 <div className="text-muted-foreground flex items-center gap-1">
                   <Calendar size={12} /> Travel Date & Style:
                 </div>
-                <div className="font-semibold text-sm mt-0.5">
-                  {formatDate(booking.travellerInfo?.travelDate)} (
-                  {booking.travellerInfo?.travelType})
+                <div className="font-semibold text-sm mt-0.5 flex items-center gap-2 flex-wrap">
+                  <span>{formatDate(booking.travellerInfo?.travelDate)}</span>
+                  {booking.travellerInfo?.travelType && (
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+                      {formatTripType(booking.travellerInfo?.travelType)}
+                    </span>
+                  )}
                 </div>
               </div>
             </div>

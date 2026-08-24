@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { _axios } from '@/lib/axios'
 import { Pagination } from '@/components/Pagination'
 import { Button } from '@/components/ui/button'
+import { Switch } from '@/components/ui/switch'
 import {
   Table,
   TableBody,
@@ -237,25 +238,12 @@ function TestimonialsIndexComponent() {
                     {t.order ?? 0}
                   </TableCell>
                   <TableCell>
-                    <button
-                      onClick={() => toggleMutation.mutate(t._id)}
+                    <Switch
+                      checked={t.isActive}
+                      onCheckedChange={() => toggleMutation.mutate(t._id)}
                       disabled={toggleMutation.isPending}
-                      className={`text-xs px-2.5 py-1 rounded-full font-medium inline-flex items-center gap-1 cursor-pointer transition-colors ${
-                        t.isActive
-                          ? 'bg-green-100 text-green-700 hover:bg-green-200'
-                          : 'bg-red-100 text-red-600 hover:bg-red-200'
-                      }`}
-                    >
-                      {t.isActive ? (
-                        <>
-                          <Check className="w-3 h-3" /> Active
-                        </>
-                      ) : (
-                        <>
-                          <X className="w-3 h-3" /> Inactive
-                        </>
-                      )}
-                    </button>
+                      title={t.isActive ? 'Active (Click to deactivate)' : 'Inactive (Click to activate)'}
+                    />
                   </TableCell>
                   <TableCell className="text-right">
                     <Link

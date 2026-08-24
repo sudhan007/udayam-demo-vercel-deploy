@@ -123,6 +123,23 @@ function BookingsIndexComponent() {
     })
   }
 
+  const formatTripType = (type?: string) => {
+    if (!type) return null
+    const map: Record<string, { label: string; icon: string }> = {
+      FAMILY: { label: 'Family', icon: '👨‍👩‍👧' },
+      HONEYMOON: { label: 'Honeymoon', icon: '💑' },
+      ADVENTURE: { label: 'Adventure', icon: '🧗' },
+      SOLO: { label: 'Solo Travel', icon: '🎒' },
+      GROUP: { label: 'Group', icon: '👥' },
+      PILGRIMAGE: { label: 'Pilgrimage', icon: '🛕' },
+    }
+    const match = map[type.toUpperCase()]
+    if (match) {
+      return `${match.icon} ${match.label}`
+    }
+    return type.replace(/_/g, ' ')
+  }
+
   const getStatusBadgeStyle = (status: string, _bookingType: string) => {
     switch (status) {
       case 'BOOKED':
@@ -321,12 +338,19 @@ function BookingsIndexComponent() {
                   </TableCell>
 
                   {/* Travel Date & Pax */}
-                  <TableCell className="text-xs text-muted-foreground space-y-0.5">
+                  <TableCell className="text-xs text-muted-foreground space-y-1">
                     <div className="flex items-center gap-1 font-medium text-foreground">
                       <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
                       {formatDate(booking.travellerInfo?.travelDate)}
                     </div>
-                    <div>👥 {booking.travellerInfo?.numberOfPersons} Persons</div>
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span>👥 {booking.travellerInfo?.numberOfPersons} Persons</span>
+                      {booking.travellerInfo?.travelType && (
+                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-50 text-blue-700 border border-blue-200">
+                          {formatTripType(booking.travellerInfo.travelType)}
+                        </span>
+                      )}
+                    </div>
                   </TableCell>
 
                   {/* Pricing */}
